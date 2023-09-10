@@ -1,0 +1,12 @@
+# Compilation
+
+/lib
+/lib-commonjs
+
+# Test
+
+/coverage
+
+# PNPM
+
+/pnpm-lock.yaml

@@ -1,0 +1,43 @@
+# Editors and IDEs
+
+/*.code-workspace
+/.vscode
+
+# Git
+
+/.gitattributes
+/.github
+/.gitignore
+
+# Documentation
+
+/docs
+
+# Source
+
+/scripts
+/src
+
+# NPM
+
+/.pnpm-store
+/node_modules
+/pnpm-lock.yaml
+
+# Configs
+
+/.eslintrc.js
+/.lintstagedrc
+/.prettierignore
+/.prettierrc
+/tsconfigs
+/tsconfig.json
+
+# Test
+
+/coverage
+
+# Misc
+
+/.husky
+/.eslintcache

@@ -1,0 +1,40 @@
+// See https://www.typescriptlang.org/tsconfig/ for more about TSConfig.
+{
+    "compilerOptions": {
+        "allowJs": false,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "incremental": true,
+        "inlineSources": true,
+        "isolatedModules": true,
+        "lib": ["ESNext"],
+        "listEmittedFiles": true,
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "newLine": "lf",
+        "noEmit": false,
+        "noEmitOnError": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "removeComments": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        /**
+         * The following options will be turned on if option `--strict` is set:
+         * - alwaysStrict
+         * - noImplicitAny
+         * - noImplicitThis
+         * - strictBindCallApply
+         * - strictFunctionTypes
+         * - strictNullChecks
+         * - strictPropertyInitialization
+         * - useUnknownInCatchVariables
+         */
+        "strict": true,
+        "stripInternal": true,
+        "target": "ES2018"
+    }
+}
