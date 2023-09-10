@@ -1,0 +1,34 @@
+# See https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+
+# ------------------------------------------------------------------------------------------------------- Editor and IDE
+
+.vscode
+
+# ----------------------------------------------------------------------------------------------------------- Dependency
+
+.pnp
+.pnp.js
+node_modules
+
+# ---------------------------------------------------------------------------------------------------------- Compilation
+
+*.tsbuildinfo
+
+/lib
+/lib-commonjs
+
+# ----------------------------------------------------------------------------------------------------------------- Test
+
+/coverage
+
+# -------------------------------------------------------------------------------------------------------- Miscellaneous
+
+.DS_Store
+
+.eslintcache
+
+debug.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*

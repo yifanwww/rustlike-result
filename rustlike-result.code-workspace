@@ -1,0 +1,51 @@
+{
+    "folders": [
+        {
+            "name": "rustlike-result",
+            "path": "."
+        }
+    ],
+    "settings": {
+        // --------------------------------------------------------------------------------- Visual Studio Code Settings
+
+        "editor.insertSpaces": true,
+        "editor.rulers": [120],
+        "editor.tabSize": 4,
+
+        "files.associations": {
+            ".eslintcache": "json",
+            ".lintstagedrc": "json"
+        },
+
+        "git.enabled": true,
+
+        "search.useIgnoreFiles": true,
+        "search.useParentIgnoreFiles": true,
+
+        "typescript.enablePromptUseWorkspaceTsdk": true,
+        "typescript.tsdk": "rustlike-result/node_modules/typescript/lib",
+
+        "[javascript]": {
+            "editor.defaultFormatter": "esbenp.prettier-vscode",
+            "editor.suggest.insertMode": "replace"
+        },
+        "[json]": {
+            "editor.defaultFormatter": "esbenp.prettier-vscode",
+            "editor.suggest.insertMode": "replace"
+        },
+        "[jsonc]": {
+            "editor.defaultFormatter": "esbenp.prettier-vscode",
+            "editor.suggest.insertMode": "replace"
+        },
+        "[typescript]": {
+            "editor.defaultFormatter": "esbenp.prettier-vscode",
+            "editor.suggest.insertMode": "replace"
+        },
+        "[yaml]": {
+            "editor.autoIndent": "advanced",
+            "editor.defaultFormatter": "esbenp.prettier-vscode",
+            "editor.insertSpaces": true,
+            "editor.tabSize": 2
+        }
+    }
+}

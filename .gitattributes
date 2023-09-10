@@ -1,0 +1,184 @@
+*                           text=auto
+
+# documents
+
+README                      text eol=lf
+CHANGELOG                   text eol=lf
+LICENSE                     text eol=lf
+
+*.md                        text eol=lf
+
+# Configurations
+## git
+
+.gitattributes              text eol=lf
+.gitkeep                    text eol=lf
+.gitmodules                 text eol=lf
+.gitignore                  text eol=lf
+
+pre-commit                  text eol=lf
+
+## jetbrains
+
+*.iml                       text eol=lf
+
+## visual studio & visual studio code
+
+*.code-workspace            text eol=lf
+*.csproj                    text eol=lf
+*.filters                   text eol=lf
+*.pubxml                    text eol=lf
+*.sln                       text eol=lf
+*.user                      text eol=lf
+*.vcxproj                   text eol=lf
+
+## others
+
+.clang-format               text eol=lf
+.editorconfig               text eol=lf
+.env                        text eol=lf
+.flake8                     text eol=lf
+.npmignore                  text eol=lf
+.npmrc                      text eol=lf
+.prettierrc                 text eol=lf
+.prettierignore             text eol=lf
+.style.yapf                 text eol=lf
+.yarnrc                     text eol=lf
+makefile                    text eol=lf
+
+*.ini                       text eol=lf
+*.json                      text eol=lf
+*.lock                      text eol=lf
+*.toml                      text eol=lf
+*.xml                       text eol=lf
+*.yaml                      text eol=lf
+*.yml                       text eol=lf
+
+# programming language source code
+## c & cpp & object-c
+
+*.c                         text eol=lf
+*.cc                        text eol=lf
+*.cpp                       text eol=lf
+*.h                         text eol=lf
+*.hpp                       text eol=lf
+*.m                         text eol=lf
+
+## csharp
+
+*.cs                        text eol=lf
+*.razor                     text eol=lf
+*.xaml                      text eol=lf
+
+## css
+
+*.css                       text eol=lf
+*.less                      text eol=lf
+*.sass                      text eol=lf
+*.scss                      text eol=lf
+
+## dart
+
+*.dart                      text eol=lf
+
+## go
+
+*.go                        text eol=lf
+
+## handlebars
+
+*.hbs                       text eol=lf
+
+## html
+
+*.asp                       text eol=lf
+*.html                      text eol=lf
+
+## java
+
+*.java                      text eol=lf
+
+## javascript & typescript
+
+*.cjs                       text eol=lf
+*.js                        text eol=lf
+*.jsx                       text eol=lf
+*.map                       text eol=lf
+*.mjs                       text eol=lf
+*.ts                        text eol=lf
+*.tsx                       text eol=lf
+
+*.snap                      text eol=lf
+
+## kotlin
+
+*.kt                        text eol=lf
+
+## lisp
+
+*.asd                       text eol=lf
+*.lisp                      text eol=lf
+*.lisp-expr                 text eol=lf
+
+## lua
+
+*.lua                       text eol=lf
+
+## ocaml
+
+*.ml                        text eol=lf
+*.mll                       text eol=lf
+
+## python
+
+*.py                        text eol=lf
+
+## ruby
+
+*.rb                        text eol=lf
+
+## rust
+
+*.rs                        text eol=lf
+
+## scala
+
+*.sbt                       text eol=lf
+*.scala                     text eol=lf
+
+## scaml
+
+*.scaml                     text eol=lf
+
+## sql
+
+*.sql                       text eol=lf
+
+## swift
+
+*.swift                     text eol=lf
+
+## windows cli
+
+*.bat                       text eol=lf
+*.cmd                       text eol=lf
+*.ps1                       text eol=lf
+*.psm1                      text eol=lf
+
+## unix-like cli
+
+gradlew                     text eol=lf
+*.sh                        text eol=lf
+
+## others
+
+*.svg                       text eol=lf
+
+# misc
+
+*.log                       text eol=lf
+*.txt                       text eol=lf
+
+# windows driver
+
+*.inf                       text eol=crlf
