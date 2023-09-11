@@ -217,6 +217,32 @@ export class RustlikeResult<T, E> implements Result<T, E> {
     }
 
     /**
+     * Returns the contained `Ok` value, without checking that the value is not an `Err`.
+     *
+     * **SAFETY**: Calling this method on an `Err` is undefined behavior.
+     * The safety contract must be upheld by the caller.
+     *
+     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_unchecked
+     */
+    // TODO: find a way to do the check in debug/development mode.
+    unwrapUnchecked(): T {
+        return this._value!;
+    }
+
+    /**
+     * Returns the contained `Err` value, without checking that the value is not an `Ok`.
+     *
+     * **SAFETY**: Calling this method on an `Ok` is undefined behavior.
+     * The safety contract must be upheld by the caller.
+     *
+     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_err_unchecked
+     */
+    // TODO: find a way to do the check in debug/development mode.
+    unwrapErrUnchecked(): E {
+        return this._error!;
+    }
+
+    /**
      * Returns `res` if itself is `Ok`, otherwise returns the `Err` value of itself.
      *
      * Arguments passed to `and` are eagerly evaluated;
@@ -278,15 +304,21 @@ export class RustlikeResult<T, E> implements Result<T, E> {
     }
 
     private static _equal(self: unknown, other: unknown): boolean {
+        // TODO: find a better way to check if `self` and `other` is `Result`
+        // to support user customized `Result` implementation.
+
         const isSelfResult = self instanceof RustlikeResult;
         const isOtherResult = other instanceof RustlikeResult;
 
         if (isSelfResult && isOtherResult) {
-            const isOk = self.isOk();
-            if (isOk !== other.isOk()) return false;
+            const _self: Result<unknown, unknown> = self;
+            const _other: Result<unknown, unknown> = other;
+
+            const isOk = _self.isOk();
+            if (isOk !== _other.isOk()) return false;
             return isOk
-                ? RustlikeResult._equal(self._value, other._value)
-                : RustlikeResult._equal(self._error, other._error);
+                ? RustlikeResult._equal(_self.unwrapUnchecked(), _other.unwrapUnchecked())
+                : RustlikeResult._equal(_self.unwrapErrUnchecked(), _other.unwrapErrUnchecked());
         }
 
         return self === other || (Number.isNaN(self) && Number.isNaN(other));
@@ -295,11 +327,11 @@ export class RustlikeResult<T, E> implements Result<T, E> {
     /**
      * Returns `true` if `self` equals to `other`.
      */
-    equal(other: RustlikeResult<T, E>): boolean {
+    equal(other: Result<T, E>): boolean {
         const isOk = this.isOk();
         if (isOk !== other.isOk()) return false;
         return isOk
-            ? RustlikeResult._equal(this._value, other._value!)
-            : RustlikeResult._equal(this._error, other._error!);
+            ? RustlikeResult._equal(this._value, other.unwrapUnchecked())
+            : RustlikeResult._equal(this._error, other.unwrapErrUnchecked());
     }
 }

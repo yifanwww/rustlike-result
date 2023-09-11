@@ -167,6 +167,26 @@ export interface Result<T, E> {
     unwrapOrElse(op: (err: E) => T): T;
 
     /**
+     * Returns the contained `Ok` value, without checking that the value is not an `Err`.
+     *
+     * **SAFETY**: Calling this method on an `Err` is undefined behavior.
+     * The safety contract must be upheld by the caller.
+     *
+     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_unchecked
+     */
+    unwrapUnchecked(): T;
+
+    /**
+     * Returns the contained `Err` value, without checking that the value is not an `Ok`.
+     *
+     * **SAFETY**: Calling this method on an `Ok` is undefined behavior.
+     * The safety contract must be upheld by the caller.
+     *
+     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_err_unchecked
+     */
+    unwrapErrUnchecked(): E;
+
+    /**
      * Returns `res` if itself is `Ok`, otherwise returns the `Err` value of itself.
      *
      * Arguments passed to `and` are eagerly evaluated;

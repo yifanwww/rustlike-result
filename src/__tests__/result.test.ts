@@ -264,6 +264,18 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
     });
 });
 
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.unwrapUnchecked.name}\``, () => {
+    it('should unwrap itself to get the contained `Ok` value', () => {
+        expect(Ok(100).unwrapUnchecked()).toBe(100);
+    });
+});
+
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.unwrapErrUnchecked.name}\``, () => {
+    it('should unwrap itself to get the contained `Err` value', () => {
+        expect(Err('Err').unwrapErrUnchecked()).toBe('Err');
+    });
+});
+
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.and.name}\``, () => {
     it('should return `res`', () => {
         expect(op1().and(Ok(667)).ok()).toBe(667);
