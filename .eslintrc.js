@@ -11,8 +11,10 @@ const naming = [
 
     { selector: 'enumMember', format: ['UPPER_CASE'], leadingUnderscore: 'forbid' },
 
+    { selector: 'function', format: null, filter: { regex: '^(Ok|Err)$', match: true } },
     { selector: 'function', format: ['camelCase'], leadingUnderscore: 'allow' },
 
+    { selector: 'method', modifiers: ['static'], format: null, filter: { regex: '^(Ok|Err)$', match: true } },
     { selector: 'method', modifiers: ['private'], format: ['camelCase'], leadingUnderscore: 'require' },
     { selector: 'method', modifiers: ['protected'], format: ['camelCase'], leadingUnderscore: 'require' },
     { selector: 'method', format: ['camelCase'], leadingUnderscore: 'forbid' },
@@ -38,11 +40,7 @@ const naming = [
 
     { selector: 'objectLiteralProperty', format: null },
 
-    {
-        selector: 'variable',
-        format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
-        leadingUnderscore: 'allow',
-    },
+    { selector: 'variable', format: ['camelCase', 'UPPER_CASE'], leadingUnderscore: 'allow' },
 ];
 
 module.exports = {

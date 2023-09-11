@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test fn \`Err\` should create Err result 1`] = `
+Result {
+  "_error": "Some error message",
+  "_type": "err",
+  "_value": undefined,
+}
+`;
+
+exports[`Test fn \`Ok\` should create Ok result 1`] = `
+Result {
+  "_error": undefined,
+  "_type": "ok",
+  "_value": 1,
+}
+`;
+
+exports[`Test static method \`Result.Err\` should create Err result 1`] = `
+Result {
+  "_error": "Some error message",
+  "_type": "err",
+  "_value": undefined,
+}
+`;
+
+exports[`Test static method \`Result.Ok\` should create Ok result 1`] = `
+Result {
+  "_error": undefined,
+  "_type": "ok",
+  "_value": 1,
+}
+`;
