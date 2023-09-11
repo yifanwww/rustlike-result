@@ -1,46 +1,35 @@
-import { Err, Ok, Result } from '../result';
-import type { IResult } from '../types';
+import { Err, Ok } from '../factory';
+import { RustlikeResult } from '../result.class';
+import type { Result } from '../result.interface';
 
-function op1(): IResult<number, string> {
+function op1(): Result<number, string> {
     return Ok(666);
 }
 
-function op2(): IResult<number, string> {
+function op2(): Result<number, string> {
     return Err('sadface');
 }
 
-describe(`Test static method \`${Result.name}.${Result.Ok.name}\``, () => {
-    it('should create Ok result', () => {
-        expect(Result.Ok(1)).toMatchSnapshot();
+describe(`Test static method \`${RustlikeResult.name}.${RustlikeResult.Ok.name}\``, () => {
+    it('should create `Ok` result', () => {
+        expect(RustlikeResult.Ok(1)).toMatchSnapshot();
     });
 });
 
-describe(`Test static method \`${Result.name}.${Result.Err.name}\``, () => {
-    it('should create Err result', () => {
-        expect(Result.Err('Some error message')).toMatchSnapshot();
+describe(`Test static method \`${RustlikeResult.name}.${RustlikeResult.Err.name}\``, () => {
+    it('should create `Err` result', () => {
+        expect(RustlikeResult.Err('Some error message')).toMatchSnapshot();
     });
 });
 
-describe(`Test fn \`${Ok.name}\``, () => {
-    it('should create Ok result', () => {
-        expect(Ok(1)).toMatchSnapshot();
-    });
-});
-
-describe(`Test fn \`${Err.name}\``, () => {
-    it('should create Err result', () => {
-        expect(Err('Some error message')).toMatchSnapshot();
-    });
-});
-
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.isOk.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.isOk.name}\``, () => {
     it('should return if itself is `Ok`', () => {
         expect(Ok(1).isOk()).toBe(true);
         expect(Err('Some error message').isOk()).toBe(false);
     });
 });
 
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.isOkAnd.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.isOkAnd.name}\``, () => {
     const fnFactory = () => jest.fn((num: number) => num > 1);
 
     it('should return if itself is `Ok` and the value inside of it matches a predicate', () => {
@@ -65,14 +54,14 @@ describe(`Test method \`${Result.name}.prototype.${Result.prototype.isOkAnd.name
     });
 });
 
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.isErr.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.isErr.name}\``, () => {
     it('should return if itself is `Err`', () => {
         expect(Ok(1).isErr()).toBe(false);
         expect(Err('Some error message').isErr()).toBe(true);
     });
 });
 
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.isErrAnd.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.isErrAnd.name}\``, () => {
     enum ErrorKind {
         NOT_FOUND,
         PERMISSION_DENIED,
@@ -102,21 +91,21 @@ describe(`Test method \`${Result.name}.prototype.${Result.prototype.isErrAnd.nam
     });
 });
 
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.ok.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.ok.name}\``, () => {
     it('should convert itself to an optional value', () => {
         expect(Ok(1).ok()).toBe(1);
         expect(Err('Some error message').ok()).toBeUndefined();
     });
 });
 
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.err.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.err.name}\``, () => {
     it('should convert itself to an optional error', () => {
         expect(Ok(1).err()).toBeUndefined();
         expect(Err('Some error message').err()).toBe('Some error message');
     });
 });
 
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.map.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.map.name}\``, () => {
     const mapFactory = () => jest.fn((num: number) => String(num));
 
     it('should map itself to another result', () => {
@@ -140,7 +129,7 @@ describe(`Test method \`${Result.name}.prototype.${Result.prototype.map.name}\``
     });
 });
 
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.mapOr.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.mapOr.name}\``, () => {
     const mapFactory = () => jest.fn((num: number) => num * 2);
 
     it('should map itself to another result', () => {
@@ -164,7 +153,7 @@ describe(`Test method \`${Result.name}.prototype.${Result.prototype.mapOr.name}\
     });
 });
 
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.mapOrElse.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.mapOrElse.name}\``, () => {
     const mapFactory = () => jest.fn(jest.fn((num: number) => String(num)));
     const fallbackFactory = () => jest.fn(jest.fn((str: string) => str));
 
@@ -198,7 +187,7 @@ describe(`Test method \`${Result.name}.prototype.${Result.prototype.mapOrElse.na
     });
 });
 
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.mapErr.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.mapErr.name}\``, () => {
     const mapFactory = () => jest.fn((num: number) => `error code: ${num}`);
 
     it('should map itself to another result', () => {
@@ -222,35 +211,35 @@ describe(`Test method \`${Result.name}.prototype.${Result.prototype.mapErr.name}
     });
 });
 
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.expect.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.expect.name}\``, () => {
     it('should unwrap itself to get the contained `Ok` value', () => {
         expect(Ok(1).expect('Operation type should be correct')).toBe(1);
         expect(() => Err(2).expect('Operation type should be correct')).toThrow('Operation type should be correct: 2');
     });
 });
 
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.unwrap.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.unwrap.name}\``, () => {
     it('should unwrap itself to get the contained `Ok` value', () => {
         expect(Ok(1).unwrap()).toBe(1);
         expect(() => Err('Some error message').unwrap()).toThrow('Some error message');
     });
 });
 
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.expectErr.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.expectErr.name}\``, () => {
     it('should unwrap itself to get the contained `Err` value', () => {
         expect(Err('Some error message').expectErr('Testing expectErr')).toBe('Some error message');
         expect(() => Ok(1).expectErr('Testing expectErr')).toThrow('Testing expectErr: 1');
     });
 });
 
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.unwrapErr.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.unwrapErr.name}\``, () => {
     it('should unwrap itself to get the contained `Err` value', () => {
         expect(Err('Some error message').unwrapErr()).toBe('Some error message');
         expect(() => Ok(1).unwrapErr()).toThrow('1');
     });
 });
 
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.unwrapOr.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.unwrapOr.name}\``, () => {
     it('should unwrap itself to get the contained `Ok` value or the provided value', () => {
         const ok = Ok<number, string>(100);
         const okErr = Err<number, string>('Err');
@@ -260,7 +249,7 @@ describe(`Test method \`${Result.name}.prototype.${Result.prototype.unwrapOr.nam
     });
 });
 
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.unwrapOrElse.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.unwrapOrElse.name}\``, () => {
     it('should unwrap itself to get the contained `Ok` value or computes it from a closure', () => {
         const handler = (msg: string) => {
             if (msg === 'I got this.') return 50;
@@ -275,7 +264,7 @@ describe(`Test method \`${Result.name}.prototype.${Result.prototype.unwrapOrElse
     });
 });
 
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.and.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.and.name}\``, () => {
     it('should return `res`', () => {
         expect(op1().and(Ok(667)).ok()).toBe(667);
         expect(op1().and(Err('bad')).err()).toBe('bad');
@@ -287,7 +276,7 @@ describe(`Test method \`${Result.name}.prototype.${Result.prototype.and.name}\``
     });
 });
 
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.andThen.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.andThen.name}\``, () => {
     it('should return `res`', () => {
         expect(
             op1()
@@ -331,7 +320,7 @@ describe(`Test method \`${Result.name}.prototype.${Result.prototype.andThen.name
     });
 });
 
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.or.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.or.name}\``, () => {
     it('should return the `Ok` result', () => {
         expect(op1().or(Ok(667)).ok()).toBe(666);
         expect(op1().or(Err('bad')).ok()).toBe(666);
@@ -343,7 +332,7 @@ describe(`Test method \`${Result.name}.prototype.${Result.prototype.or.name}\``,
     });
 });
 
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.orElse.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.orElse.name}\``, () => {
     it('should return the `Ok` result', () => {
         expect(
             op1()
@@ -387,7 +376,7 @@ describe(`Test method \`${Result.name}.prototype.${Result.prototype.orElse.name}
     });
 });
 
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.transpose.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.transpose.name}\``, () => {
     it('should transpose itself to an optional of a `Result`', () => {
         expect(Ok<number | undefined | null, string>(1).transpose()!.ok()).toBe(1);
         expect(Ok<number | undefined | null, string>(undefined).transpose()).toBeUndefined();
@@ -398,7 +387,7 @@ describe(`Test method \`${Result.name}.prototype.${Result.prototype.transpose.na
     });
 });
 
-describe(`Test method \`${Result.name}.prototype.${Result.prototype.equal.name}\``, () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.equal.name}\``, () => {
     it('should check if itself equals to another result', () => {
         expect(Ok(1).equal(Ok(1))).toBe(true);
         expect(Ok(NaN).equal(Ok(NaN))).toBe(true);

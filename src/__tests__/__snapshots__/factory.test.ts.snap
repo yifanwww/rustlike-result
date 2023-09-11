@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test static method \`RustlikeResult.Err\` should create \`Err\` result 1`] = `
+exports[`Test fn \`Err\` should create \`Err\` result 1`] = `
 RustlikeResult {
   "_error": "Some error message",
   "_type": "err",
@@ -8,7 +8,7 @@ RustlikeResult {
 }
 `;
 
-exports[`Test static method \`RustlikeResult.Ok\` should create \`Ok\` result 1`] = `
+exports[`Test fn \`Ok\` should create \`Ok\` result 1`] = `
 RustlikeResult {
   "_error": undefined,
   "_type": "ok",

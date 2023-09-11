@@ -1,22 +1,16 @@
-import type { IResult, Optional } from './types';
+import type { Result } from './result.interface';
+import type { Optional } from './types';
 
 type ResultType = 'ok' | 'err';
 
 /**
- * `Result` is a type that represents either success (Ok) or failure (Err).
- *
- * Handle Errors with the `Result` type.
- *
- * `Result<T, E>` is used for returning and propagating errors.
- * It is a type with two kinds:
- * - `Result.Ok(T)`, representing success and containing a value
- * - `Result.Err(E)`, representing error and containing an error value.
+ * The default implementation of interface `Result`.
  *
  * ref:
  * - https://doc.rust-lang.org/std/result/index.html
  * - https://doc.rust-lang.org/std/result/enum.Result.html
  */
-export class Result<T, E> implements IResult<T, E> {
+export class RustlikeResult<T, E> implements Result<T, E> {
     private readonly _type: ResultType;
     private _value?: T;
     private _error?: E;
@@ -36,15 +30,15 @@ export class Result<T, E> implements IResult<T, E> {
     /**
      * Contains the success value.
      */
-    static Ok<T, E = never>(value: T): IResult<T, E> {
-        return new Result<T, E>('ok', value);
+    static Ok<T, E = never>(value: T): Result<T, E> {
+        return new RustlikeResult<T, E>('ok', value);
     }
 
     /**
      * Contains the error value.
      */
-    static Err<E, T = never>(error: E): IResult<T, E> {
-        return new Result<T, E>('err', error);
+    static Err<E, T = never>(error: E): Result<T, E> {
+        return new RustlikeResult<T, E>('err', error);
     }
 
     /**
@@ -109,8 +103,8 @@ export class Result<T, E> implements IResult<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map
      */
-    map<U>(op: (value: T) => U): IResult<U, E> {
-        return this.isOk() ? Result.Ok(op(this._value!)) : Result.Err(this._error!);
+    map<U>(op: (value: T) => U): Result<U, E> {
+        return this.isOk() ? RustlikeResult.Ok(op(this._value!)) : RustlikeResult.Err(this._error!);
     }
 
     /**
@@ -146,8 +140,8 @@ export class Result<T, E> implements IResult<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_err
      */
-    mapErr<F>(op: (err: E) => F): IResult<T, F> {
-        return this.isOk() ? Result.Ok(this._value!) : Result.Err(op(this._error!));
+    mapErr<F>(op: (err: E) => F): Result<T, F> {
+        return this.isOk() ? RustlikeResult.Ok(this._value!) : RustlikeResult.Err(op(this._error!));
     }
 
     private _unwrapFailed(msg: string, error: unknown): never {
@@ -230,8 +224,8 @@ export class Result<T, E> implements IResult<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.and
      */
-    and<U>(res: IResult<U, E>): IResult<U, E> {
-        return this.isOk() ? res : Result.Err(this._error!);
+    and<U>(res: Result<U, E>): Result<U, E> {
+        return this.isOk() ? res : RustlikeResult.Err(this._error!);
     }
 
     /**
@@ -241,8 +235,8 @@ export class Result<T, E> implements IResult<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.and_then
      */
-    andThen<U>(op: (value: T) => IResult<U, E>): IResult<U, E> {
-        return this.isOk() ? op(this._value!) : Result.Err(this._error!);
+    andThen<U>(op: (value: T) => Result<U, E>): Result<U, E> {
+        return this.isOk() ? op(this._value!) : RustlikeResult.Err(this._error!);
     }
 
     /**
@@ -253,8 +247,8 @@ export class Result<T, E> implements IResult<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.or
      */
-    or<F>(res: IResult<T, F>): IResult<T, F> {
-        return this.isOk() ? Result.Ok(this._value!) : res;
+    or<F>(res: Result<T, F>): Result<T, F> {
+        return this.isOk() ? RustlikeResult.Ok(this._value!) : res;
     }
 
     /**
@@ -264,8 +258,8 @@ export class Result<T, E> implements IResult<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.or_else
      */
-    orElse<F>(op: (error: E) => IResult<T, F>): IResult<T, F> {
-        return this.isOk() ? Result.Ok(this._value!) : op(this._error!);
+    orElse<F>(op: (error: E) => Result<T, F>): Result<T, F> {
+        return this.isOk() ? RustlikeResult.Ok(this._value!) : op(this._error!);
     }
 
     /**
@@ -276,21 +270,23 @@ export class Result<T, E> implements IResult<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.transpose
      */
-    transpose(): Optional<IResult<T & NonNullable<unknown>, E>> {
+    transpose(): Optional<Result<T & NonNullable<unknown>, E>> {
         if (this.isOk()) {
-            return this._value === undefined || this._value === null ? undefined : Result.Ok(this._value);
+            return this._value === undefined || this._value === null ? undefined : RustlikeResult.Ok(this._value);
         }
-        return Result.Err(this._error!);
+        return RustlikeResult.Err(this._error!);
     }
 
     private static _equal(self: unknown, other: unknown): boolean {
-        const isSelfResult = self instanceof Result;
-        const isOtherResult = other instanceof Result;
+        const isSelfResult = self instanceof RustlikeResult;
+        const isOtherResult = other instanceof RustlikeResult;
 
         if (isSelfResult && isOtherResult) {
             const isOk = self.isOk();
             if (isOk !== other.isOk()) return false;
-            return isOk ? Result._equal(self._value, other._value) : Result._equal(self._error, other._error);
+            return isOk
+                ? RustlikeResult._equal(self._value, other._value)
+                : RustlikeResult._equal(self._error, other._error);
         }
 
         return self === other || (Number.isNaN(self) && Number.isNaN(other));
@@ -299,21 +295,11 @@ export class Result<T, E> implements IResult<T, E> {
     /**
      * Returns `true` if `self` equals to `other`.
      */
-    equal(other: Result<T, E>): boolean {
+    equal(other: RustlikeResult<T, E>): boolean {
         const isOk = this.isOk();
         if (isOk !== other.isOk()) return false;
-        return isOk ? Result._equal(this._value, other._value!) : Result._equal(this._error, other._error!);
+        return isOk
+            ? RustlikeResult._equal(this._value, other._value!)
+            : RustlikeResult._equal(this._error, other._error!);
     }
-}
-
-export function Ok<T>(value: T): IResult<T, never>;
-export function Ok<T, E>(value: T): IResult<T, E>;
-export function Ok<T, E>(value: T): IResult<T, E> {
-    return Result.Ok(value);
-}
-
-export function Err<E>(error: E): IResult<never, E>;
-export function Err<T, E>(error: E): IResult<T, E>;
-export function Err<T, E>(error: E): IResult<T, E> {
-    return Result.Err(error);
 }
