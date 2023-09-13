@@ -418,5 +418,14 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         expect(Err(Ok<number, string>(1)).equal(Err(Err('Some error message')))).toBe(false);
         expect(Err(Err<number, string>('Some error message')).equal(Err(Ok(1)))).toBe(false);
         expect(Ok<number, string>(1).equal(Err('Some error message'))).toBe(false);
+
+        expect(Ok([1]).equal(Ok([1]))).toBe(false);
+        expect(Ok({ foo: 1 }).equal(Ok({ foo: 1 }))).toBe(false);
+        expect(Ok(Ok([1])).equal(Ok(Ok([1])))).toBe(false);
+        expect(Ok(Ok({ foo: 1 })).equal(Ok(Ok({ foo: 1 })))).toBe(false);
+        expect(Err({ message: 'Some error message' }).equal(Err({ message: 'Some error message' }))).toBe(false);
+        expect(Err(Err({ message: 'Some error message' })).equal(Err(Err({ message: 'Some error message' })))).toBe(
+            false,
+        );
     });
 });
