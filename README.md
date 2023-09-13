@@ -15,7 +15,10 @@ pnpm install rustlike-result
 This package implement a Rust-like `Result`, nearly all methods are similar to the [Result].
 
 ```ts
-// TODO
+const ok = Ok(1);
+const err = Err('Some error message');
+
+// TODO: complex examples
 ```
 
 [result]: https://doc.rust-lang.org/std/result/enum.Result.html

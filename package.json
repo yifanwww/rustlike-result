@@ -1,6 +1,6 @@
 {
     "name": "rustlike-result",
-    "version": "0.0.0",
+    "version": "0.1.0",
     "description": "Rust-like Result for Javascript",
     "main": "lib-commonjs/index.js",
     "module": "lib/index.js",
