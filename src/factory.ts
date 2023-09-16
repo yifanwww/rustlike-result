@@ -1,5 +1,5 @@
-import { RustlikeResult } from './result.class';
-import type { Result } from './result.interface';
+import { RustlikeResult } from './result';
+import type { Result } from './types';
 
 /**
  * Creates a `Result` that contains the success value.

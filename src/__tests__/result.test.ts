@@ -1,6 +1,6 @@
 import { Err, Ok } from '../factory';
-import { RustlikeResult } from '../result.class';
-import type { Result } from '../result.interface';
+import { RustlikeResult } from '../result';
+import type { Result } from '../types';
 
 function op1(): Result<number, string> {
     return Ok(666);

@@ -1,75 +1,98 @@
-import type { Optional } from './types';
+import type { Optional, Result } from './types';
+
+type ResultType = 'ok' | 'err';
 
 /**
- * The interface of `Result` that defines the methods that `Result` should support.
- *
- * This package includes a default implementation of `Result` and factory functions `Ok` and `Err`.
- * They should satisify your requirements in most cases.
- *
- * But you still can implement this interface with your own class, and implement your own `Ok` and `Err`.
- *
- * The recommended type definitions of `Ok` and `Err` are:
- * - `function Ok<T>(value: T): Result<T, never>`;
- * - `function Ok<T, E>(value: T): Result<T, E>`;
- * - `function Err<E>(error: E): Result<never, E>`;
- * - `function Err<T, E>(error: E): Result<T, E>`;
- *
- * so that you can use it easily:
- * ```ts
- * const result1 = Ok(1);
- * const result2 = Ok<number, string>(2);
- * const result3: Result<number, string> = Ok(3);
- * const result4 = Err('Some error message');
- * const result5 = Err<number, string>('Some error message');
- * const result6: Result<number, string> = Err('Some error message');
- * ```
+ * The default implementation of interface `Result`.
  *
  * ref:
  * - https://doc.rust-lang.org/std/result/index.html
  * - https://doc.rust-lang.org/std/result/enum.Result.html
  */
-export interface Result<T, E> {
+export class RustlikeResult<T, E> implements Result<T, E> {
+    private readonly _type: ResultType;
+    private _value?: T;
+    private _error?: E;
+
+    private constructor(type: 'ok', value: T);
+    private constructor(type: 'err', error: E);
+    private constructor(type: ResultType, value: T | E) {
+        if (type === 'ok') {
+            this._type = 'ok';
+            this._value = value as T;
+        } else {
+            this._type = 'err';
+            this._error = value as E;
+        }
+    }
+
+    /**
+     * Contains the success value.
+     */
+    static Ok<T, E = never>(value: T): Result<T, E> {
+        return new RustlikeResult<T, E>('ok', value);
+    }
+
+    /**
+     * Contains the error value.
+     */
+    static Err<E, T = never>(error: E): Result<T, E> {
+        return new RustlikeResult<T, E>('err', error);
+    }
+
     /**
      * Returns `true` if the result is `Ok`.
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_ok
      */
-    isOk(): boolean;
+    isOk(): boolean {
+        return this._type === 'ok';
+    }
 
     /**
      * Returns `true` if the result is `Ok` and the value inside of it matches a predicate.
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_ok_and
      */
-    isOkAnd(fn: (value: T) => boolean): boolean;
+    isOkAnd(fn: (value: T) => boolean): boolean {
+        return this.isOk() && fn(this._value!);
+    }
 
     /**
      * Returns `true` if the result is `Err`.
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_err
      */
-    isErr(): boolean;
+    isErr(): boolean {
+        return this._type === 'err';
+    }
 
     /**
      * Returns `true` if the result is `Err` and the value inside of it matches a predicate.
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_err_and
      */
-    isErrAnd(fn: (err: E) => boolean): boolean;
+    isErrAnd(fn: (err: E) => boolean): boolean {
+        return this.isErr() && fn(this._error!);
+    }
 
     /**
      * Converts from `Result<T, E>` to `Optional<T>` and discarding the error, if any.
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.ok
      */
-    ok(): Optional<T>;
+    ok(): Optional<T> {
+        return this.isOk() ? this._value : undefined;
+    }
 
     /**
      * Converts from `Result<T, E>` to `Optional<E>` and discarding the success value, if any.
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.err
      */
-    err(): Optional<E>;
+    err(): Optional<E> {
+        return this.isOk() ? undefined : this._error;
+    }
 
     /**
      * Maps a `Result<T, E>` to `Result<U, E>` by applying a function to a contained `Ok` value,
@@ -79,7 +102,9 @@ export interface Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map
      */
-    map<U>(op: (value: T) => U): Result<U, E>;
+    map<U>(op: (value: T) => U): Result<U, E> {
+        return this.isOk() ? RustlikeResult.Ok(op(this._value!)) : RustlikeResult.Err(this._error!);
+    }
 
     /**
      * Returns the provided `fallback` (if `Err`), or applies a function to the contained value (if `Ok`).
@@ -90,7 +115,9 @@ export interface Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or
      */
-    mapOr<U>(fallback: U, map: (value: T) => U): U;
+    mapOr<U>(fallback: U, map: (value: T) => U): U {
+        return this.isOk() ? map(this._value!) : fallback;
+    }
 
     /**
      * Maps a `Result<T, E>` to `U` by applying fallback function `fallback` to a contained `Err` value,
@@ -100,7 +127,9 @@ export interface Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or_else
      */
-    mapOrElse<U>(fallback: (err: E) => U, map: (value: T) => U): U;
+    mapOrElse<U>(fallback: (err: E) => U, map: (value: T) => U): U {
+        return this.isOk() ? map(this._value!) : fallback(this._error!);
+    }
 
     /**
      * Maps a `Result<T, E>` to `Result<T, F>` by applying a function to a contained `Err` value,
@@ -110,7 +139,13 @@ export interface Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_err
      */
-    mapErr<F>(op: (err: E) => F): Result<T, F>;
+    mapErr<F>(op: (err: E) => F): Result<T, F> {
+        return this.isOk() ? RustlikeResult.Ok(this._value!) : RustlikeResult.Err(op(this._error!));
+    }
+
+    private _unwrapFailed(msg: string, error: unknown): never {
+        throw new Error(`${msg}: ${String(error)}`);
+    }
 
     /**
      * Returns the contained `Ok` value.
@@ -119,7 +154,9 @@ export interface Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.expect
      */
-    expect(msg: string): T;
+    expect(msg: string): T {
+        return this.isOk() ? this._value! : this._unwrapFailed(msg, this._error!);
+    }
 
     /**
      * Returns the contained `Ok` value.
@@ -128,7 +165,10 @@ export interface Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap
      */
-    unwrap(): T;
+    unwrap(): T {
+        if (this.isOk()) return this._value!;
+        throw new Error(String(this._error!));
+    }
 
     /**
      * Returns the contained `Err` value.
@@ -137,7 +177,9 @@ export interface Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.expect_err
      */
-    expectErr(msg: string): E;
+    expectErr(msg: string): E {
+        return this.isErr() ? this._error! : this._unwrapFailed(msg, this._value!);
+    }
 
     /**
      * Returns the contained `Err` value.
@@ -146,7 +188,10 @@ export interface Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_err
      */
-    unwrapErr(): E;
+    unwrapErr(): E {
+        if (this.isErr()) return this._error!;
+        throw new Error(String(this._value!));
+    }
 
     /**
      * Returns the contained `Ok` value or a provided default.
@@ -157,14 +202,18 @@ export interface Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or
      */
-    unwrapOr(fallback: T): T;
+    unwrapOr(fallback: T): T {
+        return this.isOk() ? this._value! : fallback;
+    }
 
     /**
      * Returns the contained `Ok` value or computes it from a closure.
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or_else
      */
-    unwrapOrElse(op: (err: E) => T): T;
+    unwrapOrElse(op: (err: E) => T): T {
+        return this.isOk() ? this._value! : op(this._error!);
+    }
 
     /**
      * Returns the contained `Ok` value, without checking that the value is not an `Err`.
@@ -174,7 +223,10 @@ export interface Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_unchecked
      */
-    unwrapUnchecked(): T;
+    // TODO: find a way to do the check in debug/development mode.
+    unwrapUnchecked(): T {
+        return this._value!;
+    }
 
     /**
      * Returns the contained `Err` value, without checking that the value is not an `Ok`.
@@ -184,7 +236,10 @@ export interface Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_err_unchecked
      */
-    unwrapErrUnchecked(): E;
+    // TODO: find a way to do the check in debug/development mode.
+    unwrapErrUnchecked(): E {
+        return this._error!;
+    }
 
     /**
      * Returns `res` if itself is `Ok`, otherwise returns the `Err` value of itself.
@@ -194,7 +249,9 @@ export interface Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.and
      */
-    and<U>(res: Result<U, E>): Result<U, E>;
+    and<U>(res: Result<U, E>): Result<U, E> {
+        return this.isOk() ? res : RustlikeResult.Err(this._error!);
+    }
 
     /**
      * Calls `op` if itself is `Ok`, otherwise returns the `Err` value of itself.
@@ -203,7 +260,9 @@ export interface Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.and_then
      */
-    andThen<U>(op: (value: T) => Result<U, E>): Result<U, E>;
+    andThen<U>(op: (value: T) => Result<U, E>): Result<U, E> {
+        return this.isOk() ? op(this._value!) : RustlikeResult.Err(this._error!);
+    }
 
     /**
      * Returns `res` if itself is `Err`, otherwise returns the `Ok` value of itself.
@@ -213,7 +272,9 @@ export interface Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.or
      */
-    or<F>(res: Result<T, F>): Result<T, F>;
+    or<F>(res: Result<T, F>): Result<T, F> {
+        return this.isOk() ? RustlikeResult.Ok(this._value!) : res;
+    }
 
     /**
      * Calls `op` if the result is `Err`, otherwise returns the `Ok` value of self.
@@ -222,7 +283,9 @@ export interface Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.or_else
      */
-    orElse<F>(op: (error: E) => Result<T, F>): Result<T, F>;
+    orElse<F>(op: (error: E) => Result<T, F>): Result<T, F> {
+        return this.isOk() ? RustlikeResult.Ok(this._value!) : op(this._error!);
+    }
 
     /**
      * Transposes a `Result` of an optional value into an optional of a `Result`.
@@ -232,10 +295,42 @@ export interface Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.transpose
      */
-    transpose(): Optional<Result<T & NonNullable<unknown>, E>>;
+    transpose(): Optional<Result<T & NonNullable<unknown>, E>> {
+        if (this.isOk()) {
+            return this._value === undefined || this._value === null ? undefined : RustlikeResult.Ok(this._value);
+        }
+        return RustlikeResult.Err(this._error!);
+    }
+
+    private static _equal(self: unknown, other: unknown): boolean {
+        // TODO: find a better way to check if `self` and `other` is `Result`
+        // to support user customized `Result` implementation.
+
+        const isSelfResult = self instanceof RustlikeResult;
+        const isOtherResult = other instanceof RustlikeResult;
+
+        if (isSelfResult && isOtherResult) {
+            const _self: Result<unknown, unknown> = self;
+            const _other: Result<unknown, unknown> = other;
+
+            const isOk = _self.isOk();
+            if (isOk !== _other.isOk()) return false;
+            return isOk
+                ? RustlikeResult._equal(_self.unwrapUnchecked(), _other.unwrapUnchecked())
+                : RustlikeResult._equal(_self.unwrapErrUnchecked(), _other.unwrapErrUnchecked());
+        }
+
+        return self === other || (Number.isNaN(self) && Number.isNaN(other));
+    }
 
     /**
      * Returns `true` if `self` equals to `other`.
      */
-    equal(other: Result<T, E>): boolean;
+    equal(other: Result<T, E>): boolean {
+        const isOk = this.isOk();
+        if (isOk !== other.isOk()) return false;
+        return isOk
+            ? RustlikeResult._equal(this._value, other.unwrapUnchecked())
+            : RustlikeResult._equal(this._error, other.unwrapErrUnchecked());
+    }
 }
