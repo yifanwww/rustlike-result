@@ -1,4 +1,12 @@
 # CHANGELOG
+## rustlike-result v0.2.0 (2023-09-17)
+### Features
+
+Adds resultify help funtions
+- `resultify`
+- `resultify.sync`
+- `resultify.promise`
+
 ## rustlike-result v0.1.0 (2023-09-13)
 ### Features
 
