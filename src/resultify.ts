@@ -3,6 +3,22 @@ import type { Result } from './types';
 
 type NoVoid<T> = T extends void ? undefined : T;
 
+/**
+ * Takes a promise and returns a new promise that contains a result.
+ *
+ * Examples:
+ * ```ts
+ * const result = await resultify.promise(promise);
+ * ```
+ */
+async function resultifyPromise<T, E>(promise: Promise<T>): Promise<Result<NoVoid<T>, E>> {
+    try {
+        return Ok((await promise) as NoVoid<T>);
+    } catch (err) {
+        return Err(err as E);
+    }
+}
+
 type CurriedResultifySync<E> = <T, Args extends unknown[]>(
     fn: (...args: Args) => T,
 ) => (...args: Args) => Result<NoVoid<T>, E>;
@@ -84,7 +100,7 @@ function resultify<T, E, Args extends unknown[]>(
     return fn ? curriedResultify(fn) : curriedResultify;
 }
 
-resultify.async = resultify;
 resultify.sync = resultifySync;
+resultify.promise = resultifyPromise;
 
 export { resultify };
