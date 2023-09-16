@@ -24,16 +24,34 @@ type CurriedResultifySync<E> = <T, Args extends unknown[]>(
 ) => (...args: Args) => Result<NoVoid<T>, E>;
 
 /**
- * Takes a function and returns a version that returns results.
+ * Takes a function and returns a version that returns results synchronously.
+ *
+ * Examples:
+ * ```ts
+ * function fn(): string {
+ *   // throws error if failed
+ * }
+ * const fn1 = resultify.sync(fn);
+ * ```
+ *
+ * In the context where async functions are not allowed, you can use this function to resultify the sync function.
+ * If you want to resultify an async function, please use `resultify` instead.
  *
  * If you need the error value and want to specify its type, please use another overloaded function.
- *
- * If you want to resultify an async function, please use `resultify` instead.
  */
 function resultifySync<T, E, Args extends unknown[]>(fn: (...args: Args) => T): (...args: Args) => Result<NoVoid<T>, E>;
 /**
- * Takes a function and returns a version that returns results.
+ * Takes a function and returns a version that returns results synchronously.
  *
+ * Examples:
+ * ```ts
+ * function fn(): string {
+ *   // throws error if failed
+ * }
+ * const fn1 = resultify.sync(fn);
+ * ```
+ *
+ * In the context where async functions are not allowed, you can use this function to resultify the sync function.
  * If you want to resultify an async function, please use `resultify` instead.
  */
 function resultifySync<E>(): CurriedResultifySync<E>;
@@ -59,8 +77,9 @@ type CurriedResultify<E> = <T, Args extends unknown[]>(
 ) => (...args: Args) => Promise<Result<NoVoid<Awaited<T>>, E>>;
 
 /**
- * Takes a function and returns a version that returns results.
+ * Takes a function and returns a version that returns results asynchronously.
  *
+ * Examples:
  * ```ts
  * import fs from 'node:fs/promises';
  *
@@ -73,9 +92,10 @@ function resultify<T, E, Args extends unknown[]>(
     fn: (...args: Args) => T | Promise<T>,
 ): (...args: Args) => Promise<Result<NoVoid<Awaited<T>>, E>>;
 /**
- * Takes a function and returns a version that returns results.
+ * Takes a function and returns a version that returns results asynchronously.
  * This overloaded function allows you to specify the error type.
  *
+ * Examples:
  * ```ts
  * import fs from 'node:fs/promises';
  *

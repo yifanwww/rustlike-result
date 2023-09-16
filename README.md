@@ -60,7 +60,7 @@ The Rust-like `Result` implements the following methods:
 | orElse                    | [or_else]              |
 | transpose                 | [transpose]            |
 
-Unlike Rust, JavaScript doesn't have the 'Ownership' feature, so some API like `as_ref` is not necessary. These implementations are not implemented:
+Unlike Rust, JavaScript doesn't have the 'Ownership' feature, so some API like `as_ref` are not necessary. These implementations are not implemented:
 
 ```md
 <!-- implementations -->
@@ -128,6 +128,44 @@ There is no built-in deep-equal support in this package for array, object and so
 There is a [proposal] (stage 2) that introduces `Record` and `Tuple` which are compared by content rather than identity. In the future, we can use `Record` and `Tuple` in `Result` so that we don't need to implement custom equality comparison function.
 
 [proposal]: https://github.com/tc39/proposal-record-tuple
+
+## More Helper Functions
+### resultify
+
+Takes a function and returns a version that returns results asynchronously.
+
+```ts
+import fs from 'node:fs/promises';
+
+const copyFile1 = resultify(fs.copyFile);
+const copyFile2 = resultify<Error>()(fs.copyFile);
+```
+
+### resultify.sync
+
+Takes a function and returns a version that returns results synchronously.
+
+```ts
+/**
+ * @throws {Error} Some error messages
+ */
+function fn(): string {
+    // do something
+}
+
+const fn1 = resultify.sync(fn);
+const fn1 = resultify.sync<Error>()(fn);
+```
+
+In the context where async functions are not allowed, you can use this function to resultify the sync function.
+
+### resultify.promise
+
+Takes a promise and returns a new promise that contains a result.
+
+```ts
+const result = await resultify.promise(promise);
+```
 
 ## License
 
