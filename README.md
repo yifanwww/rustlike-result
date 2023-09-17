@@ -167,6 +167,9 @@ Takes a promise and returns a new promise that contains a result.
 const result = await resultify.promise(promise);
 ```
 
+Due to the limit of TypeScript,it's impossible to resultify overloaded functions perfectly that the returned functions are still overloaded.
+This function allows you to resultify the promise that the overloaded functions return.
+
 ## Write Your Own Implementation of `Result`?
 
 Although you do have the ability to do so, it's not recommended that you write your own implementation.

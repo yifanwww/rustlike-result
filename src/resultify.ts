@@ -10,6 +10,10 @@ type NoVoid<T> = T extends void ? undefined : T;
  * ```ts
  * const result = await resultify.promise(promise);
  * ```
+ *
+ * Due to the limit of TypeScript,it's impossible to resultify overloaded functions perfectly that
+ * the returned functions are still overloaded.
+ * This function allows you to resultify the promise that the overloaded functions return.
  */
 async function resultifyPromise<T, E>(promise: Promise<T>): Promise<Result<NoVoid<T>, E>> {
     try {
