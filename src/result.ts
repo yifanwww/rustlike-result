@@ -303,9 +303,6 @@ export class RustlikeResult<T, E> implements Result<T, E> {
     }
 
     private static _equal(self: unknown, other: unknown): boolean {
-        // TODO: find a better way to check if `self` and `other` is `Result`
-        // to support user customized `Result` implementation.
-
         const isSelfResult = self instanceof RustlikeResult;
         const isOtherResult = other instanceof RustlikeResult;
 

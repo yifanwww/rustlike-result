@@ -167,6 +167,12 @@ Takes a promise and returns a new promise that contains a result.
 const result = await resultify.promise(promise);
 ```
 
+## Write Your Own Implementation of `Result`?
+
+Although you do have the ability to do so, it's not recommended that you write your own implementation.
+
+The default implementation that this package provides should meet your requirements in most cases. If if leaks some abilities please feel free to file an issue.
+
 ## License
 
 MIT

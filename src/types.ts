@@ -13,26 +13,8 @@ export type Optional<T> = T | undefined;
 /**
  * The interface of `Result` that defines the methods that `Result` should support.
  *
- * This package includes a default implementation of `Result` and factory functions `Ok` and `Err`.
- * They should satisify your requirements in most cases.
- *
- * But you still can implement this interface with your own class, and implement your own `Ok` and `Err`.
- *
- * The recommended type definitions of `Ok` and `Err` are:
- * - `function Ok<T>(value: T): Result<T, never>`;
- * - `function Ok<T, E>(value: T): Result<T, E>`;
- * - `function Err<E>(error: E): Result<never, E>`;
- * - `function Err<T, E>(error: E): Result<T, E>`;
- *
- * so that you can use it easily:
- * ```ts
- * const result1 = Ok(1);
- * const result2 = Ok<number, string>(2);
- * const result3: Result<number, string> = Ok(3);
- * const result4 = Err('Some error message');
- * const result5 = Err<number, string>('Some error message');
- * const result6: Result<number, string> = Err('Some error message');
- * ```
+ * This package includes a default implementation of `Result` and factory functions `Ok` and `Err`,
+ * which should meet your requirements in most cases.
  *
  * ref:
  * - https://doc.rust-lang.org/std/result/index.html
