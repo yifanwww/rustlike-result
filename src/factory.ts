@@ -6,21 +6,12 @@ import type { Result } from './types';
  *
  * Examples:
  * ```ts
- * const result = Ok(1);
+ * const result1 = Ok(1);
+ * const result2 = Ok<number, string>(1);
+ * const result3: Result<number, string> = Ok(2);
  * ```
  */
-export function Ok<T>(value: T): Result<T, never>;
-/**
- * Creates a `Result` that contains the success value.
- *
- * Examples:
- * ```ts
- * const result1 = Ok<number, string>(1);
- * const result2: Result<number, string> = Ok(2);
- * ```
- */
-export function Ok<T, E>(value: T): Result<T, E>;
-export function Ok<T, E>(value: T): Result<T, E> {
+export function Ok<T, E = never>(value: T): Result<T, E> {
     return RustlikeResult.Ok(value);
 }
 
