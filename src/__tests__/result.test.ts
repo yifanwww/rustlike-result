@@ -110,8 +110,8 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
 
     it('should map itself to another result', () => {
         const map = mapFactory();
-        expect(Ok(1).map(map).ok()).toBe('1');
-        expect(Err('Some error message').map(map).ok()).toBeUndefined();
+        expect(Ok(1).map(map)).toStrictEqual(Ok('1'));
+        expect(Err('Some error message').map(map)).toStrictEqual(Err('Some error message'));
     });
 
     it('should call map fn only once if itself is `Ok`', () => {
@@ -192,8 +192,8 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
 
     it('should map itself to another result', () => {
         const map = mapFactory();
-        expect(Ok(1).mapErr(map).ok()).toBe(1);
-        expect(Err(2).mapErr(map).err()).toBe('error code: 2');
+        expect(Ok(1).mapErr(map)).toStrictEqual(Ok(1));
+        expect(Err(2).mapErr(map)).toStrictEqual(Err('error code: 2'));
     });
 
     it('should call map fn only once if itself is `Err`', () => {
@@ -278,43 +278,25 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.and.name}\``, () => {
     it('should return `res`', () => {
-        expect(op1().and(Ok(667)).ok()).toBe(667);
-        expect(op1().and(Err('bad')).err()).toBe('bad');
+        expect(op1().and(Ok(667))).toStrictEqual(Ok(667));
+        expect(op1().and(Err('bad'))).toStrictEqual(Err('bad'));
     });
 
     it('should return the `Err` result', () => {
-        expect(op2().and(Ok(667)).err()).toBe('sadface');
-        expect(op2().and(Err('bad')).err()).toBe('sadface');
+        expect(op2().and(Ok(667))).toStrictEqual(Err('sadface'));
+        expect(op2().and(Err('bad'))).toStrictEqual(Err('sadface'));
     });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.andThen.name}\``, () => {
     it('should return `res`', () => {
-        expect(
-            op1()
-                .andThen((num) => Ok(num + 1))
-                .ok(),
-        ).toBe(667);
-
-        expect(
-            op1()
-                .andThen(() => Err('bad'))
-                .err(),
-        ).toBe('bad');
+        expect(op1().andThen((num) => Ok(num + 1))).toStrictEqual(Ok(667));
+        expect(op1().andThen(() => Err('bad'))).toStrictEqual(Err('bad'));
     });
 
     it('should return the `Err` result', () => {
-        expect(
-            op2()
-                .andThen((num) => Ok(num + 1))
-                .err(),
-        ).toBe('sadface');
-
-        expect(
-            op2()
-                .andThen(() => Err('bad'))
-                .err(),
-        ).toBe('sadface');
+        expect(op2().andThen((num) => Ok(num + 1))).toStrictEqual(Err('sadface'));
+        expect(op2().andThen(() => Err('bad'))).toStrictEqual(Err('sadface'));
     });
 
     it('should call op fn only once if itself is `Ok`', () => {
@@ -334,43 +316,25 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.or.name}\``, () => {
     it('should return the `Ok` result', () => {
-        expect(op1().or(Ok(667)).ok()).toBe(666);
-        expect(op1().or(Err('bad')).ok()).toBe(666);
+        expect(op1().or(Ok(667))).toStrictEqual(Ok(666));
+        expect(op1().or(Err('bad'))).toStrictEqual(Ok(666));
     });
 
     it('should return `res`', () => {
-        expect(op2().or(Ok(667)).ok()).toBe(667);
-        expect(op2().or(Err('bad')).err()).toBe('bad');
+        expect(op2().or(Ok(667))).toStrictEqual(Ok(667));
+        expect(op2().or(Err('bad'))).toStrictEqual(Err('bad'));
     });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.orElse.name}\``, () => {
     it('should return the `Ok` result', () => {
-        expect(
-            op1()
-                .orElse(() => Ok(667))
-                .ok(),
-        ).toBe(666);
-
-        expect(
-            op1()
-                .orElse((err) => Err(err))
-                .ok(),
-        ).toBe(666);
+        expect(op1().orElse(() => Ok(667))).toStrictEqual(Ok(666));
+        expect(op1().orElse((err) => Err(err))).toStrictEqual(Ok(666));
     });
 
     it('should return `res`', () => {
-        expect(
-            op2()
-                .orElse(() => Ok(667))
-                .ok(),
-        ).toBe(667);
-
-        expect(
-            op2()
-                .orElse((err) => Err(err))
-                .err(),
-        ).toBe('sadface');
+        expect(op2().orElse(() => Ok(667))).toStrictEqual(Ok(667));
+        expect(op2().orElse((err) => Err(err))).toStrictEqual(Err('sadface'));
     });
 
     it('should call op fn only once if itself is `Err`', () => {
@@ -390,11 +354,11 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.transpose.name}\``, () => {
     it('should transpose itself to an optional of a `Result`', () => {
-        expect(Ok<number | undefined | null, string>(1).transpose()!.ok()).toBe(1);
+        expect(Ok<number | undefined | null, string>(1).transpose()).toStrictEqual(Ok(1));
         expect(Ok<number | undefined | null, string>(undefined).transpose()).toBeUndefined();
         expect(Ok<number | undefined | null, string>(null).transpose()).toBeUndefined();
-        expect(Err<number | undefined | null, string>('Some error message').transpose()!.err()).toBe(
-            'Some error message',
+        expect(Err<number | undefined | null, string>('Some error message').transpose()).toStrictEqual(
+            Err('Some error message'),
         );
     });
 });
