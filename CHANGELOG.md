@@ -1,4 +1,13 @@
 # CHANGELOG
+## rustlike-result v0.3.0 (2023-09-23)
+### Features
+
+Adds JSON serialization and deserialization support with these functions:
+- `ResultJSON.serialize`
+- `ResultJSON.deserialize`
+- `createResultModelSchema`
+- `resultPropSchema`
+
 ## rustlike-result v0.2.0 (2023-09-17)
 ### Features
 
