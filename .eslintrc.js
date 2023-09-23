@@ -40,7 +40,7 @@ const naming = [
 
     { selector: 'objectLiteralProperty', format: null },
 
-    { selector: 'variable', format: ['camelCase', 'UPPER_CASE'], leadingUnderscore: 'allow' },
+    { selector: 'variable', format: ['camelCase', 'PascalCase', 'UPPER_CASE'], leadingUnderscore: 'allow' },
 ];
 
 module.exports = {
