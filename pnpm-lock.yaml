@@ -62,6 +62,9 @@ devDependencies:
   semver:
     specifier: ^7.5.4
     version: 7.5.4
+  serializr:
+    specifier: ^3.0.2
+    version: 3.0.2
   typescript:
     specifier: 5.2.2
     version: 5.2.2
@@ -3909,6 +3912,10 @@ packages:
     hasBin: true
     dependencies:
       lru-cache: 6.0.0
+    dev: true
+
+  /serializr@3.0.2:
+    resolution: {integrity: sha512-bCACTuCiAEjtk1NxkATc3yz2j/8OoaWYxRkC4D5yq0ikZeLO7KLmmI/owmvJ/N4vS9SX4fZTXgSmsNzWtxDJ/Q==}
     dev: true
 
   /shebang-command@2.0.0:

@@ -17,8 +17,20 @@ This package implement a Rust-like `Result`, nearly all methods are similar to t
 ```ts
 const ok = Ok(1);
 const err = Err('Some error message');
+```
 
-// TODO: complex examples
+```ts
+import fs, { Dirent, Stats } from 'node:fs/promises';
+
+const result1: Result<Stats, Error> = await fs
+    .stat(path)
+    .then((value) => Ok(value))
+    .catch((err) => Err(err));
+
+const result2: Result<Dirent[], Error> = await fs
+    .readdir(path, { withFileTypes: true })
+    .then((value) => Ok(value))
+    .catch((err) => Err(err));
 ```
 
 [result]: https://doc.rust-lang.org/std/result/enum.Result.html
@@ -129,7 +141,7 @@ There is a [proposal] (stage 2) that introduces `Record` and `Tuple` which are c
 
 [proposal]: https://github.com/tc39/proposal-record-tuple
 
-## More Helper Functions
+## Helpers for Resultifying
 ### resultify
 
 Takes a function and returns a version that returns results asynchronously.
@@ -169,6 +181,95 @@ const result = await resultify.promise(promise);
 
 Due to the limit of TypeScript,it's impossible to resultify overloaded functions perfectly that the returned functions are still overloaded.
 This function allows you to resultify the promise that the overloaded functions return.
+
+## JSON Serialization & Deserialization
+
+You can always write your (de)serialization implementation for your use cases. But before you write it, you can check following helper functions to see if they can help you.
+
+### Built-in Simple Implementation
+
+This package provides a simple implementation for JSON (de)serialization.
+
+```ts
+// serialization
+ResultJSON.serialize(Ok(1)) // { type: 'ok', value: 1 }
+ResultJSON.serialize(Err('Some error message')) // { type: 'err', value: 'Some error message' }
+ResultJSON.serialize(Ok(Ok(2))) // { type: 'ok', value: { type: 'ok', value: 2 } }
+
+// deserialization
+ResultJSON.deserialize({ type: 'ok', value: 1 }) // Ok(1)
+ResultJSON.deserialize({ type: 'err', value: 'Some error message' }) // Err('Some error message')
+ResultJSON.deserialize({ type: 'ok', value: { type: 'ok', value: 2 } }) // Ok({ type: 'ok', value: 2 }) *the nested `Result` won't be deserialized*
+```
+
+This simple implementation only covers a few use cases. It may not be suitable if:
+- the `Result` has a nested `Result`
+- the `Result` is in a complex structure
+- the `Result` contains a complex object, such as a class instance, requiring custom (de)serialization
+
+### Community (De)Serialization Solutions
+
+There're some great JSON (de)serialization libraries for complex objects. This package also provides some helper functions to help you use some of them.
+
+#### serializr
+
+Please install `serializr` first, then you can use two helper functions `resultPropSchema` and `createResultModelSchema` as shown in the following example:
+
+```ts
+import { createResultModelSchema, resultPropSchema } from 'rustlike-result/serializr';
+
+class User {
+    username: string;
+    password: string;
+}
+
+const userSchema = createModelSchema(User, {
+    username: primitive(),
+    password: primitive(),
+})
+
+// example 1
+
+class Job {
+    result: Result<User[], string>;
+}
+
+const schema = createModelSchema(Job, {
+    result: resultPropSchema({ ok: list(object(userSchema)) }),
+});
+
+const job: Job;
+serialize(schema, job)
+// {
+//   result: {
+//     type: 'ok',
+//     value: [{ username: '<name>', password: '<password>' }, { ... }, ...],
+//   },
+// }
+
+// example 2
+
+const schema = createResultModelSchema({ ok: list(object(userSchema)) });
+
+const result: Result<User[], string>;
+serialize(schema, result)
+// {
+//   type: 'ok',
+//   value: [{ username: '<name>', password: '<password>' }, { ... }, ...],
+// }
+```
+
+#### class-transformer
+
+TODO.
+
+### JSON Representation Format
+
+The format of the JSON object follows the [adjacently tagged enum representation] in Rust library Serde.
+The reason it doesn't follow the [externally tagged enum representation] (the default in Serde) is that, the externally tagged representation of `Ok(undefined)` and `Err(undefined)` are both `{}`, therefore we can't tell whether `{}` should be deserialized to `Ok(undefined)` or `Err(undefined)`.
+
+[adjacently tagged enum representation]: https://serde.rs/enum-representations.html#adjacently-tagged
+[externally tagged enum representation]: https://serde.rs/enum-representations.html#externally-tagged
 
 ## Write Your Own Implementation of `Result`?
 

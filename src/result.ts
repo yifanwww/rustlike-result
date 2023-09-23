@@ -1,6 +1,5 @@
 import type { Optional, Result } from './types';
-
-type ResultType = 'ok' | 'err';
+import type { ResultType } from './types.internal';
 
 /**
  * The default implementation of interface `Result`.
@@ -14,9 +13,9 @@ export class RustlikeResult<T, E> implements Result<T, E> {
     private _value?: T;
     private _error?: E;
 
-    private constructor(type: 'ok', value: T);
-    private constructor(type: 'err', error: E);
-    private constructor(type: ResultType, value: T | E) {
+    constructor(type: 'ok', value: T);
+    constructor(type: 'err', error: E);
+    constructor(type: ResultType, value: T | E) {
         if (type === 'ok') {
             this._type = 'ok';
             this._value = value as T;

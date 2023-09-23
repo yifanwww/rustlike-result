@@ -5,6 +5,18 @@
     "main": "lib-commonjs/index.js",
     "module": "lib/index.js",
     "types": "lib/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./lib/index.d.ts",
+            "import": "./lib/index.js",
+            "default": "./lib-commonjs/index.js"
+        },
+        "./serializr": {
+            "types": "./lib/json/serializr.d.ts",
+            "import": "./lib/json/serializr.js",
+            "default": "./lib-commonjs/json/serializr.js"
+        }
+    },
     "homepage": "https://github.com/yifanwww/rustlike-result#readme",
     "license": "MIT",
     "author": "yifanwww <yifanw1101@gmail.com> (https://github.com/yifanwww)",
@@ -50,7 +62,16 @@
         "prettier": "3.0.3",
         "rimraf": "^5.0.1",
         "semver": "^7.5.4",
+        "serializr": "^3.0.2",
         "typescript": "5.2.2"
+    },
+    "peerDependencies": {
+        "serializr": "^3.0.0"
+    },
+    "peerDependenciesMeta": {
+        "serializr": {
+            "optional": true
+        }
     },
     "keywords": [
         "rust",

@@ -40,7 +40,7 @@ const naming = [
 
     { selector: 'objectLiteralProperty', format: null },
 
-    { selector: 'variable', format: ['camelCase', 'UPPER_CASE'], leadingUnderscore: 'allow' },
+    { selector: 'variable', format: ['camelCase', 'PascalCase', 'UPPER_CASE'], leadingUnderscore: 'allow' },
 ];
 
 module.exports = {
@@ -283,6 +283,10 @@ module.exports = {
 
         // https://typescript-eslint.io/rules/no-use-before-define
         '@typescript-eslint/no-use-before-define': 'error',
+
+        // https://typescript-eslint.io/rules/no-useless-constructor
+        'no-useless-constructor': 'off',
+        '@typescript-eslint/no-useless-constructor': 'error',
 
         // https://typescript-eslint.io/rules/restrict-template-expressions
         '@typescript-eslint/restrict-template-expressions': [

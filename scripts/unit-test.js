@@ -13,7 +13,6 @@ function unitTest(watch) {
         '--config',
         require.resolve('./jest/jest.config.js'),
         watch ? '--watch' : '--coverage',
-        '--passWithNoTests',
         ...argv,
     );
 
