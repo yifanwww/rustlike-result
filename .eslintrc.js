@@ -284,6 +284,10 @@ module.exports = {
         // https://typescript-eslint.io/rules/no-use-before-define
         '@typescript-eslint/no-use-before-define': 'error',
 
+        // https://typescript-eslint.io/rules/no-useless-constructor
+        'no-useless-constructor': 'off',
+        '@typescript-eslint/no-useless-constructor': 'error',
+
         // https://typescript-eslint.io/rules/restrict-template-expressions
         '@typescript-eslint/restrict-template-expressions': [
             'error',
