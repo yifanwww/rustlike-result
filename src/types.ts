@@ -36,6 +36,13 @@ export interface Result<T, E> {
     isOkAnd(fn: (value: T) => boolean): boolean;
 
     /**
+     * Asynchronously returns `true` if the result is `Ok` and the value inside of it matches a predicate.
+     *
+     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_ok_and
+     */
+    isOkAndAsync(fn: (value: T) => boolean | Promise<boolean>): Promise<boolean>;
+
+    /**
      * Returns `true` if the result is `Err`.
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_err
@@ -48,6 +55,13 @@ export interface Result<T, E> {
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_err_and
      */
     isErrAnd(fn: (err: E) => boolean): boolean;
+
+    /**
+     * Asynchronously returns `true` if the result is `Err` and the value inside of it matches a predicate.
+     *
+     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_err_and
+     */
+    isErrAndAsync(fn: (err: E) => boolean | Promise<boolean>): Promise<boolean>;
 
     /**
      * Converts from `Result<T, E>` to `Optional<T>` and discarding the error, if any.
@@ -74,6 +88,16 @@ export interface Result<T, E> {
     map<U>(op: (value: T) => U): Result<U, E>;
 
     /**
+     * Asynchronously maps a `Result<T, E>` to `Result<U, E>` by applying a function to a contained `Ok` value,
+     * leaving an `Err` value untouched.
+     *
+     * This function can be used to compose the results of two functions.
+     *
+     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map
+     */
+    mapAsync<U>(op: (value: T) => U | Promise<U>): Promise<Result<U, E>>;
+
+    /**
      * Returns the provided `fallback` (if `Err`), or applies a function to the contained value (if `Ok`).
      *
      * Arguments passed to `mapOr` are eagerly evaluated;
@@ -83,6 +107,18 @@ export interface Result<T, E> {
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or
      */
     mapOr<U>(fallback: U, map: (value: T) => U): U;
+
+    /**
+     * Asynchronously returns the provided `fallback` (if `Err`),
+     * or applies a function to the contained value (if `Ok`).
+     *
+     * Arguments passed to `mapOr` are eagerly evaluated;
+     * if you are passing the result of a function call,
+     * it is recommended to use `mapOrElse`, which is lazily evaluated.
+     *
+     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or
+     */
+    mapOrAsync<U>(fallback: U, map: (value: T) => U | Promise<U>): Promise<U>;
 
     /**
      * Maps a `Result<T, E>` to `U` by applying fallback function `fallback` to a contained `Err` value,
@@ -95,6 +131,16 @@ export interface Result<T, E> {
     mapOrElse<U>(fallback: (err: E) => U, map: (value: T) => U): U;
 
     /**
+     * Asynchronously maps a `Result<T, E>` to `U` by applying fallback function `fallback` to a contained `Err` value,
+     * or function `map` to a contained `Ok` value.
+     *
+     * This function can be used to unpack a successful result while handling an error.
+     *
+     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or_else
+     */
+    mapOrElseAsync<U>(fallback: (err: E) => U | Promise<U>, map: (value: T) => U | Promise<U>): Promise<U>;
+
+    /**
      * Maps a `Result<T, E>` to `Result<T, F>` by applying a function to a contained `Err` value,
      * leaving an `Ok` value untouched.
      *
@@ -103,6 +149,16 @@ export interface Result<T, E> {
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_err
      */
     mapErr<F>(op: (err: E) => F): Result<T, F>;
+
+    /**
+     * Asynchronously maps a `Result<T, E>` to `Result<T, F>` by applying a function to a contained `Err` value,
+     * leaving an `Ok` value untouched.
+     *
+     * This function can be used to pass through a successful result while handling an error.
+     *
+     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_err
+     */
+    mapErrAsync<F>(op: (err: E) => F | Promise<F>): Promise<Result<T, F>>;
 
     /**
      * Returns the contained `Ok` value.
@@ -159,6 +215,13 @@ export interface Result<T, E> {
     unwrapOrElse(op: (err: E) => T): T;
 
     /**
+     * Asynchronously returns the contained `Ok` value or computes it from a closure.
+     *
+     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or_else
+     */
+    unwrapOrElseAsync(op: (err: E) => T | Promise<T>): Promise<T>;
+
+    /**
      * Returns the contained `Ok` value, without checking that the value is not an `Err`.
      *
      * **SAFETY**: Calling this method on an `Err` is undefined behavior.
@@ -198,6 +261,15 @@ export interface Result<T, E> {
     andThen<U>(op: (value: T) => Result<U, E>): Result<U, E>;
 
     /**
+     * Asynchronously calls `op` if itself is `Ok`, otherwise returns the `Err` value of itself.
+     *
+     * This function can be used for control flow based on Result values.
+     *
+     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.and_then
+     */
+    andThenAsync<U>(op: (value: T) => Result<U, E> | Promise<Result<U, E>>): Promise<Result<U, E>>;
+
+    /**
      * Returns `res` if itself is `Err`, otherwise returns the `Ok` value of itself.
      *
      * Arguments passed to `or` are eagerly evaluated;
@@ -214,7 +286,16 @@ export interface Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.or_else
      */
-    orElse<F>(op: (error: E) => Result<T, F>): Result<T, F>;
+    orElse<F>(op: (err: E) => Result<T, F>): Result<T, F>;
+
+    /**
+     * Asynchronously calls `op` if the result is `Err`, otherwise returns the `Ok` value of self.
+     *
+     * This function can be used for control flow based on result values.
+     *
+     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.or_else
+     */
+    orElseAsync<F>(op: (err: E) => Result<T, F> | Promise<Result<T, F>>): Promise<Result<T, F>>;
 
     /**
      * Transposes a `Result` of an optional value into an optional of a `Result`.

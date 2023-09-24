@@ -46,31 +46,31 @@ This package doesn't implement Rust-like `Option`. Handling `undefined`/`null` i
 
 The Rust-like `Result` implements the following methods:
 
-| Rust-like `Result` method | Rust `Result` method   |
-| :------------------------ | :--------------------- |
-| isOk                      | [is_ok]                |
-| isOkAnd                   | [is_ok_and]            |
-| isErr                     | [is_err]               |
-| isErrAnd                  | [is_err_and]           |
-| ok                        | [ok]                   |
-| err                       | [err]                  |
-| map                       | [map]                  |
-| mapOr                     | [map_or]               |
-| mapOrElse                 | [map_or_else]          |
-| mapErr                    | [map_err]              |
-| expect                    | [expect]               |
-| unwrap                    | [unwrap]               |
-| expectErr                 | [expect_err]           |
-| unwrapErr                 | [unwrap_err]           |
-| unwrapOr                  | [unwrap_or]            |
-| unwrapOrElse              | [unwrap_or_else]       |
-| unwrapUnchecked           | [unwrap_unchecked]     |
-| unwrapErrUnchecked        | [unwrap_err_unchecked] |
-| and                       | [and]                  |
-| andThen                   | [and_then]             |
-| or                        | [or]                   |
-| orElse                    | [or_else]              |
-| transpose                 | [transpose]            |
+| Rust-like `Result` method        | Rust `Result` method   |
+| :------------------------------- | :--------------------- |
+| isOk                             | [is_ok]                |
+| isOkAnd / isOkAndAsync           | [is_ok_and]            |
+| isErr                            | [is_err]               |
+| isErrAnd / isErrAndAsync         | [is_err_and]           |
+| ok                               | [ok]                   |
+| err                              | [err]                  |
+| map / mapAsync                   | [map]                  |
+| mapOr / mapOrAsync               | [map_or]               |
+| mapOrElse / mapOrElseAsync       | [map_or_else]          |
+| mapErr / mapErrAsync             | [map_err]              |
+| expect                           | [expect]               |
+| unwrap                           | [unwrap]               |
+| expectErr                        | [expect_err]           |
+| unwrapErr                        | [unwrap_err]           |
+| unwrapOr                         | [unwrap_or]            |
+| unwrapOrElse / unwrapOrElseAsync | [unwrap_or_else]       |
+| unwrapUnchecked                  | [unwrap_unchecked]     |
+| unwrapErrUnchecked               | [unwrap_err_unchecked] |
+| and                              | [and]                  |
+| andThen / andThenAsync           | [and_then]             |
+| or                               | [or]                   |
+| orElse / orElseAsync             | [or_else]              |
+| transpose                        | [transpose]            |
 
 Unlike Rust, JavaScript doesn't have the 'Ownership' feature, so some API like `as_ref` are not necessary. These implementations are not implemented:
 
@@ -121,6 +121,18 @@ hash
 [or]: https://doc.rust-lang.org/std/result/enum.Result.html#method.or
 [or_else]: https://doc.rust-lang.org/std/result/enum.Result.html#method.or_else
 [transpose]: https://doc.rust-lang.org/std/result/enum.Result.html#method.transpose
+
+### Asynchronous Methods
+
+Some of the methods have asynchronous versions to help you handle asynchronous logic, for example:
+```ts
+const result = await Ok(1)
+    .andThenAsync(asyncFn1)
+    .then((result) => result.andThenAsync(asyncFn2))
+    .then((result) => result.andThenAsync(asyncFn3))
+    .then((result) => result.andThenAsync(asyncFn4))
+    .then((result) => result.andThenAsync(asyncFn5));
+```
 
 ## More Methods
 ### equal
