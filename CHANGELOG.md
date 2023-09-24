@@ -1,4 +1,18 @@
 # CHANGELOG
+## rustlike-result v0.3.1 (2023-09-24)
+### Features
+
+Add async methods:
+- `isOkAndAsync`
+- `isErrAndAsync`
+- `mapAsync`
+- `mapOrAsync`
+- `mapOrElseAsync`
+- `mapErrAsync`
+- `unwrapOrElseAsync`
+- `andThenAsync`
+- `orElseAsync`
+
 ## rustlike-result v0.3.0 (2023-09-23)
 ### Features
 
