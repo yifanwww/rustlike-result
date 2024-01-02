@@ -1,4 +1,9 @@
 # CHANGELOG
+## rustlike-result v0.3.2 (2024-01-02)
+### Bug Fixes
+
+Correct `exports` in package.json, run commonjs code in Node.js environment, while the bundlers can still bundle the fake esm code.
+
 ## rustlike-result v0.3.1 (2023-09-24)
 ### Features
 
