@@ -2,21 +2,23 @@
     "name": "rustlike-result",
     "version": "0.3.1",
     "description": "Rust-like Result for Javascript",
-    "main": "lib-commonjs/index.js",
-    "module": "lib/index.js",
-    "types": "lib/index.d.ts",
     "exports": {
         ".": {
             "types": "./lib/index.d.ts",
+            "node": "./lib-commonjs/index.js",
             "import": "./lib/index.js",
             "default": "./lib-commonjs/index.js"
         },
         "./serializr": {
             "types": "./lib/json/serializr.d.ts",
+            "node": "./lib-commonjs/json/serializr.js",
             "import": "./lib/json/serializr.js",
             "default": "./lib-commonjs/json/serializr.js"
         }
     },
+    "main": "lib-commonjs/index.js",
+    "module": "lib/index.js",
+    "types": "lib/index.d.ts",
     "homepage": "https://github.com/yifanwww/rustlike-result#readme",
     "license": "MIT",
     "author": "yifanwww <yifanw1101@gmail.com> (https://github.com/yifanwww)",
