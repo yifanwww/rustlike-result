@@ -75,6 +75,11 @@
             "optional": true
         }
     },
+    "files": [
+        "CHANGELOG.md",
+        "lib",
+        "lib-commonjs"
+    ],
     "keywords": [
         "rust",
         "rustlike",
