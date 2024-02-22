@@ -35,6 +35,7 @@
          */
         "strict": true,
         "stripInternal": true,
-        "target": "ES2018"
+        "target": "ES2018",
+        "verbatimModuleSyntax": true
     }
 }
