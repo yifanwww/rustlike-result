@@ -1,3 +1,5 @@
+import { describe, expect, it, jest } from '@jest/globals';
+
 import { Err, Ok } from '../factory';
 import { RustlikeResult } from '../result';
 import type { Result } from '../types';

@@ -1,3 +1,5 @@
+import { describe, expect, it } from '@jest/globals';
+
 import { resultify } from '../resultify';
 
 function syncFn(throws: boolean) {

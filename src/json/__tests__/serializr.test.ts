@@ -1,5 +1,6 @@
 /* eslint-disable max-classes-per-file */
 
+import { describe, expect, it } from '@jest/globals';
 import { createModelSchema, deserialize, list, object, primitive, serialize } from 'serializr';
 
 import { Err, Ok } from '../../factory';
