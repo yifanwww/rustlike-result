@@ -3,8 +3,8 @@ import type { AdditionalPropArgs, ModelSchema, PropDeserializer, PropSchema, Pro
 
 import { Err, Ok } from '../factory';
 import { RustlikeResult } from '../result';
-import type { Optional, Result } from '../types';
-import type { ResultType } from '../types.internal';
+import type { Result } from '../types';
+import type { Optional, ResultType } from '../types.internal';
 
 import type { ResultJson } from './types';
 

@@ -1,5 +1,5 @@
-import type { Optional, Result } from './types';
-import type { ResultType } from './types.internal';
+import type { Result } from './types';
+import type { Optional, ResultType } from './types.internal';
 
 /**
  * The default implementation of interface `Result`.
