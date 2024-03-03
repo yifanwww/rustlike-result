@@ -58,6 +58,8 @@ The Rust-like `Result` implements the following methods:
 | mapOr / mapOrAsync               | [map_or]               |
 | mapOrElse / mapOrElseAsync       | [map_or_else]          |
 | mapErr / mapErrAsync             | [map_err]              |
+| inspect                          | [inspect]              |
+| inspectErr                       | [inspect_err]          |
 | expect                           | [expect]               |
 | unwrap                           | [unwrap]               |
 | expectErr                        | [expect_err]           |
@@ -108,6 +110,8 @@ hash
 [map_or]: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or
 [map_or_else]: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or_else
 [map_err]: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_err
+[inspect]: https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect
+[inspect_err]: https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect_err
 [expect]: https://doc.rust-lang.org/std/result/enum.Result.html#method.expect
 [unwrap]: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap
 [expect_err]: https://doc.rust-lang.org/std/result/enum.Result.html#method.expect_err
