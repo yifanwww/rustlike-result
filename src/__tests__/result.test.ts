@@ -455,6 +455,62 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
     });
 });
 
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.inspect.name}\``, () => {
+    it('should return itself', () => {
+        const fn = jest.fn(() => {
+            // do something
+        });
+        const okResult = Ok(1);
+        const errResult = Err(0);
+        expect(okResult.inspect(fn)).toBe(okResult);
+        expect(errResult.inspect(fn)).toBe(errResult);
+    });
+
+    it('should inspect ok value', () => {
+        const fn = jest.fn((value: number) => expect(value).toBe(1));
+        expect(fn).toHaveBeenCalledTimes(0);
+        Ok(1).inspect(fn);
+        expect(fn).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not inspect err value', () => {
+        const fn = jest.fn(() => {
+            // do something
+        });
+        expect(fn).toHaveBeenCalledTimes(0);
+        Err(1).inspect(fn);
+        expect(fn).toHaveBeenCalledTimes(0);
+    });
+});
+
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.inspectErr.name}\``, () => {
+    it('should return itself', () => {
+        const fn = jest.fn(() => {
+            // do something
+        });
+        const okResult = Ok(1);
+        const errResult = Err(0);
+        expect(okResult.inspectErr(fn)).toBe(okResult);
+        expect(errResult.inspectErr(fn)).toBe(errResult);
+    });
+
+    it('should not inspect ok value', () => {
+        const fn = jest.fn(() => {
+            // do something
+        });
+        expect(fn).toHaveBeenCalledTimes(0);
+        Ok(1).inspectErr(fn);
+        expect(fn).toHaveBeenCalledTimes(0);
+    });
+
+    it('should inspect err value', () => {
+        const fn = jest.fn((value: number) => expect(value).toBe(1));
+        expect(fn).toHaveBeenCalledTimes(0);
+        Err(1).inspectErr(fn);
+        expect(fn).toHaveBeenCalledTimes(1);
+    });
+});
+
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.expect.name}\``, () => {
     it('should unwrap itself to get the contained `Ok` value', () => {
         expect(Ok(1).expect('Operation type should be correct')).toBe(1);

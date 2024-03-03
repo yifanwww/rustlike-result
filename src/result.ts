@@ -210,6 +210,30 @@ export class RustlikeResult<T, E> implements Result<T, E> {
         return this.isOk() ? RustlikeResult.Ok(this._value!) : RustlikeResult.Err(await op(this._error!));
     }
 
+    /**
+     * Calls the provided closure with a reference to the contained value if `Ok`.
+     *
+     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect
+     */
+    inspect(fn: (value: T) => void): this {
+        if (this.isOk()) {
+            fn(this.unwrapUnchecked());
+        }
+        return this;
+    }
+
+    /**
+     * Calls the provided closure with a reference to the contained value if `Err`.
+     *
+     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect_err
+     */
+    inspectErr(fn: (err: E) => void): this {
+        if (this.isErr()) {
+            fn(this.unwrapErrUnchecked());
+        }
+        return this;
+    }
+
     private _unwrapFailed(msg: string, err: unknown): never {
         throw new Error(`${msg}: ${String(err)}`);
     }

@@ -151,6 +151,20 @@ export interface Result<T, E> {
     mapErrAsync<F>(op: (err: E) => F | Promise<F>): Promise<Result<T, F>>;
 
     /**
+     * Calls the provided closure with a reference to the contained value if `Ok`.
+     *
+     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect
+     */
+    inspect(fn: (value: T) => void): this;
+
+    /**
+     * Calls the provided closure with a reference to the contained value if `Err`.
+     *
+     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect_err
+     */
+    inspectErr(fn: (err: E) => void): this;
+
+    /**
      * Returns the contained `Ok` value.
      *
      * Throws Error if itself is `Err`, with a error message provided by the `Err`'s value.
