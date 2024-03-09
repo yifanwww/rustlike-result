@@ -1,5 +1,5 @@
 # CHANGELOG
-## rustlike-result v0.3.2 (2024-03-03)
+## rustlike-result v0.4.0 (2024-03-03)
 ### Breaking Changes
 
 - `Optional` type is no longer exported, you can just simply write `T | undefined`.
