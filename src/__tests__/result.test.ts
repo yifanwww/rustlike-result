@@ -4,12 +4,12 @@ import { Err, Ok } from '../factory';
 import { RustlikeResult } from '../result';
 import type { Result } from '../types';
 
-function op1(): Result<number, string> {
-    return Ok(666);
+function panicFn1(): never {
+    throw new Error('error');
 }
 
-function op2(): Result<number, string> {
-    return Err('sadface');
+function panicFn2() {
+    return Promise.reject(new Error('error'));
 }
 
 describe(`Test static method \`${RustlikeResult.name}.${RustlikeResult.Ok.name}\``, () => {
@@ -54,6 +54,10 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         Err('Some error message').isOkAnd(fn);
         expect(fn).toHaveBeenCalledTimes(0);
     });
+
+    it('should panic if fn panic', () => {
+        expect(() => Ok(2).isOkAnd(panicFn1)).toThrow(Error('error'));
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.isOkAndAsync.name}\``, () => {
@@ -92,6 +96,11 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         await _it(fnFactory1());
         await _it(fnFactory2());
     });
+
+    it('should panic if fn panic', async () => {
+        await expect(() => Ok(2).isOkAndAsync(panicFn1)).rejects.toThrow(Error('error'));
+        await expect(() => Ok(2).isOkAndAsync(panicFn2)).rejects.toThrow(Error('error'));
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.isErr.name}\``, () => {
@@ -128,6 +137,10 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         expect(fn).toHaveBeenCalledTimes(0);
         Ok(123).isErrAnd(fn);
         expect(fn).toHaveBeenCalledTimes(0);
+    });
+
+    it('should panic if fn panic', () => {
+        expect(() => Err(ErrorKind.NOT_FOUND).isErrAnd(panicFn1)).toThrow(Error('error'));
     });
 });
 
@@ -172,6 +185,11 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         await _it(fnFactory1());
         await _it(fnFactory2());
     });
+
+    it('should panic if fn panic', async () => {
+        await expect(() => Err(ErrorKind.NOT_FOUND).isErrAndAsync(panicFn1)).rejects.toThrow(Error('error'));
+        await expect(() => Err(ErrorKind.NOT_FOUND).isErrAndAsync(panicFn2)).rejects.toThrow(Error('error'));
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.ok.name}\``, () => {
@@ -210,6 +228,10 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         Err('Some error message').map(map);
         expect(map).toHaveBeenCalledTimes(0);
     });
+
+    it('should panic if fn panic', () => {
+        expect(() => Ok(1).map(panicFn1)).toThrow(Error('error'));
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.mapAsync.name}\``, () => {
@@ -247,6 +269,11 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         await _it(mapFactory1());
         await _it(mapFactory2());
     });
+
+    it('should panic if fn panic', async () => {
+        await expect(() => Ok(1).mapAsync(panicFn1)).rejects.toThrow(Error('error'));
+        await expect(() => Ok(1).mapAsync(panicFn2)).rejects.toThrow(Error('error'));
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.mapOr.name}\``, () => {
@@ -270,6 +297,10 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         expect(map).toHaveBeenCalledTimes(0);
         Err('Some error message').mapOr(-1, map);
         expect(map).toHaveBeenCalledTimes(0);
+    });
+
+    it('should panic if fn panic', () => {
+        expect(() => Ok(1).mapOr(Err('err'), panicFn1)).toThrow(Error('error'));
     });
 });
 
@@ -308,6 +339,11 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         await _it(mapFactory1());
         await _it(mapFactory2());
     });
+
+    it('should panic if fn panic', async () => {
+        await expect(() => Ok(1).mapOrAsync(Err('err'), panicFn1)).rejects.toThrow(Error('error'));
+        await expect(() => Ok(1).mapOrAsync(Err('err'), panicFn2)).rejects.toThrow(Error('error'));
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.mapOrElse.name}\``, () => {
@@ -341,6 +377,11 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         Err('Some error message').mapOrElse(fallback, map);
         expect(map).toHaveBeenCalledTimes(0);
         expect(fallback).toHaveBeenCalledTimes(1);
+    });
+
+    it('should panic if fn panic', () => {
+        expect(() => Ok(1).mapOrElse(panicFn1, panicFn1)).toThrow(Error('error'));
+        expect(() => Err('err').mapOrElse(panicFn1, panicFn1)).toThrow(Error('error'));
     });
 });
 
@@ -394,6 +435,13 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         await _it(mapFactory1(), fallbackFactory1());
         await _it(mapFactory2(), fallbackFactory2());
     });
+
+    it('should panic if fn panic', async () => {
+        await expect(() => Ok(1).mapOrElseAsync(panicFn1, panicFn1)).rejects.toThrow(Error('error'));
+        await expect(() => Err('err').mapOrElseAsync(panicFn1, panicFn1)).rejects.toThrow(Error('error'));
+        await expect(() => Ok(1).mapOrElseAsync(panicFn2, panicFn2)).rejects.toThrow(Error('error'));
+        await expect(() => Err('err').mapOrElseAsync(panicFn2, panicFn2)).rejects.toThrow(Error('error'));
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.mapErr.name}\``, () => {
@@ -417,6 +465,10 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         expect(map).toHaveBeenCalledTimes(0);
         Ok(1).mapErr(map);
         expect(map).toHaveBeenCalledTimes(0);
+    });
+
+    it('should panic if fn panic', () => {
+        expect(() => Err('err').mapErr(panicFn1)).toThrow(Error('error'));
     });
 });
 
@@ -455,6 +507,11 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         await _it(mapFactory1());
         await _it(mapFactory2());
     });
+
+    it('should panic if fn panic', async () => {
+        await expect(() => Err('err').mapErrAsync(panicFn1)).rejects.toThrow(Error('error'));
+        await expect(() => Err('err').mapErrAsync(panicFn2)).rejects.toThrow(Error('error'));
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.inspect.name}\``, () => {
@@ -483,6 +540,10 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         Err(1).inspect(fn);
         expect(fn).toHaveBeenCalledTimes(0);
     });
+
+    it('should panic if fn panic', () => {
+        expect(() => Ok(1).inspect(panicFn1)).toThrow(Error('error'));
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.inspectErr.name}\``, () => {
@@ -510,6 +571,10 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         expect(fn).toHaveBeenCalledTimes(0);
         Err(1).inspectErr(fn);
         expect(fn).toHaveBeenCalledTimes(1);
+    });
+
+    it('should panic if fn panic', () => {
+        expect(() => Err('err').inspectErr(panicFn1)).toThrow(Error('error'));
     });
 });
 
@@ -577,6 +642,10 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         Ok(100).unwrapOrElse(op);
         expect(op).toHaveBeenCalledTimes(0);
     });
+
+    it('should panic if fn panic', () => {
+        expect(() => Err('err').unwrapOrElse(panicFn1)).toThrow(Error('error'));
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.unwrapOrElseAsync.name}\``, () => {
@@ -622,6 +691,11 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         await _it(fnFactory1());
         await _it(fnFactory2());
     });
+
+    it('should panic if fn panic', async () => {
+        await expect(() => Err('err').unwrapOrElseAsync(panicFn1)).rejects.toThrow(Error('error'));
+        await expect(() => Err('err').unwrapOrElseAsync(panicFn2)).rejects.toThrow(Error('error'));
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.unwrapUnchecked.name}\``, () => {
@@ -635,6 +709,14 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         expect(Err('Err').unwrapErrUnchecked()).toBe('Err');
     });
 });
+
+function op1(): Result<number, string> {
+    return Ok(666);
+}
+
+function op2(): Result<number, string> {
+    return Err('sadface');
+}
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.and.name}\``, () => {
     it('should return `res`', () => {
@@ -672,6 +754,10 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         op2().andThen(fn);
         expect(fn).toHaveBeenCalledTimes(0);
     });
+
+    it('should panic if fn panic', () => {
+        expect(() => Ok(1).andThen(panicFn1)).toThrow(Error('error'));
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.andThenAsync.name}\``, () => {
@@ -701,6 +787,11 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         expect(fn).toHaveBeenCalledTimes(0);
         await op2().andThenAsync(fn);
         expect(fn).toHaveBeenCalledTimes(0);
+    });
+
+    it('should panic if fn panic', async () => {
+        await expect(() => Ok(1).andThenAsync(panicFn1)).rejects.toThrow(Error('error'));
+        await expect(() => Ok(1).andThenAsync(panicFn2)).rejects.toThrow(Error('error'));
     });
 });
 
@@ -740,6 +831,10 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         op1().orElse(fn);
         expect(fn).toHaveBeenCalledTimes(0);
     });
+
+    it('should panic if fn panic', () => {
+        expect(() => Err('err').orElse(panicFn1)).toThrow(Error('error'));
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.orElseAsync.name}\``, () => {
@@ -769,6 +864,11 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         expect(fn).toHaveBeenCalledTimes(0);
         await op1().orElseAsync(fn);
         expect(fn).toHaveBeenCalledTimes(0);
+    });
+
+    it('should panic if fn panic', async () => {
+        await expect(() => Err('err').orElseAsync(panicFn1)).rejects.toThrow(Error('error'));
+        await expect(() => Err('err').orElseAsync(panicFn2)).rejects.toThrow(Error('error'));
     });
 });
 
