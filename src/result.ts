@@ -223,6 +223,18 @@ export class RustlikeResult<T, E> implements Result<T, E> {
     }
 
     /**
+     * Asynchronously calls the provided closure with a reference to the contained value if `Ok`.
+     *
+     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect
+     */
+    async inspectAsync(fn: (value: T) => void | Promise<void>): Promise<this> {
+        if (this.isOk()) {
+            await fn(this.unwrapUnchecked());
+        }
+        return this;
+    }
+
+    /**
      * Calls the provided closure with a reference to the contained value if `Err`.
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect_err
@@ -230,6 +242,18 @@ export class RustlikeResult<T, E> implements Result<T, E> {
     inspectErr(fn: (err: E) => void): this {
         if (this.isErr()) {
             fn(this.unwrapErrUnchecked());
+        }
+        return this;
+    }
+
+    /**
+     * Asynchronously calls the provided closure with a reference to the contained value if `Err`.
+     *
+     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect_err
+     */
+    async inspectErrAsync(fn: (err: E) => void | Promise<void>): Promise<this> {
+        if (this.isErr()) {
+            await fn(this.unwrapErrUnchecked());
         }
         return this;
     }

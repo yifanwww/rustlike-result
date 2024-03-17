@@ -516,9 +516,9 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.inspect.name}\``, () => {
     it('should return itself', () => {
-        const fn = jest.fn(() => {
+        const fn = () => {
             // do something
-        });
+        };
         const okResult = Ok(1);
         const errResult = Err(0);
         expect(okResult.inspect(fn)).toBe(okResult);
@@ -546,11 +546,59 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
     });
 });
 
-describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.inspectErr.name}\``, () => {
-    it('should return itself', () => {
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.inspectAsync.name}\``, () => {
+    it('should return itself', async () => {
+        const fn1 = () => {
+            // do something
+        };
+        const fn2 = () => {
+            // do something
+            return Promise.resolve();
+        };
+
+        const okResult = Ok(1);
+        const errResult = Err(0);
+
+        await expect(okResult.inspectAsync(fn1)).resolves.toStrictEqual(okResult);
+        await expect(errResult.inspectAsync(fn1)).resolves.toStrictEqual(errResult);
+        await expect(okResult.inspectAsync(fn2)).resolves.toStrictEqual(okResult);
+        await expect(errResult.inspectAsync(fn2)).resolves.toStrictEqual(errResult);
+    });
+
+    it('should inspect ok value', async () => {
+        const fn1 = jest.fn((value: number) => expect(value).toBe(1));
+        const fn2 = jest.fn((value: number) => {
+            expect(value).toBe(1);
+            return Promise.resolve();
+        });
+        expect(fn1).toHaveBeenCalledTimes(0);
+        expect(fn2).toHaveBeenCalledTimes(0);
+        await Ok(1).inspectAsync(fn1);
+        await Ok(1).inspectAsync(fn2);
+        expect(fn1).toHaveBeenCalledTimes(1);
+        expect(fn2).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not inspect err value', async () => {
         const fn = jest.fn(() => {
             // do something
         });
+        expect(fn).toHaveBeenCalledTimes(0);
+        await Err(1).inspectAsync(fn);
+        expect(fn).toHaveBeenCalledTimes(0);
+    });
+
+    it('should panic if fn panic', async () => {
+        await expect(() => Ok(1).inspectAsync(panicFn1)).rejects.toThrow(Error('error'));
+        await expect(() => Ok(1).inspectAsync(panicFn2)).rejects.toThrow(Error('error'));
+    });
+});
+
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.inspectErr.name}\``, () => {
+    it('should return itself', () => {
+        const fn = () => {
+            // do something
+        };
         const okResult = Ok(1);
         const errResult = Err(0);
         expect(okResult.inspectErr(fn)).toBe(okResult);
@@ -575,6 +623,54 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
 
     it('should panic if fn panic', () => {
         expect(() => Err('err').inspectErr(panicFn1)).toThrow(Error('error'));
+    });
+});
+
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.inspectErrAsync.name}\``, () => {
+    it('should return itself', async () => {
+        const fn1 = () => {
+            // do something
+        };
+        const fn2 = () => {
+            // do something
+            return Promise.resolve();
+        };
+
+        const okResult = Ok(1);
+        const errResult = Err(0);
+
+        await expect(okResult.inspectErrAsync(fn1)).resolves.toBe(okResult);
+        await expect(errResult.inspectErrAsync(fn1)).resolves.toBe(errResult);
+        await expect(okResult.inspectErrAsync(fn2)).resolves.toBe(okResult);
+        await expect(errResult.inspectErrAsync(fn2)).resolves.toBe(errResult);
+    });
+
+    it('should not inspect ok value', async () => {
+        const fn = jest.fn(() => {
+            // do something
+        });
+        expect(fn).toHaveBeenCalledTimes(0);
+        await Ok(1).inspectErrAsync(fn);
+        expect(fn).toHaveBeenCalledTimes(0);
+    });
+
+    it('should inspect err value', async () => {
+        const fn1 = jest.fn((value: number) => expect(value).toBe(1));
+        const fn2 = jest.fn((value: number) => {
+            expect(value).toBe(1);
+            return Promise.resolve();
+        });
+        expect(fn1).toHaveBeenCalledTimes(0);
+        expect(fn2).toHaveBeenCalledTimes(0);
+        await Err(1).inspectErrAsync(fn1);
+        await Err(1).inspectErrAsync(fn2);
+        expect(fn1).toHaveBeenCalledTimes(1);
+        expect(fn2).toHaveBeenCalledTimes(1);
+    });
+
+    it('should panic if fn panic', async () => {
+        await expect(() => Err('err').inspectErrAsync(panicFn1)).rejects.toThrow(Error('error'));
+        await expect(() => Err('err').inspectErrAsync(panicFn2)).rejects.toThrow(Error('error'));
     });
 });
 

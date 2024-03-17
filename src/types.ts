@@ -158,11 +158,25 @@ export interface Result<T, E> {
     inspect(fn: (value: T) => void): this;
 
     /**
+     * Asynchronously calls the provided closure with a reference to the contained value if `Ok`.
+     *
+     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect
+     */
+    inspectAsync(fn: (value: T) => void | Promise<void>): Promise<this>;
+
+    /**
      * Calls the provided closure with a reference to the contained value if `Err`.
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect_err
      */
     inspectErr(fn: (err: E) => void): this;
+
+    /**
+     * Asynchronously calls the provided closure with a reference to the contained value if `Err`.
+     *
+     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect_err
+     */
+    inspectErrAsync(fn: (err: E) => void | Promise<void>): Promise<this>;
 
     /**
      * Returns the contained `Ok` value.
