@@ -37,7 +37,7 @@
         "clean": "rimraf --glob coverage lib lib-commonjs tsconfigs/*.tsbuildinfo",
         "format": "prettier --write \"**/*.{cjs,js,mjs,json,ts,yaml,yml}\"",
         "lint": "eslint .",
-        "lint:fix": "eslint . --fix",
+        "lint-fix": "eslint . --fix",
         "pre-commit": "lint-staged",
         "prepare": "husky",
         "test": "node scripts/unit-test.js",
