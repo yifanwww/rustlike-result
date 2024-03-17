@@ -1,4 +1,11 @@
 # CHANGELOG
+## rustlike-result v0.4.1 (2024-03-17)
+### Features
+
+Support new methods:
+- `inspectAsync`
+- `inspectErrAsync`
+
 ## rustlike-result v0.4.0 (2024-03-03)
 ### Breaking Changes
 

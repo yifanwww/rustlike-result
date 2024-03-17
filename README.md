@@ -58,8 +58,8 @@ The Rust-like `Result` implements the following methods:
 | mapOr / mapOrAsync               | [map_or]               |
 | mapOrElse / mapOrElseAsync       | [map_or_else]          |
 | mapErr / mapErrAsync             | [map_err]              |
-| inspect                          | [inspect]              |
-| inspectErr                       | [inspect_err]          |
+| inspect / inspectAsync           | [inspect]              |
+| inspectErr / inspectErrAsync     | [inspect_err]          |
 | expect                           | [expect]               |
 | unwrap                           | [unwrap]               |
 | expectErr                        | [expect_err]           |
