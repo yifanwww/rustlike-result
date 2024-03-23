@@ -9,9 +9,11 @@ Rust-like `Result` for JavaScript.
 - [Installation](#installation)
 - [Usage](#usage)
 - [About Rust `Option`](#about-rust-option)
-- [Rust `Result` Methods](#rust-result-methods)
-- [Additional Methods](#additional-methods)
-  - [equal](#equal)
+- [Methods Documentation](#methods-documentation)
+  - [Rust `Result` Methods](#rust-result-methods)
+    - [isOk](#isok)
+  - [Additional Methods](#additional-methods)
+    - [equal](#equal)
 - [Helpers for Resultifying](#helpers-for-resultifying)
   - [resultify](#resultify)
   - [resultify.sync](#resultifysync)
@@ -65,7 +67,8 @@ This package doesn't implement Rust-like `Option`. Handling `undefined`/`null` i
 [proposal-optional-chaining]: https://github.com/tc39/proposal-optional-chaining
 [proposal-nullish-coalescing]: https://github.com/tc39/proposal-nullish-coalescing
 
-## Rust `Result` Methods
+## Methods Documentation
+### Rust `Result` Methods
 
 The Rust-like `Result` implements the following methods:
 
@@ -149,6 +152,23 @@ hash
 [or_else]: https://doc.rust-lang.org/std/result/enum.Result.html#method.or_else
 [transpose]: https://doc.rust-lang.org/std/result/enum.Result.html#method.transpose
 
+#### `isOk`
+
+Returns `true` if the result is `Ok`.
+
+Examples:
+
+```ts
+import { Err, Ok, type Result } from 'rustlike-result';
+
+const x: Result<number, string> = Ok(2);
+console.assert(x.isOk() === true);
+
+const y: Result<number, string> = Err('Some error message');
+console.assert(y.isOk() === false);
+```
+
+<!--
 Some of the methods have asynchronous versions to help you handle asynchronous logic, for example:
 ```ts
 const result = await Ok(1)
@@ -158,9 +178,10 @@ const result = await Ok(1)
     .then((result) => result.andThenAsync(asyncFn4))
     .then((result) => result.andThenAsync(asyncFn5));
 ```
+-->
 
-## Additional Methods
-### equal
+### Additional Methods
+#### equal
 
 You can not just use `===` or `==` to compare `Result`, so `Result` itself provides an method call `equal` for that.
 

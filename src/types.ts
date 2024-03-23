@@ -14,6 +14,18 @@ export interface Result<T, E> {
     /**
      * Returns `true` if the result is `Ok`.
      *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok, type Result } from 'rustlike-result';
+     *
+     * const x: Result<number, string> = Ok(2);
+     * console.assert(x.isOk() === true);
+     *
+     * const y: Result<number, string> = Err('Some error message');
+     * console.assert(y.isOk() === false);
+     * ```
+     *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_ok
      */
     isOk(): boolean;

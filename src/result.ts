@@ -26,14 +26,14 @@ export class RustlikeResult<T, E> implements Result<T, E> {
     }
 
     /**
-     * Contains the success value.
+     * Creates a `Result` that contains the success value.
      */
     static Ok<T, E = never>(value: T): Result<T, E> {
         return new RustlikeResult<T, E>('ok', value);
     }
 
     /**
-     * Contains the error value.
+     * Creates a `Result` that contains the error value.
      */
     static Err<E, T = never>(error: E): Result<T, E> {
         return new RustlikeResult<T, E>('err', error);
@@ -43,6 +43,16 @@ export class RustlikeResult<T, E> implements Result<T, E> {
      * Returns `true` if the result is `Ok`.
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_ok
+     *
+     * Examples:
+     *
+     * ```
+     * const x: Result<number, string> = Ok(2);
+     * console.assert(x.isOk() === true);
+     *
+     * const y: Result<number, string> = Err('Some error message');
+     * console.assert(y.isOk() === false);
+     * ```
      */
     isOk(): boolean {
         return this._type === 'ok';
