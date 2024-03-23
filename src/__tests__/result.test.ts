@@ -534,6 +534,30 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         expect(() => Ok(1).mapOrElse(panicFn1, panicFn1)).toThrow(Error('error'));
         expect(() => Err('err').mapOrElse(panicFn1, panicFn1)).toThrow(Error('error'));
     });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            const k = 21;
+
+            const x: Result<string, string> = Ok('foo');
+            assert(
+                x.mapOrElse(
+                    () => k * 2,
+                    (value) => value.length,
+                ) === 3,
+            );
+
+            const y: Result<string, string> = Err('bar');
+            assert(
+                y.mapOrElse(
+                    () => k * 2,
+                    (value) => value.length,
+                ) === 42,
+            );
+        }
+
+        expect(examples).not.toThrow();
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.mapOrElseAsync.name}\``, () => {
@@ -593,6 +617,30 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         await expect(() => Ok(1).mapOrElseAsync(panicFn2, panicFn2)).rejects.toThrow(Error('error'));
         await expect(() => Err('err').mapOrElseAsync(panicFn2, panicFn2)).rejects.toThrow(Error('error'));
     });
+
+    it('should have correct examples doc', async () => {
+        async function examples() {
+            const k = 21;
+
+            const x: Result<string, string> = Ok('foo');
+            assert(
+                (await x.mapOrElseAsync(
+                    () => Promise.resolve(k * 2),
+                    (value) => Promise.resolve(value.length),
+                )) === 3,
+            );
+
+            const y: Result<string, string> = Err('bar');
+            assert(
+                (await y.mapOrElseAsync(
+                    () => Promise.resolve(k * 2),
+                    (value) => Promise.resolve(value.length),
+                )) === 42,
+            );
+        }
+
+        await expect(examples()).resolves.not.toThrow();
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.mapErr.name}\``, () => {
@@ -620,6 +668,15 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
 
     it('should panic if fn panic', () => {
         expect(() => Err('err').mapErr(panicFn1)).toThrow(Error('error'));
+    });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            const x: Result<number, Error> = Err(new Error('Some error message'));
+            assert(x.mapErr((err) => err.message).err() === 'Some error message');
+        }
+
+        expect(examples).not.toThrow();
     });
 });
 
@@ -662,6 +719,15 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
     it('should panic if fn panic', async () => {
         await expect(() => Err('err').mapErrAsync(panicFn1)).rejects.toThrow(Error('error'));
         await expect(() => Err('err').mapErrAsync(panicFn2)).rejects.toThrow(Error('error'));
+    });
+
+    it('should have correct examples doc', async () => {
+        async function examples() {
+            const x = await Err(new Error('Some error message')).mapErrAsync((err) => Promise.resolve(err.message));
+            assert(x.err() === 'Some error message');
+        }
+
+        await expect(examples()).resolves.not.toThrow();
     });
 });
 

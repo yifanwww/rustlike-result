@@ -276,6 +276,20 @@ export interface Result<T, E> {
      *
      * This function can be used to unpack a successful result while handling an error.
      *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok, type Result } from 'rustlike-result';
+     *
+     * const k = 21;
+     *
+     * const x: Result<string, string> = Ok('foo');
+     * assert(x.mapOrElse((err) => k * 2, (value) => value.length) === 3);
+     *
+     * const y: Result<string, string> = Err('bar');
+     * assert(y.mapOrElse((err) => k * 2, (value) => value.length) === 42);
+     * ```
+     *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or_else
      */
     mapOrElse<U>(fallback: (err: E) => U, map: (value: T) => U): U;
@@ -285,6 +299,20 @@ export interface Result<T, E> {
      * or function `map` to a contained `Ok` value.
      *
      * This function can be used to unpack a successful result while handling an error.
+     *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok, type Result } from 'rustlike-result';
+     *
+     * const k = 21;
+     *
+     * const x: Result<string, string> = Ok('foo');
+     * assert((await x.mapOrElseAsync(() => Promise.resolve(k * 2), (value) => Promise.resolve(value.length))) === 3);
+     *
+     * const y: Result<string, string> = Err('bar');
+     * assert((await y.mapOrElseAsync(() => Promise.resolve(k * 2), (value) => Promise.resolve(value.length))) === 42);
+     * ```
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or_else
      */
@@ -296,6 +324,15 @@ export interface Result<T, E> {
      *
      * This function can be used to pass through a successful result while handling an error.
      *
+     * Examples:
+     *
+     * ```
+     * import { Err, type Result } from 'rustlike-result';
+     *
+     * const x: Result<number, Error> = Err(new Error('Some error message'));
+     * assert(x.mapErr((err) => err.message).err() === 'Some error message');
+     * ```
+     *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_err
      */
     mapErr<F>(op: (err: E) => F): Result<T, F>;
@@ -305,6 +342,15 @@ export interface Result<T, E> {
      * leaving an `Ok` value untouched.
      *
      * This function can be used to pass through a successful result while handling an error.
+     *
+     * Examples:
+     *
+     * ```
+     * import { Err, type Result } from 'rustlike-result';
+     *
+     * const x = await Err(new Error('Some error message')).mapErrAsync((err) => Promise.resolve(err.message));
+     * assert(x.err() === 'Some error message');
+     * ```
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_err
      */

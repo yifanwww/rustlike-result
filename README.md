@@ -23,6 +23,10 @@ Rust-like `Result` for JavaScript.
     - [mapAsync](#mapasync)
     - [mapOr](#mapor)
     - [mapOrAsync](#maporasync)
+    - [mapOrElse](#maporelse)
+    - [mapOrElseAsync](#maporelseasync)
+    - [mapErr](#maperr)
+    - [mapErrAsync](#maperrasync)
   - [Additional Methods](#additional-methods)
     - [equal](#equal)
 - [Helpers for Resultifying](#helpers-for-resultifying)
@@ -377,6 +381,76 @@ assert((await x.mapOrAsync(42, (value) => value.length)) === 3);
 
 const y: Result<string, string> = Err('bar');
 assert((await y.mapOrAsync(42, (value) => value.length)) === 42);
+```
+
+#### `mapOrElse`
+
+Maps a `Result<T, E>` to `U` by applying fallback function `fallback` to a contained `Err` value, or function `map` to a contained `Ok` value.
+
+This function can be used to unpack a successful result while handling an error.
+
+Examples:
+
+```ts
+import { Err, Ok, type Result } from 'rustlike-result';
+
+const k = 21;
+
+const x: Result<string, string> = Ok('foo');
+assert(x.mapOrElse((err) => k * 2, (value) => value.length) === 3);
+
+const y: Result<string, string> = Err('bar');
+assert(y.mapOrElse((err) => k * 2, (value) => value.length) === 42);
+```
+
+#### `mapOrElseAsync`
+
+Asynchronously maps a `Result<T, E>` to `U` by applying fallback function `fallback` to a contained `Err` value, or function `map` to a contained `Ok` value.
+
+This function can be used to unpack a successful result while handling an error.
+
+Examples:
+
+```ts
+import { Err, Ok, type Result } from 'rustlike-result';
+
+const k = 21;
+
+const x: Result<string, string> = Ok('foo');
+assert((await x.mapOrElseAsync(() => Promise.resolve(k * 2), (value) => Promise.resolve(value.length))) === 3);
+
+const y: Result<string, string> = Err('bar');
+assert((await y.mapOrElseAsync(() => Promise.resolve(k * 2), (value) => Promise.resolve(value.length))) === 42);
+```
+
+#### `mapErr`
+
+Maps a `Result<T, E>` to `Result<T, F>` by applying a function to a contained `Err` value, leaving an `Ok` value untouched.
+
+This function can be used to pass through a successful result while handling an error.
+
+Examples:
+
+```ts
+import { Err, type Result } from 'rustlike-result';
+
+const x: Result<number, Error> = Err(new Error('Some error message'));
+assert(x.mapErr((err) => err.message).err() === 'Some error message');
+```
+
+#### `mapErrAsync`
+
+Asynchronously maps a `Result<T, E>` to `Result<T, F>` by applying a function to a contained `Err` value, leaving an `Ok` value untouched.
+
+This function can be used to pass through a successful result while handling an error.
+
+Examples:
+
+```ts
+import { Err, type Result } from 'rustlike-result';
+
+const x = await Err(new Error('Some error message')).mapErrAsync((err) => Promise.resolve(err.message));
+assert(x.err() === 'Some error message');
 ```
 
 ### Additional Methods
