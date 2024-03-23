@@ -150,12 +150,36 @@ export interface Result<T, E> {
     /**
      * Converts from `Result<T, E>` to `Optional<T>` and discarding the error, if any.
      *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok, type Result } from 'rustlike-result';
+     *
+     * const x: Result<number, string> = Ok(2);
+     * assert(x.ok() === 2);
+     *
+     * const y: Result<number, string> = Err('Some error message');
+     * assert(y.ok() === undefined);
+     * ```
+     *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.ok
      */
     ok(): Optional<T>;
 
     /**
      * Converts from `Result<T, E>` to `Optional<E>` and discarding the success value, if any.
+     *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok, type Result } from 'rustlike-result';
+     *
+     * const x: Result<number, string> = Ok(2);
+     * assert(x.err() === undefined);
+     *
+     * const y: Result<number, string> = Err('Some error message');
+     * assert(y.err() === 'Some error message');
+     * ```
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.err
      */

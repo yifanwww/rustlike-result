@@ -282,12 +282,36 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         expect(Ok(1).ok()).toBe(1);
         expect(Err('Some error message').ok()).toBeUndefined();
     });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            const x: Result<number, string> = Ok(2);
+            assert(x.ok() === 2);
+
+            const y: Result<number, string> = Err('Some error message');
+            assert(y.ok() === undefined);
+        }
+
+        expect(examples).not.toThrow();
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.err.name}\``, () => {
     it('should convert itself to an optional error', () => {
         expect(Ok(1).err()).toBeUndefined();
         expect(Err('Some error message').err()).toBe('Some error message');
+    });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            const x: Result<number, string> = Ok(2);
+            assert(x.err() === undefined);
+
+            const y: Result<number, string> = Err('Some error message');
+            assert(y.err() === 'Some error message');
+        }
+
+        expect(examples).not.toThrow();
     });
 });
 

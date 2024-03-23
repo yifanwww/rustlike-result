@@ -17,6 +17,8 @@ Rust-like `Result` for JavaScript.
     - [isErr](#iserr)
     - [isErrAnd](#iserrand)
     - [isErrAndAsync](#iserrandasync)
+    - [ok](#ok)
+    - [err](#err)
   - [Additional Methods](#additional-methods)
     - [equal](#equal)
 - [Helpers for Resultifying](#helpers-for-resultifying)
@@ -273,6 +275,38 @@ assert((await y.isErrAndAsync((value) => Promise.resolve(value === ErrorKind.NOT
 
 const z: Result<number, ErrorKind> = Ok(123);
 assert((await z.isErrAndAsync((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === false);
+```
+
+#### `ok`
+
+Converts from `Result<T, E>` to `Optional<T>` and discarding the error, if any.
+
+Examples:
+
+```ts
+import { Err, Ok, type Result } from 'rustlike-result';
+
+const x: Result<number, string> = Ok(2);
+assert(x.ok() === 2);
+
+const y: Result<number, string> = Err('Some error message');
+assert(y.ok() === undefined);
+```
+
+#### `err`
+
+Converts from `Result<T, E>` to `Optional<E>` and discarding the success value, if any.
+
+Examples:
+
+```ts
+import { Err, Ok, type Result } from 'rustlike-result';
+
+const x: Result<number, string> = Ok(2);
+assert(x.err() === undefined);
+
+const y: Result<number, string> = Err('Some error message');
+assert(y.err() === 'Some error message');
 ```
 
 ### Additional Methods
