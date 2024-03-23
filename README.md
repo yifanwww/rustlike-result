@@ -27,6 +27,10 @@ Rust-like `Result` for JavaScript.
     - [mapOrElseAsync](#maporelseasync)
     - [mapErr](#maperr)
     - [mapErrAsync](#maperrasync)
+    - [inspect](#inspect)
+    - [inspectAsync](#inspectasync)
+    - [inspectErr](#inspecterr)
+    - [inspectErrAsync](#inspecterrasync)
   - [Additional Methods](#additional-methods)
     - [equal](#equal)
 - [Helpers for Resultifying](#helpers-for-resultifying)
@@ -341,7 +345,7 @@ This function can be used to compose the results of two functions.
 Examples:
 
 ```ts
-import { Ok, type Result } from 'rustlike-result';
+import { Ok } from 'rustlike-result';
 
 const x = await Ok<string, string>('foo').mapAsync((value) => Promise.resolve(value.length));
 assert(x.ok() === 3);
@@ -447,10 +451,80 @@ This function can be used to pass through a successful result while handling an 
 Examples:
 
 ```ts
-import { Err, type Result } from 'rustlike-result';
+import { Err } from 'rustlike-result';
 
 const x = await Err(new Error('Some error message')).mapErrAsync((err) => Promise.resolve(err.message));
 assert(x.err() === 'Some error message');
+```
+
+#### `inspect`
+
+Calls the provided closure with a reference to the contained value if `Ok`.
+
+Examples:
+
+```ts
+import { resultify } from 'rustlike-result';
+
+const num = resultify
+    .sync<SyntaxError>()(JSON.parse)('4')
+    .inspect((value: number) => console.log(`original: ${value}`))
+    .map((value) => value ** 3)
+    .expect('failed to parse number');
+assert(num === 64);
+```
+
+#### `inspectAsync`
+
+Asynchronously calls the provided closure with a reference to the contained value if `Ok`.
+
+Examples:
+
+```ts
+import { resultify } from 'rustlike-result';
+
+const num = await resultify
+    .sync<SyntaxError>()(JSON.parse)('4')
+    .inspectAsync((value: number) => {
+        console.log(`original: ${value}`);
+        return Promise.resolve();
+    })
+    .then((result) => result.map((value) => value ** 3))
+    .then((result) => result.expect('failed to parse number'));
+assert(num === 64);
+```
+
+#### `inspectErr`
+
+Calls the provided closure with a reference to the contained value if `Err`.
+
+Examples:
+
+```ts
+import { resultify } from 'rustlike-result';
+
+const num = resultify
+    .sync<SyntaxError>()(JSON.parse)('asdf')
+    .inspectErr((err) => console.log(`failed to parse json string: ${err.message}`));
+assert(num.err() instanceof SyntaxError);
+```
+
+#### `inspectErrAsync`
+
+Asynchronously calls the provided closure with a reference to the contained value if `Err`.
+
+Examples:
+
+```ts
+import { resultify } from 'rustlike-result';
+
+const num = await resultify
+    .sync<SyntaxError>()(JSON.parse)('asdf')
+    .inspectErrAsync((err) => {
+        console.log(`failed to parse json string: ${err.message}`);
+        return Promise.resolve();
+    });
+assert(num.err() instanceof SyntaxError);
 ```
 
 ### Additional Methods

@@ -3,6 +3,7 @@ import assert from 'node:assert';
 
 import { Err, Ok } from '../factory';
 import { RustlikeResult } from '../result';
+import { resultify } from '../resultify';
 import type { Result } from '../types';
 
 function panicFn1(): never {
@@ -761,6 +762,21 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
     it('should panic if fn panic', () => {
         expect(() => Ok(1).inspect(panicFn1)).toThrow(Error('error'));
     });
+
+    it('should have correct examples doc', () => {
+        jest.spyOn(console, 'log').mockImplementationOnce(() => {});
+
+        function examples() {
+            const num = resultify
+                .sync<SyntaxError>()(JSON.parse)('4')
+                .inspect((value: number) => console.log(`original: ${value}`))
+                .map((value) => value ** 3)
+                .expect('failed to parse number');
+            assert(num === 64);
+        }
+
+        expect(examples).not.toThrow();
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.inspectAsync.name}\``, () => {
@@ -809,6 +825,24 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         await expect(() => Ok(1).inspectAsync(panicFn1)).rejects.toThrow(Error('error'));
         await expect(() => Ok(1).inspectAsync(panicFn2)).rejects.toThrow(Error('error'));
     });
+
+    it('should have correct examples doc', async () => {
+        async function examples() {
+            jest.spyOn(console, 'log').mockImplementationOnce(() => {});
+
+            const num = await resultify
+                .sync<SyntaxError>()(JSON.parse)('4')
+                .inspectAsync((value: number) => {
+                    console.log(`original: ${value}`);
+                    return Promise.resolve();
+                })
+                .then((result) => result.map((value) => value ** 3))
+                .then((result) => result.expect('failed to parse number'));
+            assert(num === 64);
+        }
+
+        await expect(examples()).resolves.not.toThrow();
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.inspectErr.name}\``, () => {
@@ -840,6 +874,19 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
 
     it('should panic if fn panic', () => {
         expect(() => Err('err').inspectErr(panicFn1)).toThrow(Error('error'));
+    });
+
+    it('should have correct examples doc', () => {
+        jest.spyOn(console, 'log').mockImplementationOnce(() => {});
+
+        function examples() {
+            const num = resultify
+                .sync<SyntaxError>()(JSON.parse)('asdf')
+                .inspectErr((err) => console.log(`failed to parse json string: ${err.message}`));
+            assert(num.err() instanceof SyntaxError);
+        }
+
+        expect(examples).not.toThrow();
     });
 });
 
@@ -888,6 +935,22 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
     it('should panic if fn panic', async () => {
         await expect(() => Err('err').inspectErrAsync(panicFn1)).rejects.toThrow(Error('error'));
         await expect(() => Err('err').inspectErrAsync(panicFn2)).rejects.toThrow(Error('error'));
+    });
+
+    it('should have correct examples doc', async () => {
+        jest.spyOn(console, 'log').mockImplementationOnce(() => {});
+
+        async function examples() {
+            const num = await resultify
+                .sync<SyntaxError>()(JSON.parse)('asdf')
+                .inspectErrAsync((err) => {
+                    console.log(`failed to parse json string: ${err.message}`);
+                    return Promise.resolve();
+                });
+            assert(num.err() instanceof SyntaxError);
+        }
+
+        await expect(examples()).resolves.not.toThrow();
     });
 });
 

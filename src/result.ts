@@ -259,7 +259,7 @@ export class RustlikeResult<T, E> implements Result<T, E> {
      * Examples:
      *
      * ```
-     * import { Ok, type Result } from 'rustlike-result';
+     * import { Ok } from 'rustlike-result';
      *
      * const x = await Ok<string, string>('foo').mapAsync((value) => Promise.resolve(value.length));
      * assert(x.ok() === 3);
@@ -404,7 +404,7 @@ export class RustlikeResult<T, E> implements Result<T, E> {
      * Examples:
      *
      * ```
-     * import { Err, type Result } from 'rustlike-result';
+     * import { Err } from 'rustlike-result';
      *
      * const x = await Err(new Error('Some error message')).mapErrAsync((err) => Promise.resolve(err.message));
      * assert(x.err() === 'Some error message');
@@ -419,6 +419,19 @@ export class RustlikeResult<T, E> implements Result<T, E> {
     /**
      * Calls the provided closure with a reference to the contained value if `Ok`.
      *
+     * Examples:
+     *
+     * ```
+     * import { resultify } from 'rustlike-result';
+     *
+     * const num = resultify
+     *     .sync<SyntaxError>()(JSON.parse)('4')
+     *     .inspect((value: number) => console.log(`original: ${value}`))
+     *     .map((value) => value ** 3)
+     *     .expect('failed to parse number');
+     * assert(num === 64);
+     * ```
+     *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect
      */
     inspect(fn: (value: T) => void): this {
@@ -430,6 +443,22 @@ export class RustlikeResult<T, E> implements Result<T, E> {
 
     /**
      * Asynchronously calls the provided closure with a reference to the contained value if `Ok`.
+     *
+     * Examples:
+     *
+     * ```
+     * import { resultify } from 'rustlike-result';
+     *
+     * const num = await resultify
+     *     .sync<SyntaxError>()(JSON.parse)('4')
+     *     .inspectAsync((value: number) => {
+     *         console.log(`original: ${value}`);
+     *         return Promise.resolve();
+     *     })
+     *     .then((result) => result.map((value) => value ** 3))
+     *     .then((result) => result.expect('failed to parse number'));
+     * assert(num === 64);
+     * ```
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect
      */
@@ -443,6 +472,17 @@ export class RustlikeResult<T, E> implements Result<T, E> {
     /**
      * Calls the provided closure with a reference to the contained value if `Err`.
      *
+     * Examples:
+     *
+     * ```
+     * import { resultify } from 'rustlike-result';
+     *
+     * const num = resultify
+     *     .sync<SyntaxError>()(JSON.parse)('asdf')
+     *     .inspectErr((err) => console.log(`failed to parse json string: ${err.message}`));
+     * assert(num.err() instanceof SyntaxError);
+     * ```
+     *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect_err
      */
     inspectErr(fn: (err: E) => void): this {
@@ -454,6 +494,20 @@ export class RustlikeResult<T, E> implements Result<T, E> {
 
     /**
      * Asynchronously calls the provided closure with a reference to the contained value if `Err`.
+     *
+     * Examples:
+     *
+     * ```
+     * import { resultify } from 'rustlike-result';
+     *
+     * const num = await resultify
+     *     .sync<SyntaxError>()(JSON.parse)('asdf')
+     *     .inspectErrAsync((err) => {
+     *         console.log(`failed to parse json string: ${err.message}`);
+     *         return Promise.resolve();
+     *     });
+     * assert(num.err() instanceof SyntaxError);
+     * ```
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect_err
      */
