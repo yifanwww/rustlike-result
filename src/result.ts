@@ -93,13 +93,13 @@ export class RustlikeResult<T, E> implements Result<T, E> {
      * import { Err, Ok, type Result } from 'rustlike-result';
      *
      * const x: Result<number, string> = Ok(2);
-     * assert(await x.isOkAndAsync((value) => Promise.resolve(value > 1)) === true);
+     * assert((await x.isOkAndAsync((value) => Promise.resolve(value > 1))) === true);
      *
      * const y: Result<number, string> = Ok(0);
-     * assert(await y.isOkAndAsync((value) => Promise.resolve(value > 1)) === false);
+     * assert((await y.isOkAndAsync((value) => Promise.resolve(value > 1))) === false);
      *
      * const z: Result<number, string> = Err('Some error message');
-     * assert(await z.isOkAndAsync((value) => Promise.resolve(value > 1)) === false);
+     * assert((await z.isOkAndAsync((value) => Promise.resolve(value > 1))) === false);
      * ```
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_ok_and
@@ -111,6 +111,18 @@ export class RustlikeResult<T, E> implements Result<T, E> {
     /**
      * Returns `true` if the result is `Err`.
      *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok, type Result } from 'rustlike-result';
+     *
+     * const x: Result<number, string> = Ok(-3);
+     * assert(x.isErr() === false);
+     *
+     * const y: Result<number, string> = Err('Some error message');
+     * assert(y.isErr() === true);
+     * ```
+     *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_err
      */
     isErr(): boolean {
@@ -120,6 +132,26 @@ export class RustlikeResult<T, E> implements Result<T, E> {
     /**
      * Returns `true` if the result is `Err` and the value inside of it matches a predicate.
      *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok, type Result } from 'rustlike-result';
+     *
+     * enum ErrorKind {
+     *   NOT_FOUND,
+     *   PERMISSION_DENIED,
+     * }
+     *
+     * const x: Result<number, ErrorKind> = Err(ErrorKind.NOT_FOUND);
+     * assert(x.isErrAnd((value) => value === ErrorKind.NOT_FOUND) === true);
+     *
+     * const y: Result<number, ErrorKind> = Err(ErrorKind.PERMISSION_DENIED);
+     * assert(y.isErrAnd((value) => value === ErrorKind.NOT_FOUND) === false);
+     *
+     * const z: Result<number, ErrorKind> = Ok(123);
+     * assert(z.isErrAnd((value) => value === ErrorKind.NOT_FOUND) === false);
+     * ```
+     *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_err_and
      */
     isErrAnd(fn: (err: E) => boolean): boolean {
@@ -128,6 +160,26 @@ export class RustlikeResult<T, E> implements Result<T, E> {
 
     /**
      * Asynchronously returns `true` if the result is `Err` and the value inside of it matches a predicate.
+     *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok, type Result } from 'rustlike-result';
+     *
+     * enum ErrorKind {
+     *   NOT_FOUND,
+     *   PERMISSION_DENIED,
+     * }
+     *
+     * const x: Result<number, ErrorKind> = Err(ErrorKind.NOT_FOUND);
+     * assert((await x.isErrAndAsync((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === true);
+     *
+     * const y: Result<number, ErrorKind> = Err(ErrorKind.PERMISSION_DENIED);
+     * assert((await y.isErrAndAsync((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === false);
+     *
+     * const z: Result<number, ErrorKind> = Ok(123);
+     * assert((await z.isErrAndAsync((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === false);
+     * ```
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_err_and
      */

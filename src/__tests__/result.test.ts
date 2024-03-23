@@ -151,6 +151,18 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         expect(Ok(1).isErr()).toBe(false);
         expect(Err('Some error message').isErr()).toBe(true);
     });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            const x: Result<number, string> = Ok(-3);
+            assert(x.isErr() === false);
+
+            const y: Result<number, string> = Err('Some error message');
+            assert(y.isErr() === true);
+        }
+
+        expect(examples).not.toThrow();
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.isErrAnd.name}\``, () => {
@@ -184,6 +196,21 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
 
     it('should panic if fn panic', () => {
         expect(() => Err(ErrorKind.NOT_FOUND).isErrAnd(panicFn1)).toThrow(Error('error'));
+    });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            const x: Result<number, ErrorKind> = Err(ErrorKind.NOT_FOUND);
+            assert(x.isErrAnd((value) => value === ErrorKind.NOT_FOUND) === true);
+
+            const y: Result<number, ErrorKind> = Err(ErrorKind.PERMISSION_DENIED);
+            assert(y.isErrAnd((value) => value === ErrorKind.NOT_FOUND) === false);
+
+            const z: Result<number, ErrorKind> = Ok(123);
+            assert(z.isErrAnd((value) => value === ErrorKind.NOT_FOUND) === false);
+        }
+
+        expect(examples).not.toThrow();
     });
 });
 
@@ -232,6 +259,21 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
     it('should panic if fn panic', async () => {
         await expect(() => Err(ErrorKind.NOT_FOUND).isErrAndAsync(panicFn1)).rejects.toThrow(Error('error'));
         await expect(() => Err(ErrorKind.NOT_FOUND).isErrAndAsync(panicFn2)).rejects.toThrow(Error('error'));
+    });
+
+    it('should have correct examples doc', async () => {
+        async function examples() {
+            const x: Result<number, ErrorKind> = Err(ErrorKind.NOT_FOUND);
+            assert((await x.isErrAndAsync((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === true);
+
+            const y: Result<number, ErrorKind> = Err(ErrorKind.PERMISSION_DENIED);
+            assert((await y.isErrAndAsync((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === false);
+
+            const z: Result<number, ErrorKind> = Ok(123);
+            assert((await z.isErrAndAsync((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === false);
+        }
+
+        await expect(examples()).resolves.not.toThrow();
     });
 });
 

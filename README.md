@@ -12,6 +12,11 @@ Rust-like `Result` for JavaScript.
 - [Methods Documentation](#methods-documentation)
   - [Rust `Result` Methods](#rust-result-methods)
     - [isOk](#isok)
+    - [isOkAnd](#isokand)
+    - [isOkAndAsync](#isokandasync)
+    - [isErr](#iserr)
+    - [isErrAnd](#iserrand)
+    - [isErrAndAsync](#iserrandasync)
   - [Additional Methods](#additional-methods)
     - [equal](#equal)
 - [Helpers for Resultifying](#helpers-for-resultifying)
@@ -197,13 +202,77 @@ Examples:
 import { Err, Ok, type Result } from 'rustlike-result';
 
 const x: Result<number, string> = Ok(2);
-assert(await x.isOkAndAsync((value) => Promise.resolve(value > 1)) === true);
+assert((await x.isOkAndAsync((value) => Promise.resolve(value > 1))) === true);
 
 const y: Result<number, string> = Ok(0);
-assert(await y.isOkAndAsync((value) => Promise.resolve(value > 1)) === false);
+assert((await y.isOkAndAsync((value) => Promise.resolve(value > 1))) === false);
 
 const z: Result<number, string> = Err('Some error message');
-assert(await z.isOkAndAsync((value) => Promise.resolve(value > 1)) === false);
+assert((await z.isOkAndAsync((value) => Promise.resolve(value > 1))) === false);
+```
+
+#### `isErr`
+
+Returns `true` if the result is `Err`.
+
+Examples:
+
+```ts
+import { Err, Ok, type Result } from 'rustlike-result';
+
+const x: Result<number, string> = Ok(-3);
+assert(x.isErr() === false);
+
+const y: Result<number, string> = Err('Some error message');
+assert(y.isErr() === true);
+```
+
+#### `isErrAnd`
+
+Returns `true` if the result is `Err` and the value inside of it matches a predicate.
+
+Examples:
+
+```ts
+import { Err, Ok, type Result } from 'rustlike-result';
+
+enum ErrorKind {
+NOT_FOUND,
+PERMISSION_DENIED,
+}
+
+const x: Result<number, ErrorKind> = Err(ErrorKind.NOT_FOUND);
+assert(x.isErrAnd((value) => value === ErrorKind.NOT_FOUND) === true);
+
+const y: Result<number, ErrorKind> = Err(ErrorKind.PERMISSION_DENIED);
+assert(y.isErrAnd((value) => value === ErrorKind.NOT_FOUND) === false);
+
+const z: Result<number, ErrorKind> = Ok(123);
+assert(z.isErrAnd((value) => value === ErrorKind.NOT_FOUND) === false);
+```
+
+#### `isErrAndAsync`
+
+Asynchronously returns `true` if the result is `Err` and the value inside of it matches a predicate.
+
+Examples:
+
+```ts
+import { Err, Ok, type Result } from 'rustlike-result';
+
+enum ErrorKind {
+NOT_FOUND,
+PERMISSION_DENIED,
+}
+
+const x: Result<number, ErrorKind> = Err(ErrorKind.NOT_FOUND);
+assert((await x.isErrAndAsync((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === true);
+
+const y: Result<number, ErrorKind> = Err(ErrorKind.PERMISSION_DENIED);
+assert((await y.isErrAndAsync((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === false);
+
+const z: Result<number, ErrorKind> = Ok(123);
+assert((await z.isErrAndAsync((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === false);
 ```
 
 ### Additional Methods
