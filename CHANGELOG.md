@@ -1,4 +1,10 @@
 # CHANGELOG
+## rustlike-result v0.4.2 (2024-03-23)
+### Features
+
+- Remove type limit of `equal` method
+- Add doc examples for Rust-like Result methods
+
 ## rustlike-result v0.4.1 (2024-03-17)
 ### Features
 
