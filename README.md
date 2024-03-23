@@ -40,6 +40,9 @@ Rust-like `Result` for JavaScript.
     - [unwrapOrElseAsync](#unwraporelseasync)
     - [unwrapUnchecked](#unwrapunchecked)
     - [unwrapErrUnchecked](#unwraperrunchecked)
+    - [and](#and)
+    - [andThen](#andthen)
+    - [andThenAsync](#andthenasync)
   - [Additional Methods](#additional-methods)
     - [equal](#equal)
 - [Helpers for Resultifying](#helpers-for-resultifying)
@@ -689,6 +692,89 @@ x.unwrapErrUnchecked();
 
 const y: Result<number, string> = Err('emergency failure');
 assert(y.unwrapErrUnchecked() === 'emergency failure');
+```
+
+#### `and`
+
+Returns `res` if itself is `Ok`, otherwise returns the `Err` value of itself.
+
+Arguments passed to `and` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `andThen`, which is lazily evaluated.
+
+Examples:
+
+```ts
+import { Err, Ok, type Result } from 'rustlike-result';
+
+let x: Result<number, string>;
+let y: Result<string, string>;
+
+x = Ok(2);
+y = Err('late error');
+assert(x.and(y).equal(Err('late error')));
+
+x = Err('early error');
+y = Ok('foo');
+assert(x.and(y).equal(Err('early error')));
+
+x = Err('not a 2');
+y = Err('late error');
+assert(x.and(y).equal(Err('not a 2')));
+
+x = Ok(2);
+y = Ok('different result type');
+assert(x.and(y).equal(Ok('different result type')));
+```
+
+#### `andThen`
+
+Calls `op` if itself is `Ok`, otherwise returns the `Err` value of itself.
+
+This function can be used for control flow based on Result values.
+
+Examples:
+
+```ts
+import { Err, Ok, type Result } from 'rustlike-result';
+
+const parseJSON = (json: string) =>
+    resultify
+    .sync<SyntaxError>()(JSON.parse)(json)
+        .mapErr((err) => err.message);
+
+assert(Ok<string, string>('2').andThen(parseJSON).equal(Ok(2)));
+assert(
+    Ok<string, string>('asdf')
+        .andThen(parseJSON)
+        .equal(Err('Unexpected token \'a\', "asdf" is not valid JSON')),
+);
+```
+
+#### `andThenAsync`
+
+Asynchronously calls `op` if itself is `Ok`, otherwise returns the `Err` value of itself.
+
+This function can be used for control flow based on Result values.
+
+Examples:
+
+```ts
+import { Err, Ok, type Result } from 'rustlike-result';
+
+const parseJSON = (json: string) =>
+    Promise.resolve(
+        resultify
+            .sync<SyntaxError>()(JSON.parse)(json)
+            .mapErr((err) => err.message),
+    );
+
+const x = await Ok<string, string>('2').andThenAsync(parseJSON);
+assert(x.equal(Ok(2)));
+
+const y = await Ok<string, string>('asdf').andThenAsync(parseJSON);
+assert(y.equal(Err('Unexpected token \'a\', "asdf" is not valid JSON')));
+
+const z = await Err('not a valid json string').andThenAsync(parseJSON);
+assert(z.equal(Err('not a valid json string')));
 ```
 
 ### Additional Methods

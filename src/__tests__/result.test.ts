@@ -1203,6 +1203,31 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         expect(op2().and(Ok(667))).toStrictEqual(Err('sadface'));
         expect(op2().and(Err('bad'))).toStrictEqual(Err('sadface'));
     });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            let x: Result<number, string>;
+            let y: Result<string, string>;
+
+            x = Ok(2);
+            y = Err('late error');
+            assert(x.and(y).equal(Err('late error')));
+
+            x = Err('early error');
+            y = Ok('foo');
+            assert(x.and(y).equal(Err('early error')));
+
+            x = Err('not a 2');
+            y = Err('late error');
+            assert(x.and(y).equal(Err('not a 2')));
+
+            x = Ok(2);
+            y = Ok('different result type');
+            assert(x.and(y).equal(Ok('different result type')));
+        }
+
+        expect(examples).not.toThrow();
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.andThen.name}\``, () => {
@@ -1232,6 +1257,25 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
 
     it('should panic if fn panic', () => {
         expect(() => Ok(1).andThen(panicFn1)).toThrow(Error('error'));
+    });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            const parseJSON = (json: string) =>
+                resultify
+                    .sync<SyntaxError>()(JSON.parse)(json)
+                    .mapErr((err) => err.message);
+
+            assert(Ok<string, string>('2').andThen(parseJSON).equal(Ok(2)));
+            assert(
+                Ok<string, string>('asdf')
+                    .andThen(parseJSON)
+                    .equal(Err('Unexpected token \'a\', "asdf" is not valid JSON')),
+            );
+            assert(Err('not a valid json string').andThen(parseJSON).equal(Err('not a valid json string')));
+        }
+
+        expect(examples).not.toThrow();
     });
 });
 
@@ -1267,6 +1311,28 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
     it('should panic if fn panic', async () => {
         await expect(() => Ok(1).andThenAsync(panicFn1)).rejects.toThrow(Error('error'));
         await expect(() => Ok(1).andThenAsync(panicFn2)).rejects.toThrow(Error('error'));
+    });
+
+    it('should have correct examples doc', async () => {
+        async function examples() {
+            const parseJSON = (json: string) =>
+                Promise.resolve(
+                    resultify
+                        .sync<SyntaxError>()(JSON.parse)(json)
+                        .mapErr((err) => err.message),
+                );
+
+            const x = await Ok<string, string>('2').andThenAsync(parseJSON);
+            assert(x.equal(Ok(2)));
+
+            const y = await Ok<string, string>('asdf').andThenAsync(parseJSON);
+            assert(y.equal(Err('Unexpected token \'a\', "asdf" is not valid JSON')));
+
+            const z = await Err('not a valid json string').andThenAsync(parseJSON);
+            assert(z.equal(Err('not a valid json string')));
+        }
+
+        await expect(examples()).resolves.not.toThrow();
     });
 });
 
