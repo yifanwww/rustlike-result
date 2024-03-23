@@ -9,9 +9,8 @@ Rust-like `Result` for JavaScript.
 - [Installation](#installation)
 - [Usage](#usage)
 - [About Rust `Option`](#about-rust-option)
-- [The Implementations for `Result`](#the-implementations-for-result)
-  - [Asynchronous Methods](#asynchronous-methods)
-- [More Methods](#more-methods)
+- [Rust `Result` Methods](#rust-result-methods)
+- [Additional Methods](#additional-methods)
   - [equal](#equal)
 - [Helpers for Resultifying](#helpers-for-resultifying)
   - [resultify](#resultify)
@@ -66,7 +65,7 @@ This package doesn't implement Rust-like `Option`. Handling `undefined`/`null` i
 [proposal-optional-chaining]: https://github.com/tc39/proposal-optional-chaining
 [proposal-nullish-coalescing]: https://github.com/tc39/proposal-nullish-coalescing
 
-## The Implementations for `Result`
+## Rust `Result` Methods
 
 The Rust-like `Result` implements the following methods:
 
@@ -150,8 +149,6 @@ hash
 [or_else]: https://doc.rust-lang.org/std/result/enum.Result.html#method.or_else
 [transpose]: https://doc.rust-lang.org/std/result/enum.Result.html#method.transpose
 
-### Asynchronous Methods
-
 Some of the methods have asynchronous versions to help you handle asynchronous logic, for example:
 ```ts
 const result = await Ok(1)
@@ -162,7 +159,7 @@ const result = await Ok(1)
     .then((result) => result.andThenAsync(asyncFn5));
 ```
 
-## More Methods
+## Additional Methods
 ### equal
 
 You can not just use `===` or `==` to compare `Result`, so `Result` itself provides an method call `equal` for that.
