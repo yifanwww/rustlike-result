@@ -469,7 +469,7 @@ export class RustlikeResult<T, E> implements Result<T, E> {
     /**
      * Returns `true` if `self` equals to `other`.
      */
-    equal(other: Result<T, E>): boolean {
+    equal(other: Result<unknown, unknown>): boolean {
         const isOk = this.isOk();
         if (isOk !== other.isOk()) return false;
         return isOk

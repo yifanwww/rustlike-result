@@ -328,5 +328,5 @@ export interface Result<T, E> {
     /**
      * Returns `true` if `self` equals to `other`.
      */
-    equal(other: Result<T, E>): boolean;
+    equal(other: Result<unknown, unknown>): boolean;
 }

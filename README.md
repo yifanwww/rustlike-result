@@ -167,9 +167,13 @@ const result = await Ok(1)
 
 You can not just use `===` or `==` to compare `Result`, so `Result` itself provides an method call `equal` for that.
 
-```javascript
+```js
 expect(Ok(1).equal(Ok(1))).toBe(true);
+expect(Ok(1).equal(Ok(2))).toBe(false);
+expect(Ok(1).equal(Ok(2))).toBe(false);
 expect(Ok('hello').equal(Ok('hello'))).toBe(true);
+expect(Ok('hello').equal(Ok('hello world'))).toBe(false);
+expect(Ok(1).equal(Ok('hello world'))).toBe(false);
 
 expect(Ok({ foo: 1 }).equal(Ok({ foo: 1 }))).toBe(false);
 expect(Ok([1]).equal(Ok([1]))).toBe(false);

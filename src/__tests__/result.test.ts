@@ -1007,5 +1007,9 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         expect(Err(Err({ message: 'Some error message' })).equal(Err(Err({ message: 'Some error message' })))).toBe(
             false,
         );
+
+        expect(Ok(1).equal(Ok('hello world'))).toBe(false);
+        expect(Ok(1).equal(Err('error'))).toBe(false);
+        expect(Err('error').equal(Ok(1))).toBe(false);
     });
 });
