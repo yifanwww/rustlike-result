@@ -19,6 +19,10 @@ Rust-like `Result` for JavaScript.
     - [isErrAndAsync](#iserrandasync)
     - [ok](#ok)
     - [err](#err)
+    - [map](#map)
+    - [mapAsync](#mapasync)
+    - [mapOr](#mapor)
+    - [mapOrAsync](#maporasync)
   - [Additional Methods](#additional-methods)
     - [equal](#equal)
 - [Helpers for Resultifying](#helpers-for-resultifying)
@@ -307,6 +311,72 @@ assert(x.err() === undefined);
 
 const y: Result<number, string> = Err('Some error message');
 assert(y.err() === 'Some error message');
+```
+
+#### `map`
+
+Maps a `Result<T, E>` to `Result<U, E>` by applying a function to a contained `Ok` value, leaving an `Err` value untouched.
+
+This function can be used to compose the results of two functions.
+
+Examples:
+
+```ts
+import { Ok, type Result } from 'rustlike-result';
+
+const x: Result<string, string> = Ok('foo');
+assert(x.map((value) => value.length).ok() === 3);
+```
+
+#### `mapAsync`
+
+Asynchronously maps a `Result<T, E>` to `Result<U, E>` by applying a function to a contained `Ok` value, leaving an `Err` value untouched.
+
+This function can be used to compose the results of two functions.
+
+Examples:
+
+```ts
+import { Ok, type Result } from 'rustlike-result';
+
+const x = await Ok<string, string>('foo').mapAsync((value) => Promise.resolve(value.length));
+assert(x.ok() === 3);
+```
+
+#### `mapOr`
+
+Returns the provided `fallback` (if `Err`), or applies a function to the contained value (if `Ok`).
+
+Arguments passed to `mapOr` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `mapOrElse`, which is lazily evaluated.
+
+Examples:
+
+```ts
+import { Err, Ok, type Result } from 'rustlike-result';
+
+const x: Result<string, string> = Ok('foo');
+assert(x.mapOr(42, (value) => value.length) === 3);
+
+const y: Result<string, string> = Err('bar');
+assert(y.mapOr(42, (value) => value.length) === 42);
+```
+
+#### `mapOrAsync`
+
+Asynchronously returns the provided `fallback` (if `Err`), or applies a function to the contained value (if `Ok`).
+
+Arguments passed to `mapOr` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `mapOrElse`, which is lazily evaluated.
+
+Examples:
+
+```ts
+import { Err, Ok, type Result } from 'rustlike-result';
+
+const x: Result<string, string> = Ok('foo');
+assert((await x.mapOrAsync(42, (value) => value.length)) === 3);
+
+const y: Result<string, string> = Err('bar');
+assert((await y.mapOrAsync(42, (value) => value.length)) === 42);
 ```
 
 ### Additional Methods

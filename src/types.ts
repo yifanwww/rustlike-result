@@ -191,6 +191,15 @@ export interface Result<T, E> {
      *
      * This function can be used to compose the results of two functions.
      *
+     * Examples:
+     *
+     * ```
+     * import { Ok, type Result } from 'rustlike-result';
+     *
+     * const x: Result<string, string> = Ok('foo');
+     * assert(x.map((value) => value.length).ok() === 3);
+     * ```
+     *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map
      */
     map<U>(op: (value: T) => U): Result<U, E>;
@@ -200,6 +209,15 @@ export interface Result<T, E> {
      * leaving an `Err` value untouched.
      *
      * This function can be used to compose the results of two functions.
+     *
+     * Examples:
+     *
+     * ```
+     * import { Ok, type Result } from 'rustlike-result';
+     *
+     * const x = await Ok<string, string>('foo').mapAsync((value) => Promise.resolve(value.length));
+     * assert(x.ok() === 3);
+     * ```
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map
      */
@@ -212,6 +230,18 @@ export interface Result<T, E> {
      * if you are passing the result of a function call,
      * it is recommended to use `mapOrElse`, which is lazily evaluated.
      *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok, type Result } from 'rustlike-result';
+     *
+     * const x: Result<string, string> = Ok('foo');
+     * assert(x.mapOr(42, (value) => value.length) === 3);
+     *
+     * const y: Result<string, string> = Err('bar');
+     * assert(y.mapOr(42, (value) => value.length) === 42);
+     * ```
+     *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or
      */
     mapOr<U>(fallback: U, map: (value: T) => U): U;
@@ -223,6 +253,18 @@ export interface Result<T, E> {
      * Arguments passed to `mapOr` are eagerly evaluated;
      * if you are passing the result of a function call,
      * it is recommended to use `mapOrElse`, which is lazily evaluated.
+     *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok, type Result } from 'rustlike-result';
+     *
+     * const x: Result<string, string> = Ok('foo');
+     * assert((await x.mapOrAsync(42, (value) => value.length)) === 3);
+     *
+     * const y: Result<string, string> = Err('bar');
+     * assert((await y.mapOrAsync(42, (value) => value.length)) === 42);
+     * ```
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or
      */
