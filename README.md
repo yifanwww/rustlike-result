@@ -38,6 +38,8 @@ Rust-like `Result` for JavaScript.
     - [unwrapOr](#unwrapor)
     - [unwrapOrElse](#unwraporelse)
     - [unwrapOrElseAsync](#unwraporelseasync)
+    - [unwrapUnchecked](#unwrapunchecked)
+    - [unwrapErrUnchecked](#unwraperrunchecked)
   - [Additional Methods](#additional-methods)
     - [equal](#equal)
 - [Helpers for Resultifying](#helpers-for-resultifying)
@@ -649,6 +651,44 @@ import { Err, Ok } from 'rustlike-result';
 const count = (err: string) => Promise.resolve(err.length);
 assert((await Ok<number, string>(2).unwrapOrElseAsync(count)) === 2);
 assert((await Err<number, string>('foo').unwrapOrElseAsync(count)) === 3);
+```
+
+#### `unwrapUnchecked`
+
+Returns the contained `Ok` value, without checking that the value is not an `Err`.
+
+**SAFETY**: Calling this method on an `Err` is undefined behavior.
+The safety contract must be upheld by the caller.
+
+Examples:
+
+```ts
+import { Err, Ok, type Result } from 'rustlike-result';
+
+const x: Result<number, string> = Ok(2);
+assert(x.unwrapUnchecked() === 2);
+
+const y: Result<number, string> = Err('emergency failure');
+y.unwrapUnchecked();
+```
+
+#### `unwrapErrUnchecked`
+
+Returns the contained `Err` value, without checking that the value is not an `Ok`.
+
+**SAFETY**: Calling this method on an `Ok` is undefined behavior.
+The safety contract must be upheld by the caller.
+
+Examples:
+
+```ts
+import { Err, Ok, type Result } from 'rustlike-result';
+
+const x: Result<number, string> = Ok(2);
+x.unwrapErrUnchecked();
+
+const y: Result<number, string> = Err('emergency failure');
+assert(y.unwrapErrUnchecked() === 'emergency failure');
 ```
 
 ### Additional Methods

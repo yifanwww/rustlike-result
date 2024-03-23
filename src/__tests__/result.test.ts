@@ -1153,11 +1153,35 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
     it('should unwrap itself to get the contained `Ok` value', () => {
         expect(Ok(100).unwrapUnchecked()).toBe(100);
     });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            const x: Result<number, string> = Ok(2);
+            assert(x.unwrapUnchecked() === 2);
+
+            const y: Result<number, string> = Err('emergency failure');
+            y.unwrapUnchecked();
+        }
+
+        expect(examples).not.toThrow();
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.unwrapErrUnchecked.name}\``, () => {
     it('should unwrap itself to get the contained `Err` value', () => {
         expect(Err('Err').unwrapErrUnchecked()).toBe('Err');
+    });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            const x: Result<number, string> = Ok(2);
+            x.unwrapErrUnchecked();
+
+            const y: Result<number, string> = Err('emergency failure');
+            assert(y.unwrapErrUnchecked() === 'emergency failure');
+        }
+
+        expect(examples).not.toThrow();
     });
 });
 

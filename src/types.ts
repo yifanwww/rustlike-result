@@ -587,6 +587,18 @@ export interface Result<T, E> {
      * **SAFETY**: Calling this method on an `Err` is undefined behavior.
      * The safety contract must be upheld by the caller.
      *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok, type Result } from 'rustlike-result';
+     *
+     * const x: Result<number, string> = Ok(2);
+     * assert(x.unwrapUnchecked() === 2);
+     *
+     * const y: Result<number, string> = Err('emergency failure');
+     * y.unwrapUnchecked();
+     * ```
+     *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_unchecked
      */
     unwrapUnchecked(): T;
@@ -596,6 +608,18 @@ export interface Result<T, E> {
      *
      * **SAFETY**: Calling this method on an `Ok` is undefined behavior.
      * The safety contract must be upheld by the caller.
+     *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok, type Result } from 'rustlike-result';
+     *
+     * const x: Result<number, string> = Ok(2);
+     * x.unwrapErrUnchecked();
+     *
+     * const y: Result<number, string> = Err('emergency failure');
+     * assert(y.unwrapErrUnchecked() === 'emergency failure');
+     * ```
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_err_unchecked
      */
