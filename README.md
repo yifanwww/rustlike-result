@@ -1,13 +1,37 @@
 # rustlike-result
 
-Rust-like Result for Javascript
+Rust-like `Result` for JavaScript.
 
-## Install
+`Result` is a type that represents either success (`Ok`) or `failure` (`Err`).
+
+## Table Of Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [About Rust `Option`](#about-rust-option)
+- [The Implementations for `Result`](#the-implementations-for-result)
+  - [Asynchronous Methods](#asynchronous-methods)
+- [More Methods](#more-methods)
+  - [equal](#equal)
+- [Helpers for Resultifying](#helpers-for-resultifying)
+  - [resultify](#resultify)
+  - [resultify.sync](#resultifysync)
+  - [resultify.promise](#resultifypromise)
+- [JSON Serialization \& Deserialization](#json-serialization--deserialization)
+  - [Built-in Simple Implementation](#built-in-simple-implementation)
+  - [Community (De)Serialization Solutions](#community-deserialization-solutions)
+    - [serializr](#serializr)
+    - [class-transformer](#class-transformer)
+  - [JSON Representation Format](#json-representation-format)
+- [Write Your Own Implementation of `Result`?](#write-your-own-implementation-of-result)
+- [License](#license)
+
+## Installation
 
 ```sh
-npm install rustlike-result
-yarn add rustlike-result
-pnpm install rustlike-result
+> npm install rustlike-result
+> yarn add rustlike-result
+> pnpm install rustlike-result
 ```
 
 ## Usage
@@ -35,7 +59,7 @@ const result2: Result<Dirent[], Error> = await fs
 
 [result]: https://doc.rust-lang.org/std/result/enum.Result.html
 
-### About Rust `Option`
+## About Rust `Option`
 
 This package doesn't implement Rust-like `Option`. Handling `undefined`/`null` is not as hard as it was a few years ago, because right now we already have [proposal-optional-chaining] and [proposal-nullish-coalescing] to help handle it.
 
@@ -295,4 +319,7 @@ The default implementation that this package provides should meet your requireme
 
 ## License
 
-MIT
+The `rustlike-result` project is available as open source under the terms of the [MIT license].
+
+[MIT license]: https://doc.rust-lang.org/std/result/enum.Result.html#method.transpose
+

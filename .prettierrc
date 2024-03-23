@@ -18,6 +18,12 @@
             "options": {
                 "tabWidth": 2
             }
+        },
+        {
+            "files": ["*.code-workspace"],
+            "options": {
+                "trailingComma": "none"
+            }
         }
     ]
 }
