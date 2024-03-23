@@ -530,6 +530,19 @@ export interface Result<T, E> {
      * if you are passing the result of a function call,
      * it is recommended to use `unwrapOrElse`, which is lazily evaluated.
      *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok, type Result } from 'rustlike-result';
+     *
+     * const $default = 2;
+     * const x: Result<number, string> = Ok(9);
+     * assert(x.unwrapOr($default) === 9);
+     *
+     * const y: Result<number, string> = Err('error');
+     * assert(y.unwrapOr($default) === $default);
+     * ```
+     *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or
      */
     unwrapOr(fallback: T): T;
@@ -537,12 +550,32 @@ export interface Result<T, E> {
     /**
      * Returns the contained `Ok` value or computes it from a closure.
      *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok } from 'rustlike-result';
+     *
+     * const count = (err: string) => err.length;
+     * assert(Ok<number, string>(2).unwrapOrElse(count) === 2);
+     * assert(Err<number, string>('foo').unwrapOrElse(count) === 3);
+     * ```
+     *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or_else
      */
     unwrapOrElse(op: (err: E) => T): T;
 
     /**
      * Asynchronously returns the contained `Ok` value or computes it from a closure.
+     *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok } from 'rustlike-result';
+     *
+     * const count = (err: string) => Promise.resolve(err.length);
+     * assert((await Ok<number, string>(2).unwrapOrElseAsync(count)) === 2);
+     * assert((await Err<number, string>('foo').unwrapOrElseAsync(count)) === 3);
+     * ```
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or_else
      */

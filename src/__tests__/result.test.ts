@@ -1032,6 +1032,19 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         expect(ok.unwrapOr(50)).toBe(100);
         expect(okErr.unwrapOr(50)).toBe(50);
     });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            const $default = 2;
+            const x: Result<number, string> = Ok(9);
+            assert(x.unwrapOr($default) === 9);
+
+            const y: Result<number, string> = Err('error');
+            assert(y.unwrapOr($default) === $default);
+        }
+
+        expect(examples).not.toThrow();
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.unwrapOrElse.name}\``, () => {
@@ -1063,6 +1076,16 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
 
     it('should panic if fn panic', () => {
         expect(() => Err('err').unwrapOrElse(panicFn1)).toThrow(Error('error'));
+    });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            const count = (err: string) => err.length;
+            assert(Ok<number, string>(2).unwrapOrElse(count) === 2);
+            assert(Err<number, string>('foo').unwrapOrElse(count) === 3);
+        }
+
+        expect(examples).not.toThrow();
     });
 });
 
@@ -1113,6 +1136,16 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
     it('should panic if fn panic', async () => {
         await expect(() => Err('err').unwrapOrElseAsync(panicFn1)).rejects.toThrow(Error('error'));
         await expect(() => Err('err').unwrapOrElseAsync(panicFn2)).rejects.toThrow(Error('error'));
+    });
+
+    it('should have correct examples doc', async () => {
+        async function examples() {
+            const count = (err: string) => Promise.resolve(err.length);
+            assert((await Ok<number, string>(2).unwrapOrElseAsync(count)) === 2);
+            assert((await Err<number, string>('foo').unwrapOrElseAsync(count)) === 3);
+        }
+
+        await expect(examples()).resolves.not.toThrow();
     });
 });
 
