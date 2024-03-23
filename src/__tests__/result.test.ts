@@ -1,4 +1,5 @@
 import { describe, expect, it, jest } from '@jest/globals';
+import assert from 'node:assert';
 
 import { Err, Ok } from '../factory';
 import { RustlikeResult } from '../result';
@@ -29,6 +30,18 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         expect(Ok(1).isOk()).toBe(true);
         expect(Err('Some error message').isOk()).toBe(false);
     });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            const x: Result<number, string> = Ok(2);
+            assert(x.isOk() === true);
+
+            const y: Result<number, string> = Err('Some error message');
+            assert(y.isOk() === false);
+        }
+
+        expect(examples).not.toThrow();
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.isOkAnd.name}\``, () => {
@@ -57,6 +70,21 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
 
     it('should panic if fn panic', () => {
         expect(() => Ok(2).isOkAnd(panicFn1)).toThrow(Error('error'));
+    });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            const x: Result<number, string> = Ok(2);
+            assert(x.isOkAnd((value) => value > 1) === true);
+
+            const y: Result<number, string> = Ok(0);
+            assert(y.isOkAnd((value) => value > 1) === false);
+
+            const z: Result<number, string> = Err('Some error message');
+            assert(z.isOkAnd((value) => value > 1) === false);
+        }
+
+        expect(examples).not.toThrow();
     });
 });
 
@@ -100,6 +128,21 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
     it('should panic if fn panic', async () => {
         await expect(() => Ok(2).isOkAndAsync(panicFn1)).rejects.toThrow(Error('error'));
         await expect(() => Ok(2).isOkAndAsync(panicFn2)).rejects.toThrow(Error('error'));
+    });
+
+    it('should have correct examples doc', async () => {
+        async function examples() {
+            const x: Result<number, string> = Ok(2);
+            assert((await x.isOkAndAsync((value) => Promise.resolve(value > 1))) === true);
+
+            const y: Result<number, string> = Ok(0);
+            assert((await y.isOkAndAsync((value) => Promise.resolve(value > 1))) === false);
+
+            const z: Result<number, string> = Err('Some error message');
+            assert((await z.isOkAndAsync((value) => Promise.resolve(value > 1))) === false);
+        }
+
+        await expect(examples()).resolves.not.toThrow();
     });
 });
 

@@ -20,10 +20,10 @@ export interface Result<T, E> {
      * import { Err, Ok, type Result } from 'rustlike-result';
      *
      * const x: Result<number, string> = Ok(2);
-     * console.assert(x.isOk() === true);
+     * assert(x.isOk() === true);
      *
      * const y: Result<number, string> = Err('Some error message');
-     * console.assert(y.isOk() === false);
+     * assert(y.isOk() === false);
      * ```
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_ok
@@ -33,12 +33,42 @@ export interface Result<T, E> {
     /**
      * Returns `true` if the result is `Ok` and the value inside of it matches a predicate.
      *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok, type Result } from 'rustlike-result';
+     *
+     * const x: Result<number, string> = Ok(2);
+     * assert(x.isOkAnd((value) => value > 1) === true);
+     *
+     * const y: Result<number, string> = Ok(0);
+     * assert(y.isOkAnd((value) => value > 1) === false);
+     *
+     * const z: Result<number, string> = Err('Some error message');
+     * assert(z.isOkAnd((value) => value > 1) === false);
+     * ```
+     *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_ok_and
      */
     isOkAnd(fn: (value: T) => boolean): boolean;
 
     /**
      * Asynchronously returns `true` if the result is `Ok` and the value inside of it matches a predicate.
+     *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok, type Result } from 'rustlike-result';
+     *
+     * const x: Result<number, string> = Ok(2);
+     * assert(await x.isOkAndAsync((value) => Promise.resolve(value > 1)) === true);
+     *
+     * const y: Result<number, string> = Ok(0);
+     * assert(await y.isOkAndAsync((value) => Promise.resolve(value > 1)) === false);
+     *
+     * const z: Result<number, string> = Err('Some error message');
+     * assert(await z.isOkAndAsync((value) => Promise.resolve(value > 1)) === false);
+     * ```
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_ok_and
      */

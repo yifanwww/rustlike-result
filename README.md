@@ -162,23 +162,49 @@ Examples:
 import { Err, Ok, type Result } from 'rustlike-result';
 
 const x: Result<number, string> = Ok(2);
-console.assert(x.isOk() === true);
+assert(x.isOk() === true);
 
 const y: Result<number, string> = Err('Some error message');
-console.assert(y.isOk() === false);
+assert(y.isOk() === false);
 ```
 
-<!--
-Some of the methods have asynchronous versions to help you handle asynchronous logic, for example:
+#### `isOkAnd`
+
+Returns `true` if the result is `Ok` and the value inside of it matches a predicate.
+
+Examples:
+
 ```ts
-const result = await Ok(1)
-    .andThenAsync(asyncFn1)
-    .then((result) => result.andThenAsync(asyncFn2))
-    .then((result) => result.andThenAsync(asyncFn3))
-    .then((result) => result.andThenAsync(asyncFn4))
-    .then((result) => result.andThenAsync(asyncFn5));
+import { Err, Ok, type Result } from 'rustlike-result';
+
+const x: Result<number, string> = Ok(2);
+assert(x.isOkAnd((value) => value > 1) === true);
+
+const y: Result<number, string> = Ok(0);
+assert(y.isOkAnd((value) => value > 1) === false);
+
+const z: Result<number, string> = Err('Some error message');
+assert(z.isOkAnd((value) => value > 1) === false);
 ```
--->
+
+#### `isOkAndAsync`
+
+Asynchronously returns `true` if the result is `Ok` and the value inside of it matches a predicate.
+
+Examples:
+
+```ts
+import { Err, Ok, type Result } from 'rustlike-result';
+
+const x: Result<number, string> = Ok(2);
+assert(await x.isOkAndAsync((value) => Promise.resolve(value > 1)) === true);
+
+const y: Result<number, string> = Ok(0);
+assert(await y.isOkAndAsync((value) => Promise.resolve(value > 1)) === false);
+
+const z: Result<number, string> = Err('Some error message');
+assert(await z.isOkAndAsync((value) => Promise.resolve(value > 1)) === false);
+```
 
 ### Additional Methods
 #### equal
