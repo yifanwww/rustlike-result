@@ -11,41 +11,42 @@ Rust-like `Result` for JavaScript.
 - [About Rust `Option`](#about-rust-option)
 - [Methods Documentation](#methods-documentation)
   - [Rust `Result` Methods](#rust-result-methods)
-    - [isOk](#isok)
-    - [isOkAnd](#isokand)
-    - [isOkAndAsync](#isokandasync)
-    - [isErr](#iserr)
-    - [isErrAnd](#iserrand)
-    - [isErrAndAsync](#iserrandasync)
-    - [ok](#ok)
-    - [err](#err)
-    - [map](#map)
-    - [mapAsync](#mapasync)
-    - [mapOr](#mapor)
-    - [mapOrAsync](#maporasync)
-    - [mapOrElse](#maporelse)
-    - [mapOrElseAsync](#maporelseasync)
-    - [mapErr](#maperr)
-    - [mapErrAsync](#maperrasync)
-    - [inspect](#inspect)
-    - [inspectAsync](#inspectasync)
-    - [inspectErr](#inspecterr)
-    - [inspectErrAsync](#inspecterrasync)
-    - [expect](#expect)
-    - [unwrap](#unwrap)
-    - [expectErr](#expecterr)
-    - [unwrapErr](#unwraperr)
-    - [unwrapOr](#unwrapor)
-    - [unwrapOrElse](#unwraporelse)
-    - [unwrapOrElseAsync](#unwraporelseasync)
-    - [unwrapUnchecked](#unwrapunchecked)
-    - [unwrapErrUnchecked](#unwraperrunchecked)
-    - [and](#and)
-    - [andThen](#andthen)
-    - [andThenAsync](#andthenasync)
-    - [or](#or)
-    - [orElse](#orelse)
-    - [orElseAsync](#orelseasync)
+    - [`isOk`](#isok)
+    - [`isOkAnd`](#isokand)
+    - [`isOkAndAsync`](#isokandasync)
+    - [`isErr`](#iserr)
+    - [`isErrAnd`](#iserrand)
+    - [`isErrAndAsync`](#iserrandasync)
+    - [`ok`](#ok)
+    - [`err`](#err)
+    - [`map`](#map)
+    - [`mapAsync`](#mapasync)
+    - [`mapOr`](#mapor)
+    - [`mapOrAsync`](#maporasync)
+    - [`mapOrElse`](#maporelse)
+    - [`mapOrElseAsync`](#maporelseasync)
+    - [`mapErr`](#maperr)
+    - [`mapErrAsync`](#maperrasync)
+    - [`inspect`](#inspect)
+    - [`inspectAsync`](#inspectasync)
+    - [`inspectErr`](#inspecterr)
+    - [`inspectErrAsync`](#inspecterrasync)
+    - [`expect`](#expect)
+    - [`unwrap`](#unwrap)
+    - [`expectErr`](#expecterr)
+    - [`unwrapErr`](#unwraperr)
+    - [`unwrapOr`](#unwrapor)
+    - [`unwrapOrElse`](#unwraporelse)
+    - [`unwrapOrElseAsync`](#unwraporelseasync)
+    - [`unwrapUnchecked`](#unwrapunchecked)
+    - [`unwrapErrUnchecked`](#unwraperrunchecked)
+    - [`and`](#and)
+    - [`andThen`](#andthen)
+    - [`andThenAsync`](#andthenasync)
+    - [`or`](#or)
+    - [`orElse`](#orelse)
+    - [`orElseAsync`](#orelseasync)
+    - [`transpose`](#transpose)
   - [Additional Methods](#additional-methods)
     - [equal](#equal)
 - [Helpers for Resultifying](#helpers-for-resultifying)
@@ -859,6 +860,35 @@ const z = await Err<number, number>(3)
     .orElseAsync(err)
     .then((result) => result.orElseAsync(err));
 assert(z.equal(Err(3)));
+```
+
+#### `transpose`
+
+Transposes a `Result` of an optional value into an optional of a `Result`.
+
+`Ok(undefined | null)` will be mapped to `undefined`. `Ok(_)` and `Err(_)` will be mapped to `Ok(_)` and `Err(_)`.
+
+Examples:
+
+```ts
+import { Err, Ok, type Result } from 'rustlike-result';
+
+type SomeErr = unknown;
+
+let x: Result<number | undefined | null, SomeErr>;
+let y: Result<number, SomeErr> | undefined;
+
+x = Ok(5);
+y = Ok(5);
+assert(x.transpose()!.equal(y));
+
+x = Ok(undefined);
+y = undefined;
+assert(x.transpose() === y);
+
+x = Ok(null);
+y = undefined;
+assert(x.transpose() === y);
 ```
 
 ### Additional Methods

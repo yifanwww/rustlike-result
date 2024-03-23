@@ -1485,6 +1485,29 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
             Err('Some error message'),
         );
     });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            type SomeErr = unknown;
+
+            let x: Result<number | undefined | null, SomeErr>;
+            let y: Result<number, SomeErr> | undefined;
+
+            x = Ok(5);
+            y = Ok(5);
+            assert(x.transpose()!.equal(y));
+
+            x = Ok(undefined);
+            y = undefined;
+            assert(x.transpose() === y);
+
+            x = Ok(null);
+            y = undefined;
+            assert(x.transpose() === y);
+        }
+
+        expect(examples).not.toThrow();
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.equal.name}\``, () => {

@@ -929,9 +929,32 @@ export class RustlikeResult<T, E> implements Result<T, E> {
 
     /**
      * Transposes a `Result` of an optional value into an optional of a `Result`.
-     * - `Ok(undefined | null)` will be mapped to `undefined`.
-     * - `Ok(_)` (`Ok(Some(_))` in Rust) will be mapped to `Ok(_)` (`Some(Ok(_))` in Rust).
-     * - `Err(_)` will be mapped to `Err(_)` (`Some(Err(_))` in Rust).
+     *
+     * `Ok(undefined | null)` will be mapped to `undefined`.
+     * `Ok(_)` and `Err(_)` will be mapped to `Ok(_)` and `Err(_)`.
+     *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok, type Result } from 'rustlike-result';
+     *
+     * type SomeErr = unknown;
+     *
+     * let x: Result<number | undefined | null, SomeErr>;
+     * let y: Result<number, SomeErr> | undefined;
+     *
+     * x = Ok(5);
+     * y = Ok(5);
+     * assert(x.transpose()!.equal(y));
+     *
+     * x = Ok(undefined);
+     * y = undefined;
+     * assert(x.transpose() === y);
+     *
+     * x = Ok(null);
+     * y = undefined;
+     * assert(x.transpose() === y);
+     * ```
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.transpose
      */
