@@ -31,6 +31,10 @@ Rust-like `Result` for JavaScript.
     - [inspectAsync](#inspectasync)
     - [inspectErr](#inspecterr)
     - [inspectErrAsync](#inspecterrasync)
+    - [expect](#expect)
+    - [unwrap](#unwrap)
+    - [expectErr](#expecterr)
+    - [unwrapErr](#unwraperr)
   - [Additional Methods](#additional-methods)
     - [equal](#equal)
 - [Helpers for Resultifying](#helpers-for-resultifying)
@@ -525,6 +529,76 @@ const num = await resultify
         return Promise.resolve();
     });
 assert(num.err() instanceof SyntaxError);
+```
+
+#### `expect`
+
+Returns the contained `Ok` value.
+
+Because this function may throw an error, its use is generally discouraged. Instead, prefer to call `unwrapOr`, `unwrapOrElse`.
+
+Throws an Error if itself is `Err`, with an error message including the passed message, and the content of the `Err`.
+
+Examples:
+
+```ts
+import { Err, type Result } from 'rustlike-result';
+
+const x: Result<number, string> = Err('emergency failure');
+x.expect('Failed to operate'); // throws Error('Failed to operate: emergency failure')
+```
+
+#### `unwrap`
+
+Returns the contained `Ok` value.
+
+Because this function may throw an error, its use is generally discouraged. Instead, prefer to call `unwrapOr`, `unwrapOrElse`.
+
+Throws an Error if itself is `Err`, with an error message provided by the `Err`'s value.
+
+Examples:
+
+```ts
+import { Err, Ok, type Result } from 'rustlike-result';
+
+const x: Result<number, string> = Ok(2);
+assert(x.unwrap() === 2);
+
+const y: Result<number, string> = Err('emergency failure');
+y.unwrap(); // throws Error('emergency failure')
+```
+
+#### `expectErr`
+
+Returns the contained `Err` value.
+
+Throws an Error if itself is `Err`, with an error message provided by the `Ok`'s value.
+
+Examples:
+
+```ts
+import { Ok, type Result } from 'rustlike-result';
+
+const x: Result<number, string> = Ok(10);
+x.expectErr('Testing expectErr'); // throws Error('Testing expectErr: 10')
+```
+
+#### `unwrapErr`
+
+Returns the contained `Err` value.
+
+Throws an Error if itself is `Ok`, with an error message provided by the `Ok`'s value.
+
+Examples:
+
+```ts
+import { Ok, type Result } from 'rustlike-result';
+
+const x: Result<number, string> = Err('emergency failure');
+assert(x.unwrapErr() === 'emergency failure');
+
+const y: Result<number, string> = Ok(2);
+y.unwrapErr(); // throws Error(2)
 ```
 
 ### Additional Methods

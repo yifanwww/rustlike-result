@@ -441,7 +441,20 @@ export interface Result<T, E> {
     /**
      * Returns the contained `Ok` value.
      *
-     * Throws Error if itself is `Err`, with a error message provided by the `Err`'s value.
+     * Because this function may throw an error, its use is generally discouraged.
+     * Instead, prefer to call `unwrapOr`, `unwrapOrElse`.
+     *
+     * Throws an Error if itself is `Err`,
+     * with an error message including the passed message, and the content of the `Err`.
+     *
+     * Examples:
+     *
+     * ```
+     * import { Err, type Result } from 'rustlike-result';
+     *
+     * const x: Result<number, string> = Err('emergency failure');
+     * x.expect('Failed to operate'); // throws Error('Failed to operate: emergency failure')
+     * ```
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.expect
      */
@@ -450,7 +463,22 @@ export interface Result<T, E> {
     /**
      * Returns the contained `Ok` value.
      *
-     * Throws Error if itself is `Err`, with a error message provided by the `Err`'s value.
+     * Because this function may throw an error, its use is generally discouraged.
+     * Instead, prefer to call `unwrapOr`, `unwrapOrElse`.
+     *
+     * Throws an Error if itself is `Err`, with an error message provided by the `Err`'s value.
+     *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok, type Result } from 'rustlike-result';
+     *
+     * const x: Result<number, string> = Ok(2);
+     * assert(x.unwrap() === 2);
+     *
+     * const y: Result<number, string> = Err('emergency failure');
+     * y.unwrap(); // throws Error('emergency failure')
+     * ```
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap
      */
@@ -459,7 +487,16 @@ export interface Result<T, E> {
     /**
      * Returns the contained `Err` value.
      *
-     * Throws Error if itself is `Err`, with a error message provided by the `Err`'s value.
+     * Throws an Error if itself is `Err`, with an error message provided by the `Ok`'s value.
+     *
+     * Examples:
+     *
+     * ```
+     * import { Ok, type Result } from 'rustlike-result';
+     *
+     * const x: Result<number, string> = Ok(10);
+     * x.expectErr('Testing expectErr'); // throws Error('Testing expectErr: 10')
+     * ```
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.expect_err
      */
@@ -468,7 +505,19 @@ export interface Result<T, E> {
     /**
      * Returns the contained `Err` value.
      *
-     * Throws Error if itself is `Ok`, with a error message provided by the `Ok`'s value.
+     * Throws an Error if itself is `Ok`, with an error message provided by the `Ok`'s value.
+     *
+     * Examples:
+     *
+     * ```
+     * import { Ok, type Result } from 'rustlike-result';
+     *
+     * const x: Result<number, string> = Err('emergency failure');
+     * assert(x.unwrapErr() === 'emergency failure');
+     *
+     * const y: Result<number, string> = Ok(2);
+     * y.unwrapErr(); // throws Error(2)
+     * ```
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_err
      */

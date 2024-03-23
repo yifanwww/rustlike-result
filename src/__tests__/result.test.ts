@@ -959,12 +959,33 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         expect(Ok(1).expect('Operation type should be correct')).toBe(1);
         expect(() => Err(2).expect('Operation type should be correct')).toThrow('Operation type should be correct: 2');
     });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            const x: Result<number, string> = Err('emergency failure');
+            x.expect('Failed to operate');
+        }
+
+        expect(examples).toThrow('Failed to operate: emergency failure');
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.unwrap.name}\``, () => {
     it('should unwrap itself to get the contained `Ok` value', () => {
         expect(Ok(1).unwrap()).toBe(1);
         expect(() => Err('Some error message').unwrap()).toThrow('Some error message');
+    });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            const x: Result<number, string> = Ok(2);
+            assert(x.unwrap() === 2);
+
+            const y: Result<number, string> = Err('emergency failure');
+            y.unwrap();
+        }
+
+        expect(examples).toThrow('emergency failure');
     });
 });
 
@@ -973,12 +994,33 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         expect(Err('Some error message').expectErr('Testing expectErr')).toBe('Some error message');
         expect(() => Ok(1).expectErr('Testing expectErr')).toThrow('Testing expectErr: 1');
     });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            const x: Result<number, string> = Ok(10);
+            x.expectErr('Testing expectErr');
+        }
+
+        expect(examples).toThrow('Testing expectErr: 10');
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.unwrapErr.name}\``, () => {
     it('should unwrap itself to get the contained `Err` value', () => {
         expect(Err('Some error message').unwrapErr()).toBe('Some error message');
         expect(() => Ok(1).unwrapErr()).toThrow('1');
+    });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            const x: Result<number, string> = Err('emergency failure');
+            assert(x.unwrapErr() === 'emergency failure');
+
+            const y: Result<number, string> = Ok(2);
+            y.unwrapErr();
+        }
+
+        expect(examples).toThrow('2');
     });
 });
 
