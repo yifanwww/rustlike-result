@@ -1346,6 +1346,31 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         expect(op2().or(Ok(667))).toStrictEqual(Ok(667));
         expect(op2().or(Err('bad'))).toStrictEqual(Err('bad'));
     });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            let x: Result<number, string>;
+            let y: Result<number, string>;
+
+            x = Ok(2);
+            y = Err('late error');
+            assert(x.or(y).equal(Ok(2)));
+
+            x = Err('early error');
+            y = Ok(2);
+            assert(x.or(y).equal(Ok(2)));
+
+            x = Err('not a 2');
+            y = Err('late error');
+            assert(x.or(y).equal(Err('late error')));
+
+            x = Ok(2);
+            y = Ok(100);
+            assert(x.or(y).equal(Ok(2)));
+        }
+
+        expect(examples).not.toThrow();
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.orElse.name}\``, () => {
@@ -1375,6 +1400,20 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
 
     it('should panic if fn panic', () => {
         expect(() => Err('err').orElse(panicFn1)).toThrow(Error('error'));
+    });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            const sq = (num: number): Result<number, number> => Ok(num * num);
+            const err = (num: number): Result<number, number> => Err(num);
+
+            assert(Ok(2).orElse(sq).orElse(sq).equal(Ok(2)));
+            assert(Ok(2).orElse(err).orElse(sq).equal(Ok(2)));
+            assert(Err<number, number>(3).orElse(sq).orElse(err).equal(Ok(9)));
+            assert(Err<number, number>(3).orElse(err).orElse(err).equal(Err(3)));
+        }
+
+        expect(examples).not.toThrow();
     });
 });
 
@@ -1410,6 +1449,30 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
     it('should panic if fn panic', async () => {
         await expect(() => Err('err').orElseAsync(panicFn1)).rejects.toThrow(Error('error'));
         await expect(() => Err('err').orElseAsync(panicFn2)).rejects.toThrow(Error('error'));
+    });
+
+    it('should have correct examples doc', async () => {
+        async function examples() {
+            const sq = (num: number): Promise<Result<number, number>> => Promise.resolve(Ok(num * num));
+            const err = (num: number): Promise<Result<number, number>> => Promise.resolve(Err(num));
+
+            const x = await Ok(2)
+                .orElseAsync(sq)
+                .then((result) => result.orElseAsync(sq));
+            assert(x.equal(Ok(2)));
+
+            const y = await Err<number, number>(3)
+                .orElseAsync(sq)
+                .then((result) => result.orElseAsync(err));
+            assert(y.equal(Ok(9)));
+
+            const z = await Err<number, number>(3)
+                .orElseAsync(err)
+                .then((result) => result.orElseAsync(err));
+            assert(z.equal(Err(3)));
+        }
+
+        await expect(examples()).resolves.not.toThrow();
     });
 });
 

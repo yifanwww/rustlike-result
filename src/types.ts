@@ -668,7 +668,7 @@ export interface Result<T, E> {
      * Examples:
      *
      * ```
-     * import { Err, Ok, type Result } from 'rustlike-result';
+     * import { Err, Ok } from 'rustlike-result';
      *
      * const parseJSON = (json: string) =>
      *     resultify
@@ -695,7 +695,7 @@ export interface Result<T, E> {
      * Examples:
      *
      * ```
-     * import { Err, Ok, type Result } from 'rustlike-result';
+     * import { Err, Ok } from 'rustlike-result';
      *
      * const parseJSON = (json: string) =>
      *     Promise.resolve(
@@ -724,6 +724,31 @@ export interface Result<T, E> {
      * Arguments passed to `or` are eagerly evaluated;
      * if you are passing the result of a function call, it is recommended to use `orElse`, which is lazily evaluated.
      *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok, type Result } from 'rustlike-result';
+     *
+     * let x: Result<number, string>;
+     * let y: Result<number, string>;
+     *
+     * x = Ok(2);
+     * y = Err('late error');
+     * assert(x.or(y).equal(Ok(2)));
+     *
+     * x = Err('early error');
+     * y = Ok(2);
+     * assert(x.or(y).equal(Ok(2)));
+     *
+     * x = Err('not a 2');
+     * y = Err('late error');
+     * assert(x.or(y).equal(Err('late error')));
+     *
+     * x = Ok(2);
+     * y = Ok(100);
+     * assert(x.and(y).equal(Ok('different result type')));
+     * ```
+     *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.or
      */
     or<F>(res: Result<T, F>): Result<T, F>;
@@ -733,6 +758,20 @@ export interface Result<T, E> {
      *
      * This function can be used for control flow based on result values.
      *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok, type Result } from 'rustlike-result';
+     *
+     * const sq = (num: number): Result<number, number> => Ok(num * num);
+     * const err = (num: number): Result<number, number> => Err(num);
+     *
+     * assert(Ok(2).orElse(sq).orElse(sq).equal(Ok(2)));
+     * assert(Ok(2).orElse(err).orElse(sq).equal(Ok(2)));
+     * assert(Err<number, number>(3).orElse(sq).orElse(err).equal(Ok(9)));
+     * assert(Err<number, number>(3).orElse(err).orElse(err).equal(Err(3)));
+     * ```
+     *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.or_else
      */
     orElse<F>(op: (err: E) => Result<T, F>): Result<T, F>;
@@ -741,6 +780,30 @@ export interface Result<T, E> {
      * Asynchronously calls `op` if the result is `Err`, otherwise returns the `Ok` value of self.
      *
      * This function can be used for control flow based on result values.
+     *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok, type Result } from 'rustlike-result';
+     *
+     * const sq = (num: number): Promise<Result<number, number>> => Promise.resolve(Ok(num * num));
+     * const err = (num: number): Promise<Result<number, number>> => Promise.resolve(Err(num));
+     *
+     * const x = await Ok(2)
+     *     .orElseAsync(sq)
+     *     .then((result) => result.orElseAsync(sq));
+     * assert(x.equal(Ok(2)));
+     *
+     * const y = await Err<number, number>(3)
+     *     .orElseAsync(sq)
+     *     .then((result) => result.orElseAsync(err));
+     * assert(y.equal(Ok(9)));
+     *
+     * const z = await Err<number, number>(3)
+     *     .orElseAsync(err)
+     *     .then((result) => result.orElseAsync(err));
+     * assert(z.equal(Err(3)));
+     * ```
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.or_else
      */
