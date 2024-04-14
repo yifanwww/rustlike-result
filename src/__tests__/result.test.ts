@@ -32,6 +32,15 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         expect(Err('Some error message').isOk()).toBe(false);
     });
 
+    // eslint-disable-next-line jest/expect-expect
+    it('should narrow down result type', () => {
+        const result = Ok<number, string>(1);
+        if (result.isOk()) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const expected: Result<number, never> = result;
+        }
+    });
+
     it('should have correct examples doc', () => {
         function examples() {
             const x: Result<number, string> = Ok(2);
@@ -151,6 +160,15 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
     it('should return if itself is `Err`', () => {
         expect(Ok(1).isErr()).toBe(false);
         expect(Err('Some error message').isErr()).toBe(true);
+    });
+
+    // eslint-disable-next-line jest/expect-expect
+    it('should narrow down result type', () => {
+        const result = Err<number, string>('Some error message');
+        if (result.isErr()) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const expected: Result<never, string> = result;
+        }
     });
 
     it('should have correct examples doc', () => {

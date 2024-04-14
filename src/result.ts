@@ -56,7 +56,7 @@ export class RustlikeResult<T, E> implements Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_ok
      */
-    isOk(): boolean {
+    isOk(): this is Result<T, never> {
         return this._type === 'ok';
     }
 
@@ -125,7 +125,7 @@ export class RustlikeResult<T, E> implements Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_err
      */
-    isErr(): boolean {
+    isErr(): this is Result<never, E> {
         return this._type === 'err';
     }
 

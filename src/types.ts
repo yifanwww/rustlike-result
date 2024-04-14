@@ -28,7 +28,7 @@ export interface Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_ok
      */
-    isOk(): boolean;
+    isOk(): this is Result<T, never>;
 
     /**
      * Returns `true` if the result is `Ok` and the value inside of it matches a predicate.
@@ -91,7 +91,7 @@ export interface Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_err
      */
-    isErr(): boolean;
+    isErr(): this is Result<never, E>;
 
     /**
      * Returns `true` if the result is `Err` and the value inside of it matches a predicate.
