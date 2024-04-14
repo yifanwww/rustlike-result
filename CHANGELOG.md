@@ -1,4 +1,9 @@
 # CHANGELOG
+## rustlike-result v0.4.3 (2024-04-14)
+### Features
+
+- Narrow down `Result` type after `isOk` or `isErr`
+
 ## rustlike-result v0.4.2 (2024-03-23)
 ### Features
 
