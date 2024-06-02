@@ -1,7 +1,9 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, it } from '@jest/globals';
 
 import { Err, Ok } from '../factory';
-import type { Result } from '../types';
+import type { Result } from '../Result.type';
+
+import { expectResult } from './_helpers';
 
 describe(`Test fn \`${Ok.name}\``, () => {
     it('should create `Ok` result', () => {
@@ -9,9 +11,9 @@ describe(`Test fn \`${Ok.name}\``, () => {
         const result2 = Ok<number, string>(1);
         const result3: Result<number, string> = Ok(2);
 
-        expect(result1).toMatchSnapshot();
-        expect(result2).toMatchSnapshot();
-        expect(result3).toMatchSnapshot();
+        expectResult(result1, { type: 'ok', value: 1, error: undefined });
+        expectResult(result2, { type: 'ok', value: 1, error: undefined });
+        expectResult(result3, { type: 'ok', value: 2, error: undefined });
     });
 });
 
@@ -21,8 +23,8 @@ describe(`Test fn \`${Err.name}\``, () => {
         const result2 = Err<number, string>('Some error message');
         const result3: Result<number, string> = Err('Some error message');
 
-        expect(result1).toMatchSnapshot();
-        expect(result2).toMatchSnapshot();
-        expect(result3).toMatchSnapshot();
+        expectResult(result1, { type: 'err', value: undefined, error: 'Some error message' });
+        expectResult(result2, { type: 'err', value: undefined, error: 'Some error message' });
+        expectResult(result3, { type: 'err', value: undefined, error: 'Some error message' });
     });
 });

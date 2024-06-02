@@ -1,5 +1,5 @@
 import { Err, Ok } from './factory';
-import type { Result } from './types';
+import type { Result } from './Result.type';
 
 type NoVoid<T> = T extends void ? undefined : T;
 

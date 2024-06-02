@@ -2,8 +2,8 @@ import { SKIP, alias, createModelSchema, custom, raw } from 'serializr';
 import type { AdditionalPropArgs, ModelSchema, PropDeserializer, PropSchema, PropSerializer } from 'serializr';
 
 import { Err, Ok } from '../factory';
-import { RustlikeResult } from '../result';
-import type { Result } from '../types';
+import { RustlikeResult } from '../Result.class';
+import type { Result } from '../Result.type';
 import type { Optional, ResultType } from '../types.internal';
 
 import type { ResultJson } from './types';

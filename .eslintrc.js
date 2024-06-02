@@ -339,7 +339,7 @@ module.exports = {
         // -------------------- Eslint-Plugin-Jest Rules --------------------
 
         // https://github.com/jest-community/eslint-plugin-jest/blob/main/docs/rules/expect-expect.md
-        'jest/expect-expect': ['error', { assertFunctionNames: ['expect', '_expect*'] }],
+        'jest/expect-expect': ['error', { assertFunctionNames: ['expect', 'expect*'] }],
 
         // https://github.com/jest-community/eslint-plugin-jest/blob/main/docs/rules/no-alias-methods.md
         'jest/no-alias-methods': 'error',

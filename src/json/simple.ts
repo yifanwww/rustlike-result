@@ -1,6 +1,6 @@
 import { Err, Ok } from '../factory';
-import { RustlikeResult } from '../result';
-import type { Result } from '../types';
+import { RustlikeResult } from '../Result.class';
+import type { Result } from '../Result.type';
 
 import type { ResultJson } from './types';
 

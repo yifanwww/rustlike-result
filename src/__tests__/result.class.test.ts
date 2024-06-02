@@ -2,9 +2,11 @@ import { describe, expect, it, jest } from '@jest/globals';
 import assert from 'node:assert';
 
 import { Err, Ok } from '../factory';
-import { RustlikeResult } from '../result';
+import { RustlikeResult } from '../Result.class';
+import type { Result } from '../Result.type';
 import { resultify } from '../resultify';
-import type { Result } from '../types';
+
+import { expectResult } from './_helpers';
 
 function panicFn1(): never {
     throw new Error('error');
@@ -16,13 +18,15 @@ function panicFn2() {
 
 describe(`Test static method \`${RustlikeResult.name}.${RustlikeResult.Ok.name}\``, () => {
     it('should create `Ok` result', () => {
-        expect(RustlikeResult.Ok(1)).toMatchSnapshot();
+        const result = RustlikeResult.Ok(1);
+        expectResult(result, { type: 'ok', value: 1, error: undefined });
     });
 });
 
 describe(`Test static method \`${RustlikeResult.name}.${RustlikeResult.Err.name}\``, () => {
     it('should create `Err` result', () => {
-        expect(RustlikeResult.Err('Some error message')).toMatchSnapshot();
+        const result = RustlikeResult.Err('Some error message');
+        expectResult(result, { type: 'err', value: undefined, error: 'Some error message' });
     });
 });
 
