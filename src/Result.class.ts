@@ -12,11 +12,10 @@ export class RustlikeResult<T, E> implements Result<T, E> {
     constructor(type: 'ok', value: T);
     constructor(type: 'err', error: E);
     constructor(type: ResultType, value: T | E) {
+        this._type = type;
         if (type === 'ok') {
-            this._type = 'ok';
             this._value = value as T;
         } else {
-            this._type = 'err';
             this._error = value as E;
         }
     }
