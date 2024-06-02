@@ -6,8 +6,8 @@ import type { Optional, ResultType } from './types.internal';
  */
 export class RustlikeResult<T, E> implements Result<T, E> {
     private readonly _type: ResultType;
-    private _value?: T;
-    private _error?: E;
+    private readonly _value?: T;
+    private readonly _error?: E;
 
     constructor(type: 'ok', value: T);
     constructor(type: 'err', error: E);
