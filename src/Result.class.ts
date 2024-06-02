@@ -100,28 +100,28 @@ export class RustlikeResult<T, E> implements Result<T, E> {
 
     inspect(fn: (value: T) => void): this {
         if (this.isOk()) {
-            fn(this.unwrapUnchecked());
+            fn(this._value!);
         }
         return this;
     }
 
     async inspectAsync(fn: (value: T) => void | Promise<void>): Promise<this> {
         if (this.isOk()) {
-            await fn(this.unwrapUnchecked());
+            await fn(this._value!);
         }
         return this;
     }
 
     inspectErr(fn: (err: E) => void): this {
         if (this.isErr()) {
-            fn(this.unwrapErrUnchecked());
+            fn(this._error!);
         }
         return this;
     }
 
     async inspectErrAsync(fn: (err: E) => void | Promise<void>): Promise<this> {
         if (this.isErr()) {
-            await fn(this.unwrapErrUnchecked());
+            await fn(this._error!);
         }
         return this;
     }
