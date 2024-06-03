@@ -814,10 +814,10 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         const okResult = Ok(1);
         const errResult = Err(0);
 
-        await expect(okResult.inspectAsync(fn1)).resolves.toStrictEqual(okResult);
-        await expect(errResult.inspectAsync(fn1)).resolves.toStrictEqual(errResult);
-        await expect(okResult.inspectAsync(fn2)).resolves.toStrictEqual(okResult);
-        await expect(errResult.inspectAsync(fn2)).resolves.toStrictEqual(errResult);
+        await expect(okResult.inspectAsync(fn1)).resolves.toBe(okResult);
+        await expect(errResult.inspectAsync(fn1)).resolves.toBe(errResult);
+        await expect(okResult.inspectAsync(fn2)).resolves.toBe(okResult);
+        await expect(errResult.inspectAsync(fn2)).resolves.toBe(errResult);
     });
 
     it('should inspect ok value', async () => {
