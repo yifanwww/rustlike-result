@@ -1,7 +1,7 @@
 import { describe, it } from '@jest/globals';
 
 import { Err, Ok } from '../factory';
-import type { Result } from '../Result.type';
+import type { Result } from '../Result';
 
 import { expectResult } from './_helpers';
 

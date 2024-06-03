@@ -1,7 +1,7 @@
 import { expect } from '@jest/globals';
 
-import type { RustlikeResult } from '../Result.class';
-import type { Result } from '../Result.type';
+import type { Result } from '../Result';
+import type { RustlikeResult } from '../RustlikeResult';
 import type { ResultType } from '../types.internal';
 
 interface ResultTestDescription {

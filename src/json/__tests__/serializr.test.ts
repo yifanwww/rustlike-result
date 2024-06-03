@@ -4,7 +4,7 @@ import { describe, expect, it } from '@jest/globals';
 import { createModelSchema, deserialize, list, object, primitive, serialize } from 'serializr';
 
 import { Err, Ok } from '../../factory';
-import type { Result } from '../../Result.type';
+import type { Result } from '../../Result';
 import { createResultModelSchema, resultPropSchema } from '../serializr';
 
 describe(`Test fn ${resultPropSchema.name}`, () => {

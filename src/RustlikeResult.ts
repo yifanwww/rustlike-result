@@ -1,4 +1,4 @@
-import type { Result } from './Result.type';
+import type { Result } from './Result';
 import type { Optional, ResultType } from './types.internal';
 
 /**
