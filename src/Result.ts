@@ -663,7 +663,7 @@ export interface Result<T, E> {
     /**
      * Calls `op` if itself is `Ok`, otherwise returns the `Err` value of itself.
      *
-     * This function can be used for control flow based on Result values.
+     * This function can be used for control flow based on `Result` values.
      *
      * Examples:
      *
@@ -690,7 +690,7 @@ export interface Result<T, E> {
     /**
      * Asynchronously calls `op` if itself is `Ok`, otherwise returns the `Err` value of itself.
      *
-     * This function can be used for control flow based on Result values.
+     * This function can be used for control flow based on `Result` values.
      *
      * Examples:
      *
@@ -746,7 +746,7 @@ export interface Result<T, E> {
      *
      * x = Ok(2);
      * y = Ok(100);
-     * assert(x.and(y).equal(Ok('different result type')));
+     * assert(x.or(y).equal(Ok(2)));
      * ```
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.or
@@ -756,7 +756,7 @@ export interface Result<T, E> {
     /**
      * Calls `op` if the result is `Err`, otherwise returns the `Ok` value of self.
      *
-     * This function can be used for control flow based on result values.
+     * This function can be used for control flow based on `Result` values.
      *
      * Examples:
      *
@@ -779,7 +779,7 @@ export interface Result<T, E> {
     /**
      * Asynchronously calls `op` if the result is `Err`, otherwise returns the `Ok` value of self.
      *
-     * This function can be used for control flow based on result values.
+     * This function can be used for control flow based on `Result` values.
      *
      * Examples:
      *

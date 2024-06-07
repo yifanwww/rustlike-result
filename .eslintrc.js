@@ -11,7 +11,7 @@ const naming = [
 
     { selector: 'enumMember', format: ['UPPER_CASE'], leadingUnderscore: 'forbid' },
 
-    { selector: 'function', format: null, filter: { regex: '^(Ok|Err)$', match: true } },
+    { selector: 'function', format: null, filter: { regex: '^(Ok|OkAsync|Err|ErrAsync)$', match: true } },
     { selector: 'function', format: ['camelCase'], leadingUnderscore: 'allow' },
 
     { selector: 'method', modifiers: ['static'], format: null, filter: { regex: '^(Ok|Err)$', match: true } },
