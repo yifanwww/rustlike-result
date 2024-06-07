@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-cycle
 import { Err, Ok } from './factory';
 import type { Result } from './Result';
 import type { ResultAsync } from './ResultAsync';

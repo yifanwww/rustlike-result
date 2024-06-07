@@ -5,8 +5,9 @@ import { Err, Ok } from '../factory';
 import type { Result } from '../Result';
 import { resultify } from '../resultify';
 import { RustlikeResult } from '../RustlikeResult';
+import { RustlikeResultAsync } from '../RustlikeResultAsync';
 
-import { expectResult } from './_helpers';
+import { expectResult, expectResultAsync } from './_helpers';
 
 function panicFn1(): never {
     throw new Error('error');
@@ -1570,5 +1571,17 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         expect(Ok(Ok([1])).equal(Ok(Ok([1])))).toBe(false);
         expect(Ok(Ok({ foo: 1 })).equal(Ok(Ok({ foo: 1 })))).toBe(false);
         expect(Err(Err({ message: 'err' })).equal(Err(Err({ message: 'err' })))).toBe(false);
+    });
+});
+
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.async.name}\``, () => {
+    it('should convert a result to an async result', async () => {
+        const okResult = Ok(1).async();
+        expect(okResult).toBeInstanceOf(RustlikeResultAsync);
+        await expectResultAsync(okResult, { type: 'ok', value: 1, error: undefined });
+
+        const errResult = Err('Some error message').async();
+        expect(errResult).toBeInstanceOf(RustlikeResultAsync);
+        await expectResultAsync(errResult, { type: 'err', value: undefined, error: 'Some error message' });
     });
 });
