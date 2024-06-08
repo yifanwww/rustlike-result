@@ -1,4 +1,67 @@
 # CHANGELOG
+## rustlike-result v0.4.4 (2024-06-08)
+### Features
+
+Add asynchronous Result `ResultAsync`, support these methods:
+- `ResultAsync.isOk`
+- `ResultAsync.isOkAnd`
+- `ResultAsync.isErr`
+- `ResultAsync.isErrAnd`
+- `ResultAsync.ok`
+- `ResultAsync.err`
+- `ResultAsync.map`
+- `ResultAsync.mapOr`
+- `ResultAsync.mapOrElse`
+- `ResultAsync.mapErr`
+- `ResultAsync.inspect`
+- `ResultAsync.inspectErr`
+- `ResultAsync.expect`
+- `ResultAsync.unwrap`
+- `ResultAsync.expectErr`
+- `ResultAsync.unwrapErr`
+- `ResultAsync.unwrapOr`
+- `ResultAsync.unwrapOrElse`
+- `ResultAsync.unwrapUnchecked`
+- `ResultAsync.unwrapErrUnchecked`
+- `ResultAsync.and`
+- `ResultAsync.andThen`
+- `ResultAsync.or`
+- `ResultAsync.orElse`
+- `ResultAsync.transpose`
+- `ResultAsync.equal`
+
+Add new factories:
+- `OkAsync`
+- `ErrAsync`
+
+Support new methods for `Result`:
+- `Result.async`
+
+Add new resultifying helpers:
+- `resultifyAsync`
+- `resultifySync`
+- `resultifyPromise`
+
+### Notable Changes
+
+These methods are deprecated:
+- `Result.isOkAndAsync`
+- `Result.isErrAndAsync`
+- `Result.mapAsync`
+- `Result.mapOrAsync`
+- `Result.mapOrElseAsync`
+- `Result.mapErrAsync`
+- `Result.inspectAsync`
+- `Result.inspectErrAsync`
+- `Result.unwrapOrElseAsync`
+- `Result.andThenAsync`
+- `Result.orElseAsync`
+
+These helpers are deprecated:
+- `resultify`
+- `resultify.sync`
+- `resultify.promise`
+
 ## rustlike-result v0.4.3 (2024-04-14)
 ### Features
 

@@ -69,9 +69,9 @@ Rust-like `Result` and `ResultAsync` for JavaScript.
       - [`ResultAsync.equal`](#resultasyncequal)
     - [`Result.async`](#resultasync)
 - [Helpers for Resultifying](#helpers-for-resultifying)
-  - [resultifyAsync](#resultifyasync)
-  - [resultifySync](#resultifysync)
-  - [resultifyPromise](#resultifypromise)
+  - [`resultifyAsync`](#resultifyasync)
+  - [`resultifySync`](#resultifysync)
+  - [`resultifyPromise`](#resultifypromise)
 - [JSON Serialization \& Deserialization](#json-serialization--deserialization)
   - [Built-in Simple Implementation](#built-in-simple-implementation)
   - [Community (De)Serialization Solutions](#community-deserialization-solutions)
@@ -1278,7 +1278,7 @@ assert(num === 9);
 ```
 
 ## Helpers for Resultifying
-### resultifyAsync
+### `resultifyAsync`
 
 Takes a function and returns a version that returns results asynchronously.
 
@@ -1290,7 +1290,7 @@ const copyFile1 = resultifyAsync(fs.copyFile);
 const copyFile2 = resultifyAsync<Error>()(fs.copyFile);
 ```
 
-### resultifySync
+### `resultifySync`
 
 Takes a function and returns a version that returns results synchronously.
 
@@ -1310,7 +1310,7 @@ const fn1 = resultifySync<Error>()(fn);
 
 In the context where async functions are not allowed, you can use this function to resultify the sync function.
 
-### resultifyPromise
+### `resultifyPromise`
 
 Takes a promise and returns a new promise that contains a result.
 
