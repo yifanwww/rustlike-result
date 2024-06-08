@@ -1,4 +1,5 @@
 import type { Result } from './Result';
+// eslint-disable-next-line import/no-cycle
 import { RustlikeResult } from './RustlikeResult';
 
 /**

@@ -1,3 +1,4 @@
+import type { ResultAsync } from './ResultAsync';
 import type { Optional } from './types.internal';
 
 /**
@@ -53,6 +54,8 @@ export interface Result<T, E> {
     isOkAnd(fn: (value: T) => boolean): boolean;
 
     /**
+     * @deprecated Please use `.async().isOkAnd(fn)` instead.
+     *
      * Asynchronously returns `true` if the result is `Ok` and the value inside of it matches a predicate.
      *
      * Examples:
@@ -102,8 +105,8 @@ export interface Result<T, E> {
      * import { Err, Ok, type Result } from 'rustlike-result';
      *
      * enum ErrorKind {
-     *   NOT_FOUND,
-     *   PERMISSION_DENIED,
+     *     NOT_FOUND,
+     *     PERMISSION_DENIED,
      * }
      *
      * const x: Result<number, ErrorKind> = Err(ErrorKind.NOT_FOUND);
@@ -121,6 +124,8 @@ export interface Result<T, E> {
     isErrAnd(fn: (err: E) => boolean): boolean;
 
     /**
+     * @deprecated Please use `.async().isErrAnd(fn)` instead.
+     *
      * Asynchronously returns `true` if the result is `Err` and the value inside of it matches a predicate.
      *
      * Examples:
@@ -129,8 +134,8 @@ export interface Result<T, E> {
      * import { Err, Ok, type Result } from 'rustlike-result';
      *
      * enum ErrorKind {
-     *   NOT_FOUND,
-     *   PERMISSION_DENIED,
+     *     NOT_FOUND,
+     *     PERMISSION_DENIED,
      * }
      *
      * const x: Result<number, ErrorKind> = Err(ErrorKind.NOT_FOUND);
@@ -205,6 +210,8 @@ export interface Result<T, E> {
     map<U>(op: (value: T) => U): Result<U, E>;
 
     /**
+     * @deprecated Please use `.async().map(op)` instead.
+     *
      * Asynchronously maps a `Result<T, E>` to `Result<U, E>` by applying a function to a contained `Ok` value,
      * leaving an `Err` value untouched.
      *
@@ -247,6 +254,8 @@ export interface Result<T, E> {
     mapOr<U>(fallback: U, map: (value: T) => U): U;
 
     /**
+     * @deprecated Please use `.async().mapOr(fallback, map)` instead.
+     *
      * Asynchronously returns the provided `fallback` (if `Err`),
      * or applies a function to the contained value (if `Ok`).
      *
@@ -295,6 +304,8 @@ export interface Result<T, E> {
     mapOrElse<U>(fallback: (err: E) => U, map: (value: T) => U): U;
 
     /**
+     * @deprecated Please use `.async().mapOrElse(fallback, map)` instead.
+     *
      * Asynchronously maps a `Result<T, E>` to `U` by applying fallback function `fallback` to a contained `Err` value,
      * or function `map` to a contained `Ok` value.
      *
@@ -338,6 +349,8 @@ export interface Result<T, E> {
     mapErr<F>(op: (err: E) => F): Result<T, F>;
 
     /**
+     * @deprecated Please use `.async().mapErr(op)` instead.
+     *
      * Asynchronously maps a `Result<T, E>` to `Result<T, F>` by applying a function to a contained `Err` value,
      * leaving an `Ok` value untouched.
      *
@@ -377,6 +390,8 @@ export interface Result<T, E> {
     inspect(fn: (value: T) => void): this;
 
     /**
+     * @deprecated Please use `.async().inspect(fn)` instead.
+     *
      * Asynchronously calls the provided closure with a reference to the contained value if `Ok`.
      *
      * Examples:
@@ -418,6 +433,8 @@ export interface Result<T, E> {
     inspectErr(fn: (err: E) => void): this;
 
     /**
+     * @deprecated Please use `.async().inspectErr(fn)` instead.
+     *
      * Asynchronously calls the provided closure with a reference to the contained value if `Err`.
      *
      * Examples:
@@ -565,6 +582,8 @@ export interface Result<T, E> {
     unwrapOrElse(op: (err: E) => T): T;
 
     /**
+     * @deprecated Please use `.async().unwrapOrElse(op)` instead.
+     *
      * Asynchronously returns the contained `Ok` value or computes it from a closure.
      *
      * Examples:
@@ -663,7 +682,7 @@ export interface Result<T, E> {
     /**
      * Calls `op` if itself is `Ok`, otherwise returns the `Err` value of itself.
      *
-     * This function can be used for control flow based on Result values.
+     * This function can be used for control flow based on `Result` values.
      *
      * Examples:
      *
@@ -688,9 +707,11 @@ export interface Result<T, E> {
     andThen<U>(op: (value: T) => Result<U, E>): Result<U, E>;
 
     /**
+     * @deprecated Please use `.async().andThen(op)` instead.
+     *
      * Asynchronously calls `op` if itself is `Ok`, otherwise returns the `Err` value of itself.
      *
-     * This function can be used for control flow based on Result values.
+     * This function can be used for control flow based on `Result` values.
      *
      * Examples:
      *
@@ -746,7 +767,7 @@ export interface Result<T, E> {
      *
      * x = Ok(2);
      * y = Ok(100);
-     * assert(x.and(y).equal(Ok('different result type')));
+     * assert(x.or(y).equal(Ok(2)));
      * ```
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.or
@@ -756,7 +777,7 @@ export interface Result<T, E> {
     /**
      * Calls `op` if the result is `Err`, otherwise returns the `Ok` value of self.
      *
-     * This function can be used for control flow based on result values.
+     * This function can be used for control flow based on `Result` values.
      *
      * Examples:
      *
@@ -777,9 +798,11 @@ export interface Result<T, E> {
     orElse<F>(op: (err: E) => Result<T, F>): Result<T, F>;
 
     /**
+     * @deprecated Please use `.async().orElse(op)` instead.
+     *
      * Asynchronously calls `op` if the result is `Err`, otherwise returns the `Ok` value of self.
      *
-     * This function can be used for control flow based on result values.
+     * This function can be used for control flow based on `Result` values.
      *
      * Examples:
      *
@@ -844,6 +867,58 @@ export interface Result<T, E> {
 
     /**
      * Returns `true` if `self` equals to `other`.
+     *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok } from 'rustlike-result';
+     *
+     * assert(Ok(1).equal(Ok(1)));
+     * assert(Ok(NaN).equal(Ok(NaN)));
+     * assert(Err('err').equal(Err('err')));
+     *
+     * assert(Ok(1).equal(Ok(2)) === false);
+     * assert(Err('err 1').equal(Err(-1)) === false);
+     *
+     * assert(Ok(Ok(1)).equal(Ok(Ok(1))));
+     * assert(Ok(Err('err')).equal(Ok(Err('err'))));
+     * assert(Err(Err('err')).equal(Err(Err('err'))));
+     * assert(Err(Ok(1)).equal(Err(Ok(1))));
+     *
+     * assert(Ok(Ok(1)).equal(Ok(Ok(2))) === false);
+     * assert(Ok(Ok(1)).equal(Ok(Err('err'))) === false);
+     * assert(Err(Ok(1)).equal(Err(Err('err'))) === false);
+     *
+     * assert(Ok([1]).equal(Ok([1])) === false);
+     * assert(Ok({ foo: 1 }).equal(Ok({ foo: 1 })) === false);
+     * assert(Ok(Ok([1])).equal(Ok(Ok([1]))) === false);
+     * assert(Ok(Ok({ foo: 1 })).equal(Ok(Ok({ foo: 1 }))) === false);
+     * ```
      */
     equal(other: Result<unknown, unknown>): boolean;
+
+    /**
+     * Converts this result to an async `Result` so it can work in asynchronous code.
+     *
+     * Examples:
+     *
+     * ```
+     * import { Ok } from 'rustlike-result';
+     *
+     * function fn(value: number): Promise<number> {
+     *     // do something asynchronously
+     *     return Promise.resolve(value ** 2);
+     * }
+     *
+     * const num = await Ok<number, string>(3)
+     *     .async()
+     *     .map(fn)
+     *     .inspectErr((err) => {
+     *         console.log(err);
+     *     })
+     *     .ok();
+     * assert(num === 9);
+     * ```
+     */
+    async(): ResultAsync<T, E>;
 }

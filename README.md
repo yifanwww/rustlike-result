@@ -1,8 +1,8 @@
 # rustlike-result
 
-Rust-like `Result` for JavaScript.
+Rust-like `Result` and `ResultAsync` for JavaScript.
 
-`Result` is a type that represents either success (`Ok`) or `failure` (`Err`).
+`Result` is a type that represents either success (`Ok`) or `failure` (`Err`), `ResultAsync` is the asynchronous version of `Result`.
 
 ## Table Of Contents
 
@@ -11,48 +11,67 @@ Rust-like `Result` for JavaScript.
 - [About Rust `Option`](#about-rust-option)
 - [Methods Documentation](#methods-documentation)
   - [Rust `Result` Methods](#rust-result-methods)
-    - [`isOk`](#isok)
-    - [`isOkAnd`](#isokand)
-    - [`isOkAndAsync`](#isokandasync)
-    - [`isErr`](#iserr)
-    - [`isErrAnd`](#iserrand)
-    - [`isErrAndAsync`](#iserrandasync)
-    - [`ok`](#ok)
-    - [`err`](#err)
-    - [`map`](#map)
-    - [`mapAsync`](#mapasync)
-    - [`mapOr`](#mapor)
-    - [`mapOrAsync`](#maporasync)
-    - [`mapOrElse`](#maporelse)
-    - [`mapOrElseAsync`](#maporelseasync)
-    - [`mapErr`](#maperr)
-    - [`mapErrAsync`](#maperrasync)
-    - [`inspect`](#inspect)
-    - [`inspectAsync`](#inspectasync)
-    - [`inspectErr`](#inspecterr)
-    - [`inspectErrAsync`](#inspecterrasync)
-    - [`expect`](#expect)
-    - [`unwrap`](#unwrap)
-    - [`expectErr`](#expecterr)
-    - [`unwrapErr`](#unwraperr)
-    - [`unwrapOr`](#unwrapor)
-    - [`unwrapOrElse`](#unwraporelse)
-    - [`unwrapOrElseAsync`](#unwraporelseasync)
-    - [`unwrapUnchecked`](#unwrapunchecked)
-    - [`unwrapErrUnchecked`](#unwraperrunchecked)
-    - [`and`](#and)
-    - [`andThen`](#andthen)
-    - [`andThenAsync`](#andthenasync)
-    - [`or`](#or)
-    - [`orElse`](#orelse)
-    - [`orElseAsync`](#orelseasync)
-    - [`transpose`](#transpose)
+    - [Synchronous Methods (`Result`)](#synchronous-methods-result)
+      - [`Result.isOk`](#resultisok)
+      - [`Result.isOkAnd`](#resultisokand)
+      - [`Result.isErr`](#resultiserr)
+      - [`Result.isErrAnd`](#resultiserrand)
+      - [`Result.ok`](#resultok)
+      - [`Result.err`](#resulterr)
+      - [`Result.map`](#resultmap)
+      - [`Result.mapOr`](#resultmapor)
+      - [`Result.mapOrElse`](#resultmaporelse)
+      - [`Result.mapErr`](#resultmaperr)
+      - [`Result.inspect`](#resultinspect)
+      - [`Result.inspectErr`](#resultinspecterr)
+      - [`Result.expect`](#resultexpect)
+      - [`Result.unwrap`](#resultunwrap)
+      - [`Result.expectErr`](#resultexpecterr)
+      - [`Result.unwrapErr`](#resultunwraperr)
+      - [`Result.unwrapOr`](#resultunwrapor)
+      - [`Result.unwrapOrElse`](#resultunwraporelse)
+      - [`Result.unwrapUnchecked`](#resultunwrapunchecked)
+      - [`Result.unwrapErrUnchecked`](#resultunwraperrunchecked)
+      - [`Result.and`](#resultand)
+      - [`Result.andThen`](#resultandthen)
+      - [`Result.or`](#resultor)
+      - [`Result.orElse`](#resultorelse)
+      - [`Result.transpose`](#resulttranspose)
+    - [Asynchronous Methods (`ResultAsync`)](#asynchronous-methods-resultasync)
+      - [`ResultAsync.isOk`](#resultasyncresultasyncisok)
+      - [`ResultAsync.isOkAnd`](#resultasyncisokand)
+      - [`ResultAsync.isErr`](#resultasynciserr)
+      - [`ResultAsync.isErrAnd`](#resultasynciserrand)
+      - [`ResultAsync.ok`](#resultasyncok)
+      - [`ResultAsync.err`](#resultasyncerr)
+      - [`ResultAsync.map`](#resultasyncmap)
+      - [`ResultAsync.mapOr`](#resultasyncmapor)
+      - [`ResultAsync.mapOrElse`](#resultasyncmaporelse)
+      - [`ResultAsync.mapErr`](#resultasyncmaperr)
+      - [`ResultAsync.inspect`](#resultasyncinspect)
+      - [`ResultAsync.inspectErr`](#resultasyncinspecterr)
+      - [`ResultAsync.expect`](#resultasyncexpect)
+      - [`ResultAsync.unwrap`](#resultasyncunwrap)
+      - [`ResultAsync.expectErr`](#resultasyncexpecterr)
+      - [`ResultAsync.unwrapErr`](#resultasyncunwraperr)
+      - [`ResultAsync.unwrapOr`](#resultasyncunwrapor)
+      - [`ResultAsync.unwrapOrElse`](#resultasyncunwraporelse)
+      - [`ResultAsync.unwrapUnchecked`](#resultasyncunwrapunchecked)
+      - [`ResultAsync.unwrapErrUnchecked`](#resultasyncunwraperrunchecked)
+      - [`ResultAsync.and`](#resultasyncand)
+      - [`ResultAsync.andThen`](#resultasyncandthen)
+      - [`ResultAsync.or`](#resultasyncor)
+      - [`ResultAsync.orElse`](#resultasyncorelse)
+      - [`ResultAsync.transpose`](#resultasynctranspose)
   - [Additional Methods](#additional-methods)
-    - [equal](#equal)
+    - [`.equal`](#equal)
+      - [`Result.equal`](#resultequal)
+      - [`ResultAsync.equal`](#resultasyncequal)
+    - [`Result.async`](#resultasync)
 - [Helpers for Resultifying](#helpers-for-resultifying)
-  - [resultify](#resultify)
-  - [resultify.sync](#resultifysync)
-  - [resultify.promise](#resultifypromise)
+  - [resultifyAsync](#resultifyasync)
+  - [resultifySync](#resultifysync)
+  - [resultifyPromise](#resultifypromise)
 - [JSON Serialization \& Deserialization](#json-serialization--deserialization)
   - [Built-in Simple Implementation](#built-in-simple-implementation)
   - [Community (De)Serialization Solutions](#community-deserialization-solutions)
@@ -105,35 +124,35 @@ This package doesn't implement Rust-like `Option`. Handling `undefined`/`null` i
 ## Methods Documentation
 ### Rust `Result` Methods
 
-The Rust-like `Result` implements the following methods:
+The Rust-like `Result` and `ResultAsync` implements the following methods:
 
-| Rust-like `Result` method        | Rust `Result` method   |
-| :------------------------------- | :--------------------- |
-| isOk                             | [is_ok]                |
-| isOkAnd / isOkAndAsync           | [is_ok_and]            |
-| isErr                            | [is_err]               |
-| isErrAnd / isErrAndAsync         | [is_err_and]           |
-| ok                               | [ok]                   |
-| err                              | [err]                  |
-| map / mapAsync                   | [map]                  |
-| mapOr / mapOrAsync               | [map_or]               |
-| mapOrElse / mapOrElseAsync       | [map_or_else]          |
-| mapErr / mapErrAsync             | [map_err]              |
-| inspect / inspectAsync           | [inspect]              |
-| inspectErr / inspectErrAsync     | [inspect_err]          |
-| expect                           | [expect]               |
-| unwrap                           | [unwrap]               |
-| expectErr                        | [expect_err]           |
-| unwrapErr                        | [unwrap_err]           |
-| unwrapOr                         | [unwrap_or]            |
-| unwrapOrElse / unwrapOrElseAsync | [unwrap_or_else]       |
-| unwrapUnchecked                  | [unwrap_unchecked]     |
-| unwrapErrUnchecked               | [unwrap_err_unchecked] |
-| and                              | [and]                  |
-| andThen / andThenAsync           | [and_then]             |
-| or                               | [or]                   |
-| orElse / orElseAsync             | [or_else]              |
-| transpose                        | [transpose]            |
+| Rust-like `Result` / `ResultAsync` method | Rust `Result` method   |
+| :---------------------------------------- | :--------------------- |
+| isOk                                      | [is_ok]                |
+| isOkAnd                                   | [is_ok_and]            |
+| isErr                                     | [is_err]               |
+| isErrAnd                                  | [is_err_and]           |
+| ok                                        | [ok]                   |
+| err                                       | [err]                  |
+| map                                       | [map]                  |
+| mapOr                                     | [map_or]               |
+| mapOrElse                                 | [map_or_else]          |
+| mapErr                                    | [map_err]              |
+| inspect                                   | [inspect]              |
+| inspectErr                                | [inspect_err]          |
+| expect                                    | [expect]               |
+| unwrap                                    | [unwrap]               |
+| expectErr                                 | [expect_err]           |
+| unwrapErr                                 | [unwrap_err]           |
+| unwrapOr                                  | [unwrap_or]            |
+| unwrapOrElse                              | [unwrap_or_else]       |
+| unwrapUnchecked                           | [unwrap_unchecked]     |
+| unwrapErrUnchecked                        | [unwrap_err_unchecked] |
+| and                                       | [and]                  |
+| andThen                                   | [and_then]             |
+| or                                        | [or]                   |
+| orElse                                    | [or_else]              |
+| transpose                                 | [transpose]            |
 
 Unlike Rust, JavaScript doesn't have the 'Ownership' feature, so some API like `as_ref` are not necessary. These implementations are not implemented:
 
@@ -187,7 +206,8 @@ hash
 [or_else]: https://doc.rust-lang.org/std/result/enum.Result.html#method.or_else
 [transpose]: https://doc.rust-lang.org/std/result/enum.Result.html#method.transpose
 
-#### `isOk`
+#### Synchronous Methods (`Result`)
+##### `Result.isOk`
 
 Returns `true` if the result is `Ok`.
 
@@ -203,7 +223,7 @@ const y: Result<number, string> = Err('Some error message');
 assert(y.isOk() === false);
 ```
 
-#### `isOkAnd`
+##### `Result.isOkAnd`
 
 Returns `true` if the result is `Ok` and the value inside of it matches a predicate.
 
@@ -222,26 +242,7 @@ const z: Result<number, string> = Err('Some error message');
 assert(z.isOkAnd((value) => value > 1) === false);
 ```
 
-#### `isOkAndAsync`
-
-Asynchronously returns `true` if the result is `Ok` and the value inside of it matches a predicate.
-
-Examples:
-
-```ts
-import { Err, Ok, type Result } from 'rustlike-result';
-
-const x: Result<number, string> = Ok(2);
-assert((await x.isOkAndAsync((value) => Promise.resolve(value > 1))) === true);
-
-const y: Result<number, string> = Ok(0);
-assert((await y.isOkAndAsync((value) => Promise.resolve(value > 1))) === false);
-
-const z: Result<number, string> = Err('Some error message');
-assert((await z.isOkAndAsync((value) => Promise.resolve(value > 1))) === false);
-```
-
-#### `isErr`
+##### `Result.isErr`
 
 Returns `true` if the result is `Err`.
 
@@ -257,7 +258,7 @@ const y: Result<number, string> = Err('Some error message');
 assert(y.isErr() === true);
 ```
 
-#### `isErrAnd`
+##### `Result.isErrAnd`
 
 Returns `true` if the result is `Err` and the value inside of it matches a predicate.
 
@@ -267,8 +268,8 @@ Examples:
 import { Err, Ok, type Result } from 'rustlike-result';
 
 enum ErrorKind {
-NOT_FOUND,
-PERMISSION_DENIED,
+    NOT_FOUND,
+    PERMISSION_DENIED,
 }
 
 const x: Result<number, ErrorKind> = Err(ErrorKind.NOT_FOUND);
@@ -281,31 +282,7 @@ const z: Result<number, ErrorKind> = Ok(123);
 assert(z.isErrAnd((value) => value === ErrorKind.NOT_FOUND) === false);
 ```
 
-#### `isErrAndAsync`
-
-Asynchronously returns `true` if the result is `Err` and the value inside of it matches a predicate.
-
-Examples:
-
-```ts
-import { Err, Ok, type Result } from 'rustlike-result';
-
-enum ErrorKind {
-NOT_FOUND,
-PERMISSION_DENIED,
-}
-
-const x: Result<number, ErrorKind> = Err(ErrorKind.NOT_FOUND);
-assert((await x.isErrAndAsync((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === true);
-
-const y: Result<number, ErrorKind> = Err(ErrorKind.PERMISSION_DENIED);
-assert((await y.isErrAndAsync((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === false);
-
-const z: Result<number, ErrorKind> = Ok(123);
-assert((await z.isErrAndAsync((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === false);
-```
-
-#### `ok`
+##### `Result.ok`
 
 Converts from `Result<T, E>` to `Optional<T>` and discarding the error, if any.
 
@@ -321,7 +298,7 @@ const y: Result<number, string> = Err('Some error message');
 assert(y.ok() === undefined);
 ```
 
-#### `err`
+##### `Result.err`
 
 Converts from `Result<T, E>` to `Optional<E>` and discarding the success value, if any.
 
@@ -337,7 +314,7 @@ const y: Result<number, string> = Err('Some error message');
 assert(y.err() === 'Some error message');
 ```
 
-#### `map`
+##### `Result.map`
 
 Maps a `Result<T, E>` to `Result<U, E>` by applying a function to a contained `Ok` value, leaving an `Err` value untouched.
 
@@ -352,22 +329,7 @@ const x: Result<string, string> = Ok('foo');
 assert(x.map((value) => value.length).ok() === 3);
 ```
 
-#### `mapAsync`
-
-Asynchronously maps a `Result<T, E>` to `Result<U, E>` by applying a function to a contained `Ok` value, leaving an `Err` value untouched.
-
-This function can be used to compose the results of two functions.
-
-Examples:
-
-```ts
-import { Ok } from 'rustlike-result';
-
-const x = await Ok<string, string>('foo').mapAsync((value) => Promise.resolve(value.length));
-assert(x.ok() === 3);
-```
-
-#### `mapOr`
+##### `Result.mapOr`
 
 Returns the provided `fallback` (if `Err`), or applies a function to the contained value (if `Ok`).
 
@@ -385,25 +347,7 @@ const y: Result<string, string> = Err('bar');
 assert(y.mapOr(42, (value) => value.length) === 42);
 ```
 
-#### `mapOrAsync`
-
-Asynchronously returns the provided `fallback` (if `Err`), or applies a function to the contained value (if `Ok`).
-
-Arguments passed to `mapOr` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `mapOrElse`, which is lazily evaluated.
-
-Examples:
-
-```ts
-import { Err, Ok, type Result } from 'rustlike-result';
-
-const x: Result<string, string> = Ok('foo');
-assert((await x.mapOrAsync(42, (value) => value.length)) === 3);
-
-const y: Result<string, string> = Err('bar');
-assert((await y.mapOrAsync(42, (value) => value.length)) === 42);
-```
-
-#### `mapOrElse`
+##### `Result.mapOrElse`
 
 Maps a `Result<T, E>` to `U` by applying fallback function `fallback` to a contained `Err` value, or function `map` to a contained `Ok` value.
 
@@ -423,27 +367,7 @@ const y: Result<string, string> = Err('bar');
 assert(y.mapOrElse((err) => k * 2, (value) => value.length) === 42);
 ```
 
-#### `mapOrElseAsync`
-
-Asynchronously maps a `Result<T, E>` to `U` by applying fallback function `fallback` to a contained `Err` value, or function `map` to a contained `Ok` value.
-
-This function can be used to unpack a successful result while handling an error.
-
-Examples:
-
-```ts
-import { Err, Ok, type Result } from 'rustlike-result';
-
-const k = 21;
-
-const x: Result<string, string> = Ok('foo');
-assert((await x.mapOrElseAsync(() => Promise.resolve(k * 2), (value) => Promise.resolve(value.length))) === 3);
-
-const y: Result<string, string> = Err('bar');
-assert((await y.mapOrElseAsync(() => Promise.resolve(k * 2), (value) => Promise.resolve(value.length))) === 42);
-```
-
-#### `mapErr`
+##### `Result.mapErr`
 
 Maps a `Result<T, E>` to `Result<T, F>` by applying a function to a contained `Err` value, leaving an `Ok` value untouched.
 
@@ -458,22 +382,7 @@ const x: Result<number, Error> = Err(new Error('Some error message'));
 assert(x.mapErr((err) => err.message).err() === 'Some error message');
 ```
 
-#### `mapErrAsync`
-
-Asynchronously maps a `Result<T, E>` to `Result<T, F>` by applying a function to a contained `Err` value, leaving an `Ok` value untouched.
-
-This function can be used to pass through a successful result while handling an error.
-
-Examples:
-
-```ts
-import { Err } from 'rustlike-result';
-
-const x = await Err(new Error('Some error message')).mapErrAsync((err) => Promise.resolve(err.message));
-assert(x.err() === 'Some error message');
-```
-
-#### `inspect`
+##### `Result.inspect`
 
 Calls the provided closure with a reference to the contained value if `Ok`.
 
@@ -490,27 +399,7 @@ const num = resultify
 assert(num === 64);
 ```
 
-#### `inspectAsync`
-
-Asynchronously calls the provided closure with a reference to the contained value if `Ok`.
-
-Examples:
-
-```ts
-import { resultify } from 'rustlike-result';
-
-const num = await resultify
-    .sync<SyntaxError>()(JSON.parse)('4')
-    .inspectAsync((value: number) => {
-        console.log(`original: ${value}`);
-        return Promise.resolve();
-    })
-    .then((result) => result.map((value) => value ** 3))
-    .then((result) => result.expect('failed to parse number'));
-assert(num === 64);
-```
-
-#### `inspectErr`
+##### `Result.inspectErr`
 
 Calls the provided closure with a reference to the contained value if `Err`.
 
@@ -525,25 +414,7 @@ const num = resultify
 assert(num.err() instanceof SyntaxError);
 ```
 
-#### `inspectErrAsync`
-
-Asynchronously calls the provided closure with a reference to the contained value if `Err`.
-
-Examples:
-
-```ts
-import { resultify } from 'rustlike-result';
-
-const num = await resultify
-    .sync<SyntaxError>()(JSON.parse)('asdf')
-    .inspectErrAsync((err) => {
-        console.log(`failed to parse json string: ${err.message}`);
-        return Promise.resolve();
-    });
-assert(num.err() instanceof SyntaxError);
-```
-
-#### `expect`
+##### `Result.expect`
 
 Returns the contained `Ok` value.
 
@@ -560,7 +431,7 @@ const x: Result<number, string> = Err('emergency failure');
 x.expect('Failed to operate'); // throws Error('Failed to operate: emergency failure')
 ```
 
-#### `unwrap`
+##### `Result.unwrap`
 
 Returns the contained `Ok` value.
 
@@ -580,7 +451,7 @@ const y: Result<number, string> = Err('emergency failure');
 y.unwrap(); // throws Error('emergency failure')
 ```
 
-#### `expectErr`
+##### `Result.expectErr`
 
 Returns the contained `Err` value.
 
@@ -595,7 +466,7 @@ const x: Result<number, string> = Ok(10);
 x.expectErr('Testing expectErr'); // throws Error('Testing expectErr: 10')
 ```
 
-#### `unwrapErr`
+##### `Result.unwrapErr`
 
 Returns the contained `Err` value.
 
@@ -613,7 +484,7 @@ const y: Result<number, string> = Ok(2);
 y.unwrapErr(); // throws Error(2)
 ```
 
-#### `unwrapOr`
+##### `Result.unwrapOr`
 
 Returns the contained `Ok` value or a provided default.
 
@@ -632,7 +503,7 @@ const y: Result<number, string> = Err('error');
 assert(y.unwrapOr($default) === $default);
 ```
 
-#### `unwrapOrElse`
+##### `Result.unwrapOrElse`
 
 Returns the contained `Ok` value or computes it from a closure.
 
@@ -646,21 +517,7 @@ assert(Ok<number, string>(2).unwrapOrElse(count) === 2);
 assert(Err<number, string>('foo').unwrapOrElse(count) === 3);
 ```
 
-#### `unwrapOrElseAsync`
-
-Asynchronously returns the contained `Ok` value or computes it from a closure.
-
-Examples:
-
-```ts
-import { Err, Ok } from 'rustlike-result';
-
-const count = (err: string) => Promise.resolve(err.length);
-assert((await Ok<number, string>(2).unwrapOrElseAsync(count)) === 2);
-assert((await Err<number, string>('foo').unwrapOrElseAsync(count)) === 3);
-```
-
-#### `unwrapUnchecked`
+##### `Result.unwrapUnchecked`
 
 Returns the contained `Ok` value, without checking that the value is not an `Err`.
 
@@ -679,7 +536,7 @@ const y: Result<number, string> = Err('emergency failure');
 y.unwrapUnchecked();
 ```
 
-#### `unwrapErrUnchecked`
+##### `Result.unwrapErrUnchecked`
 
 Returns the contained `Err` value, without checking that the value is not an `Ok`.
 
@@ -698,7 +555,7 @@ const y: Result<number, string> = Err('emergency failure');
 assert(y.unwrapErrUnchecked() === 'emergency failure');
 ```
 
-#### `and`
+##### `Result.and`
 
 Returns `res` if itself is `Ok`, otherwise returns the `Err` value of itself.
 
@@ -729,11 +586,11 @@ y = Ok('different result type');
 assert(x.and(y).equal(Ok('different result type')));
 ```
 
-#### `andThen`
+##### `Result.andThen`
 
 Calls `op` if itself is `Ok`, otherwise returns the `Err` value of itself.
 
-This function can be used for control flow based on Result values.
+This function can be used for control flow based on `Result` values.
 
 Examples:
 
@@ -753,35 +610,7 @@ assert(
 );
 ```
 
-#### `andThenAsync`
-
-Asynchronously calls `op` if itself is `Ok`, otherwise returns the `Err` value of itself.
-
-This function can be used for control flow based on Result values.
-
-Examples:
-
-```ts
-import { Err, Ok } from 'rustlike-result';
-
-const parseJSON = (json: string) =>
-    Promise.resolve(
-        resultify
-            .sync<SyntaxError>()(JSON.parse)(json)
-            .mapErr((err) => err.message),
-    );
-
-const x = await Ok<string, string>('2').andThenAsync(parseJSON);
-assert(x.equal(Ok(2)));
-
-const y = await Ok<string, string>('asdf').andThenAsync(parseJSON);
-assert(y.equal(Err('Unexpected token \'a\', "asdf" is not valid JSON')));
-
-const z = await Err('not a valid json string').andThenAsync(parseJSON);
-assert(z.equal(Err('not a valid json string')));
-```
-
-#### `or`
+##### `Result.or`
 
 Returns `res` if itself is `Err`, otherwise returns the `Ok` value of itself.
 
@@ -809,14 +638,14 @@ assert(x.or(y).equal(Err('late error')));
 
 x = Ok(2);
 y = Ok(100);
-assert(x.and(y).equal(Ok('different result type')));
+assert(x.or(y).equal(Ok(2)));
 ```
 
-#### `orElse`
+##### `Result.orElse`
 
 Calls `op` if the result is `Err`, otherwise returns the `Ok` value of self.
 
-This function can be used for control flow based on result values.
+This function can be used for control flow based on `Result` values.
 
 Examples:
 
@@ -832,37 +661,7 @@ assert(Err<number, number>(3).orElse(sq).orElse(err).equal(Ok(9)));
 assert(Err<number, number>(3).orElse(err).orElse(err).equal(Err(3)));
 ```
 
-#### `orElseAsync`
-
-Asynchronously calls `op` if the result is `Err`, otherwise returns the `Ok` value of self.
-
-This function can be used for control flow based on result values.
-
-Examples:
-
-```ts
-import { Err, Ok, type Result } from 'rustlike-result';
-
-const sq = (num: number): Promise<Result<number, number>> => Promise.resolve(Ok(num * num));
-const err = (num: number): Promise<Result<number, number>> => Promise.resolve(Err(num));
-
-const x = await Ok(2)
-    .orElseAsync(sq)
-    .then((result) => result.orElseAsync(sq));
-assert(x.equal(Ok(2)));
-
-const y = await Err<number, number>(3)
-    .orElseAsync(sq)
-    .then((result) => result.orElseAsync(err));
-assert(y.equal(Ok(9)));
-
-const z = await Err<number, number>(3)
-    .orElseAsync(err)
-    .then((result) => result.orElseAsync(err));
-assert(z.equal(Err(3)));
-```
-
-#### `transpose`
+##### `Result.transpose`
 
 Transposes a `Result` of an optional value into an optional of a `Result`.
 
@@ -891,46 +690,613 @@ y = undefined;
 assert(x.transpose() === y);
 ```
 
-### Additional Methods
-#### equal
+#### Asynchronous Methods (`ResultAsync`)
+##### `ResultAsync.isOk`
 
-You can not just use `===` or `==` to compare `Result`, so `Result` itself provides an method call `equal` for that.
+Asynchornously returns `true` if the result is `Ok`.
 
-```js
-expect(Ok(1).equal(Ok(1))).toBe(true);
-expect(Ok(1).equal(Ok(2))).toBe(false);
-expect(Ok(1).equal(Ok(2))).toBe(false);
-expect(Ok('hello').equal(Ok('hello'))).toBe(true);
-expect(Ok('hello').equal(Ok('hello world'))).toBe(false);
-expect(Ok(1).equal(Ok('hello world'))).toBe(false);
+Examples:
 
-expect(Ok({ foo: 1 }).equal(Ok({ foo: 1 }))).toBe(false);
-expect(Ok([1]).equal(Ok([1]))).toBe(false);
+```ts
+import { ErrAsync, OkAsync, type ResultAsync } from 'rustlike-result';
+
+const x: ResultAsync<number, string> = OkAsync(2);
+assert((await x.isOk()) === true);
+
+const y: ResultAsync<number, string> = ErrAsync('Some error message');
+assert((await y.isOk()) === false);
 ```
 
-There is no built-in deep-equal support in this package for array, object and some built-in classes like `Date`. If you do want to deeply compare those complex structures, you will have to write your own helper functions.
+##### `ResultAsync.isOkAnd`
+
+Asynchronously returns `true` if the result is `Ok` and the value inside of it matches a predicate.
+
+Examples:
+
+```ts
+import { ErrAsync, OkAsync, type ResultAsync } from 'rustlike-result';
+
+const x: ResultAsync<number, string> = OkAsync(2);
+assert((await x.isOkAnd((value) => Promise.resolve(value > 1))) === true);
+
+const y: ResultAsync<number, string> = OkAsync(0);
+assert((await y.isOkAnd((value) => Promise.resolve(value > 1))) === false);
+
+const z: ResultAsync<number, string> = ErrAsync('Some error message');
+assert((await z.isOkAnd((value) => Promise.resolve(value > 1))) === false);
+```
+
+##### `ResultAsync.isErr`
+
+Asynchornously returns `true` if the result is `Err`.
+
+Examples:
+
+```ts
+import { ErrAsync, OkAsync, type ResultAsync } from 'rustlike-result';
+
+const x: ResultAsync<number, string> = OkAsync(-3);
+assert((await x.isErr()) === false);
+
+const y: ResultAsync<number, string> = ErrAsync('Some error message');
+assert((await y.isErr()) === true);
+```
+
+##### `ResultAsync.isErrAnd`
+
+Asynchronously returns `true` if the result is `Err` and the value inside of it matches a predicate.
+
+Examples:
+
+```ts
+import { ErrAsync, OkAsync, type ResultAsync } from 'rustlike-result';
+
+enum ErrorKind {
+    NOT_FOUND,
+    PERMISSION_DENIED,
+}
+
+const x: ResultAsync<number, ErrorKind> = ErrAsync(ErrorKind.NOT_FOUND);
+assert((await x.isErrAnd((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === true);
+
+const y: ResultAsync<number, ErrorKind> = ErrAsync(ErrorKind.PERMISSION_DENIED);
+assert((await y.isErrAnd((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === false);
+
+const z: ResultAsync<number, ErrorKind> = OkAsync(123);
+assert((await z.isErrAnd((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === false);
+```
+
+##### `ResultAsync.ok`
+
+Asynchornously converts from `ResultAsync<T, E>` to `Optional<T>` and discarding the error, if any.
+
+Examples:
+
+```ts
+import { ErrAsync, OkAsync, type ResultAsync } from 'rustlike-result';
+
+const x: ResultAsync<number, string> = OkAsync(2);
+assert((await x.ok()) === 2);
+
+const y: ResultAsync<number, string> = ErrAsync('Some error message');
+assert((await y.ok()) === undefined);
+```
+
+##### `ResultAsync.err`
+
+Asynchornously converts from `ResultAsync<T, E>` to `Optional<E>` and discarding the success value, if any.
+
+Examples:
+
+```ts
+import { ErrAsync, OkAsync, type ResultAsync } from 'rustlike-result';
+
+const x: ResultAsync<number, string> = OkAsync(2);
+assert((await x.err()) === undefined);
+
+const y: ResultAsync<number, string> = ErrAsync('Some error message');
+assert((await y.err()) === 'Some error message');
+```
+
+##### `ResultAsync.map`
+
+Asynchronously maps a `ResultAsync<T, E>` to `ResultAsync<U, E>` by applying a function to a contained `Ok` value, leaving an `Err` value untouched.
+
+This function can be used to compose the results of two functions.
+
+Examples:
+
+```ts
+import { OkAsync } from 'rustlike-result';
+
+const x = OkAsync<string, string>('foo').map((value) => Promise.resolve(value.length));
+assert((await x.ok()) === 3);
+```
+
+##### `ResultAsync.mapOr`
+
+Asynchronously returns the provided `fallback` (if `Err`), or applies a function to the contained value (if `Ok`).
+
+Arguments passed to `mapOr` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `mapOrElse`, which is lazily evaluated.
+
+Examples:
+
+```ts
+import { ErrAsync, OkAsync, type ResultAsync } from 'rustlike-result';
+
+const x: ResultAsync<string, string> = OkAsync('foo');
+assert((await x.mapOr(42, (value) => value.length)) === 3);
+
+const y: ResultAsync<string, string> = ErrAsync('bar');
+assert((await y.mapOr(42, (value) => value.length)) === 42);
+```
+
+##### `ResultAsync.mapOrElse`
+
+Asynchronously maps a `ResultAsync<T, E>` to `U` by applying fallback function `fallback` to a contained `Err` value, or function `map` to a contained `Ok` value.
+
+This function can be used to unpack a successful result while handling an error.
+
+Examples:
+
+```ts
+import { ErrAsync, OkAsync, type ResultAsync } from 'rustlike-result';
+
+const k = 21;
+
+const x: ResultAsync<string, string> = OkAsync('foo');
+assert((await x.mapOrElse(() => Promise.resolve(k * 2), (value) => Promise.resolve(value.length))) === 3);
+
+const y: ResultAsync<string, string> = ErrAsync('bar');
+assert((await y.mapOrElse(() => Promise.resolve(k * 2), (value) => Promise.resolve(value.length))) === 42);
+```
+
+##### `ResultAsync.mapErr`
+
+Asynchronously maps a `ResultAsync<T, E>` to `ResultAsync<T, F>` by applying a function to a contained `Err` value, leaving an `Ok` value untouched.
+
+This function can be used to pass through a successful result while handling an error.
+
+Examples:
+
+```ts
+import { ErrAsync } from 'rustlike-result';
+
+const x = ErrAsync(new Error('Some error message')).mapErr((err) => Promise.resolve(err.message));
+assert((await x.err()) === 'Some error message');
+```
+
+##### `ResultAsync.inspect`
+
+Asynchronously calls the provided closure with a reference to the contained value if `Ok`.
+
+Examples:
+
+```ts
+const num = await OkAsync(4)
+    .inspect((value) => {
+        console.log(`original: ${value}`);
+    })
+    .map((value) => value ** 3)
+    .expect('Some error message');
+assert(num === 64);
+```
+
+##### `ResultAsync.inspectErr`
+
+Asynchronously calls the provided closure with a reference to the contained value if `Err`.
+
+Examples:
+
+```ts
+const result = ErrAsync(new SyntaxError('Some error message')).inspectErr((err) => {
+    console.log(`failed to do something: ${err.message}`);
+});
+assert((await result.err()) instanceof SyntaxError);
+```
+
+##### `ResultAsync.expect`
+
+Asynchronously returns the contained `Ok` value.
+
+Because this function may throw an error, its use is generally discouraged. Instead, prefer to call `unwrapOr`, `unwrapOrElse`.
+
+Throws an Error if itself is `Err`, with an error message including the passed message, and the content of the `Err`.
+
+Examples:
+
+```ts
+import { ErrAsync, type ResultAsync } from 'rustlike-result';
+
+const x: ResultAsync<number, string> = ErrAsync('emergency failure');
+await x.expect('Failed to operate'); // throws Error('Failed to operate: emergency failure')
+```
+
+##### `ResultAsync.unwrap`
+
+Asynchronously returns the contained `Ok` value.
+
+Because this function may throw an error, its use is generally discouraged. Instead, prefer to call `unwrapOr`, `unwrapOrElse`.
+
+Throws an Error if itself is `Err`, with an error message provided by the `Err`'s value.
+
+Examples:
+
+```ts
+import { ErrAsync, OkAsync, type ResultAsync } from 'rustlike-result';
+
+const x: ResultAsync<number, string> = OkAsync(2);
+assert((await x.unwrap()) === 2);
+
+const y: ResultAsync<number, string> = ErrAsync('emergency failure');
+await y.unwrap(); // throws Error('emergency failure')
+```
+
+##### `ResultAsync.expectErr`
+
+Asynchronously returns the contained `Err` value.
+
+Throws an Error if itself is `Err`, with an error message provided by the `Ok`'s value.
+
+Examples:
+
+```ts
+import { OkAsync, type ResultAsync } from 'rustlike-result';
+
+const x: ResultAsync<number, string> = OkAsync(10);
+await x.expectErr('Testing expectErr'); // throws Error('Testing expectErr: 10')
+```
+
+##### `ResultAsync.unwrapErr`
+
+Asynchronously returns the contained `Err` value.
+
+Throws an Error if itself is `Ok`, with an error message provided by the `Ok`'s value.
+
+Examples:
+
+```ts
+import { OkAsync, type ResultAsync } from 'rustlike-result';
+
+const x: ResultAsync<number, string> = Err('emergency failure');
+assert((await x.unwrapErr()) === 'emergency failure');
+
+const y: ResultAsync<number, string> = OkAsync(2);
+await y.unwrapErr(); // throws Error(2)
+```
+
+##### `ResultAsync.unwrapOr`
+
+Asynchronously returns the contained `Ok` value or a provided default.
+
+Arguments passed to `unwrapOr` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `unwrapOrElse`, which is lazily evaluated.
+
+Examples:
+
+```ts
+import { ErrAsync, OkAsync, type ResultAsync } from 'rustlike-result';
+
+const $default = 2;
+const x: ResultAsync<number, string> = OkAsync(9);
+assert((await x.unwrapOr($default)) === 9);
+
+const y: ResultAsync<number, string> = ErrAsync('error');
+assert((await y.unwrapOr($default)) === $default);
+```
+
+##### `ResultAsync.unwrapOrElse`
+
+Asynchronously returns the contained `Ok` value or computes it from a closure.
+
+Examples:
+
+```ts
+import { ErrAsync, OkAsync } from 'rustlike-result';
+
+const count = (err: string) => Promise.resolve(err.length);
+assert((await OkAsync<number, string>(2).unwrapOrElse(count)) === 2);
+assert((await ErrAsync<number, string>('foo').unwrapOrElse(count)) === 3);
+```
+
+##### `ResultAsync.unwrapUnchecked`
+
+Asynchronously returns the contained `Ok` value, without checking that the value is not an `Err`.
+
+**SAFETY**: Calling this method on an `Err` is undefined behavior.
+The safety contract must be upheld by the caller.
+
+Examples:
+
+```ts
+import { ErrAsync, OkAsync, type ResultAsync } from 'rustlike-result';
+
+const x: ResultAsync<number, string> = OkAsync(2);
+assert((await x.unwrapUnchecked()) === 2);
+
+const y: ResultAsync<number, string> = ErrAsync('emergency failure');
+await y.unwrapUnchecked();
+```
+
+##### `ResultAsync.unwrapErrUnchecked`
+
+Asynchronously returns the contained `Err` value, without checking that the value is not an `Ok`.
+
+**SAFETY**: Calling this method on an `Ok` is undefined behavior.
+The safety contract must be upheld by the caller.
+
+Examples:
+
+```ts
+import { ErrAsync, OkAsync, type ResultAsync } from 'rustlike-result';
+
+const x: ResultAsync<number, string> = OkAsync(2);
+await x.unwrapErrUnchecked();
+
+const y: ResultAsync<number, string> = ErrAsync('emergency failure');
+assert((await y.unwrapErrUnchecked()) === 'emergency failure');
+```
+
+##### `ResultAsync.and`
+
+Asynchronously returns `res` if itself is `Ok`, otherwise returns the `Err` value of itself.
+
+Arguments passed to `and` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `andThen`, which is lazily evaluated.
+
+Examples:
+
+```ts
+import { Err, ErrAsync, Ok, OkAsync, type ResultAsync } from 'rustlike-result';
+
+let x: ResultAsync<number, string>;
+let y: ResultAsync<string, string>;
+
+x = OkAsync(2);
+y = ErrAsync('late error');
+assert(await x.and(y).equal(Err('late error')));
+
+x = ErrAsync('early error');
+y = OkAsync('foo');
+assert(await x.and(y).equal(Err('early error')));
+
+x = ErrAsync('not a 2');
+y = ErrAsync('late error');
+assert(await x.and(y).equal(Err('not a 2')));
+
+x = OkAsync(2);
+y = OkAsync('different result type');
+assert(await x.and(y).equal(Ok('different result type')));
+```
+
+##### `ResultAsync.andThen`
+
+Asynchronously calls `op` if itself is `Ok`, otherwise returns the `Err` value of itself.
+
+This function can be used for control flow based on `ResultAsync` values.
+
+Examples:
+
+```ts
+import { Err, ErrAsync, Ok, OkAsync, type ResultAsync } from 'rustlike-result';
+
+const sq = (num: number): ResultAsync<number, number> => OkAsync(num * num);
+const err = (num: number): ResultAsync<number, number> => ErrAsync(num);
+
+const x = OkAsync<number, number>(2).andThen(sq).andThen(sq);
+assert(await x.equal(Ok(16)));
+
+const y = OkAsync<number, number>(2).andThen(sq).andThen(err);
+assert(await y.equal(Err(4)));
+
+const z = OkAsync<number, number>(2).andThen(err).andThen(err);
+assert(await z.equal(Err(2)));
+```
+
+##### `ResultAsync.or`
+
+Returns `res` if itself is `Err`, otherwise returns the `Ok` value of itself.
+
+Arguments passed to `or` are eagerly evaluated; if you are passing the result of a function call, it is recommended to use `orElse`, which is lazily evaluated.
+
+Examples:
+
+```ts
+import { Err, ErrAsync, Ok, OkAsync, type ResultAsync } from 'rustlike-result';
+
+let x: ResultAsync<number, string>;
+let y: ResultAsync<number, string>;
+
+x = OkAsync(2);
+y = ErrAsync('late error');
+assert(await x.or(y).equal(Ok(2)));
+
+x = ErrAsync('early error');
+y = OkAsync(2);
+assert(await x.or(y).equal(Ok(2)));
+
+x = ErrAsync('not a 2');
+y = ErrAsync('late error');
+assert(await x.or(y).equal(Err('late error')));
+
+x = OkAsync(2);
+y = OkAsync(100);
+assert(await x.or(y).equal(Ok(2)));
+```
+
+##### `ResultAsync.orElse`
+
+Asynchronously calls `op` if the result is `Err`, otherwise returns the `Ok` value of self.
+
+This function can be used for control flow based on `ResultAsync` values.
+
+Examples:
+
+```ts
+import { Err, ErrAsync, Ok, OkAsync, type ResultAsync } from 'rustlike-result';
+
+const sq = (num: number): ResultAsync<number, number> => OkAsync(num * num);
+const err = (num: number): ResultAsync<number, number> => ErrAsync(num);
+
+const x = OkAsync(2).orElse(sq).orElse(sq);
+assert(await x.equal(Ok(2)));
+
+const y = ErrAsync<number, number>(3).orElse(sq).orElse(err);
+assert(await y.equal(Ok(9)));
+
+const z = ErrAsync<number, number>(3).orElse(err).orElse(err);
+assert(await z.equal(Err(3)));
+```
+
+##### `ResultAsync.transpose`
+
+Asynchronously transposes a `ResultAsync` of an optional value into an optional of a `ResultAsync`.
+
+`OkAsync(undefined | null)` will be mapped to `Promise<undefined>`. `OkAsync(_)` and `ErrAsync(_)` will be mapped to `OkAsync(_)` and `ErrAsync(_)`.
+
+Examples:
+
+```ts
+import { OkAsync, type ResultAsync } from 'rustlike-result';
+
+type SomeErr = unknown;
+
+let x: ResultAsync<number | undefined | null, SomeErr>;
+let y: ResultAsync<number, SomeErr> | undefined;
+
+x = OkAsync(5);
+y = OkAsync(5);
+assert(await x.transpose()!.equal(y));
+
+x = OkAsync(undefined);
+y = undefined;
+assert((await x.transpose()) === y);
+
+x = OkAsync(null);
+y = undefined;
+assert((await x.transpose()) === y);
+```
+
+### Additional Methods
+#### `.equal`
+
+You can not just use `===` or `==` to compare `Result` or `ResultAsync`, so `Result` and `ResultAsync` themselves provide an method call `equal` for that.
+
+There is no built-in deep-equal support in this package for array, object, built-in classes like `Date`, custom classes. If you do want to deeply compare those complex structures, you will have to write your own helper functions.
 
 There is a [proposal] (stage 2) that introduces `Record` and `Tuple` which are compared by content rather than identity. In the future, we can use `Record` and `Tuple` in `Result` so that we don't need to implement custom equality comparison function.
 
 [proposal]: https://github.com/tc39/proposal-record-tuple
 
+##### `Result.equal`
+
+Returns `true` if `self` equals to `other`.
+
+Examples:
+
+```ts
+import { Err, Ok } from 'rustlike-result';
+
+assert(Ok(1).equal(Ok(1)));
+assert(Ok(NaN).equal(Ok(NaN)));
+assert(Err('err').equal(Err('err')));
+
+assert(Ok(1).equal(Ok(2)) === false);
+assert(Err('err 1').equal(Err(-1)) === false);
+
+assert(Ok(Ok(1)).equal(Ok(Ok(1))));
+assert(Ok(Err('err')).equal(Ok(Err('err'))));
+assert(Err(Err('err')).equal(Err(Err('err'))));
+assert(Err(Ok(1)).equal(Err(Ok(1))));
+
+assert(Ok(Ok(1)).equal(Ok(Ok(2))) === false);
+assert(Ok(Ok(1)).equal(Ok(Err('err'))) === false);
+assert(Err(Ok(1)).equal(Err(Err('err'))) === false);
+
+assert(Ok([1]).equal(Ok([1])) === false);
+assert(Ok({ foo: 1 }).equal(Ok({ foo: 1 })) === false);
+assert(Ok(Ok([1])).equal(Ok(Ok([1]))) === false);
+assert(Ok(Ok({ foo: 1 })).equal(Ok(Ok({ foo: 1 }))) === false);
+```
+
+##### `ResultAsync.equal`
+
+Asynchronously returns `true` if `self` equals to `other`.
+
+Examples:
+
+```ts
+import { Err, ErrAsync, Ok, OkAsync, type ResultAsync } from 'rustlike-result';
+
+assert(await OkAsync(1).equal(Ok(1)));
+assert(await OkAsync(1).equal(Promise.resolve(Ok(1))));
+assert(await OkAsync(1).equal(OkAsync(1)));
+
+assert((await OkAsync(1).equal(Ok(2))) === false);
+assert((await OkAsync(1).equal(Promise.resolve(Ok(2)))) === false);
+assert((await OkAsync(1).equal(OkAsync(2))) === false);
+
+assert(await OkAsync(Ok(1)).equal(Ok(Ok(1))));
+assert(await OkAsync(Ok(1)).equal(Ok(OkAsync(1))));
+assert(await OkAsync(Ok(1)).equal(Promise.resolve(Ok(Ok(1)))));
+assert(await OkAsync(Ok(1)).equal(OkAsync(Promise.resolve(Ok(1)))));
+assert(await OkAsync(Ok(1)).equal(OkAsync(OkAsync(1))));
+assert(await OkAsync(Promise.resolve(Ok(1))).equal(Promise.resolve(Ok(OkAsync(1)))));
+assert(await OkAsync(OkAsync(1)).equal(OkAsync(Ok(1))));
+
+assert((await OkAsync([1]).equal(Ok([1]))) === false);
+assert((await OkAsync({ foo: 1 }).equal(Promise.resolve(Ok({ foo: 1 })))) === false);
+assert((await ErrAsync({ message: 'err' }).equal(ErrAsync({ message: 'err' }))) === false);
+
+assert((await OkAsync(Ok([1])).equal(Ok(Ok([1])))) === false);
+assert((await OkAsync(Ok([1])).equal(OkAsync(OkAsync([1])))) === false);
+assert((await OkAsync(Promise.resolve(Ok([1]))).equal(OkAsync(Ok([1])))) === false);
+assert((await OkAsync(Promise.resolve(Ok({ foo: 1 }))).equal(Ok(OkAsync({ foo: 1 })))) === false);
+assert((await OkAsync(OkAsync({ foo: 1 })).equal(OkAsync(OkAsync({ foo: 1 })))) === false);
+```
+
+#### `Result.async`
+
+Converts this result to an async `Result` so it can work in asynchronous code.
+
+Examples:
+
+```ts
+import { Ok } from 'rustlike-result';
+
+function fn(value: number): Promise<number> {
+    // do something asynchronously
+    return Promise.resolve(value ** 2);
+}
+
+const num = await Ok<number, string>(3)
+    .async()
+    .map(fn)
+    .inspectErr((err) => {
+        console.log(err);
+    })
+    .ok();
+assert(num === 9);
+```
+
 ## Helpers for Resultifying
-### resultify
+### resultifyAsync
 
 Takes a function and returns a version that returns results asynchronously.
 
 ```ts
 import fs from 'node:fs/promises';
+import { resultifyAsync } from 'rustlike-result';
 
-const copyFile1 = resultify(fs.copyFile);
-const copyFile2 = resultify<Error>()(fs.copyFile);
+const copyFile1 = resultifyAsync(fs.copyFile);
+const copyFile2 = resultifyAsync<Error>()(fs.copyFile);
 ```
 
-### resultify.sync
+### resultifySync
 
 Takes a function and returns a version that returns results synchronously.
 
 ```ts
+import { resultifySync } from 'rustlike-result';
+
 /**
  * @throws {Error} Some error messages
  */
@@ -938,18 +1304,20 @@ function fn(): string {
     // do something
 }
 
-const fn1 = resultify.sync(fn);
-const fn1 = resultify.sync<Error>()(fn);
+const fn1 = resultifySync(fn);
+const fn1 = resultifySync<Error>()(fn);
 ```
 
 In the context where async functions are not allowed, you can use this function to resultify the sync function.
 
-### resultify.promise
+### resultifyPromise
 
 Takes a promise and returns a new promise that contains a result.
 
 ```ts
-const result = await resultify.promise(promise);
+import { resultifyPromise } from 'rustlike-result';
+
+const result = await resultifyPromise(promise);
 ```
 
 Due to the limit of TypeScript,it's impossible to resultify overloaded functions perfectly that the returned functions are still overloaded.

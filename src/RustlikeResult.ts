@@ -1,4 +1,7 @@
 import type { Result } from './Result';
+import type { ResultAsync } from './ResultAsync';
+// eslint-disable-next-line import/no-cycle
+import { RustlikeResultAsync } from './RustlikeResultAsync';
 import type { Optional, ResultType } from './types.internal';
 
 /**
@@ -225,5 +228,9 @@ export class RustlikeResult<T, E> implements Result<T, E> {
         return isOk
             ? RustlikeResult._equal(this._value, other.unwrapUnchecked())
             : RustlikeResult._equal(this._error, other.unwrapErrUnchecked());
+    }
+
+    async(): ResultAsync<T, E> {
+        return new RustlikeResultAsync(this);
     }
 }

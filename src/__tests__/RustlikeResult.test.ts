@@ -5,8 +5,9 @@ import { Err, Ok } from '../factory';
 import type { Result } from '../Result';
 import { resultify } from '../resultify';
 import { RustlikeResult } from '../RustlikeResult';
+import { RustlikeResultAsync } from '../RustlikeResultAsync';
 
-import { expectResult } from './_helpers';
+import { expectResult, expectResultAsync } from './_helpers';
 
 function panicFn1(): never {
     throw new Error('error');
@@ -1500,12 +1501,10 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.transpose.name}\``, () => {
     it('should transpose itself to an optional of a `Result`', () => {
-        expect(Ok<number | undefined | null, string>(1).transpose()).toStrictEqual(Ok(1));
-        expect(Ok<number | undefined | null, string>(undefined).transpose()).toBeUndefined();
-        expect(Ok<number | undefined | null, string>(null).transpose()).toBeUndefined();
-        expect(Err<number | undefined | null, string>('Some error message').transpose()).toStrictEqual(
-            Err('Some error message'),
-        );
+        expect(Ok(1).transpose()).toStrictEqual(Ok(1));
+        expect(Ok(undefined).transpose()).toBeUndefined();
+        expect(Ok(null).transpose()).toBeUndefined();
+        expect(Err('Some error message').transpose()).toStrictEqual(Err('Some error message'));
     });
 
     it('should have correct examples doc', () => {
@@ -1534,35 +1533,102 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.equal.name}\``, () => {
     it('should check if itself equals to another result', () => {
+        // simple true
+
         expect(Ok(1).equal(Ok(1))).toBe(true);
         expect(Ok(NaN).equal(Ok(NaN))).toBe(true);
-        expect(Ok(Ok(1)).equal(Ok(Ok(1)))).toBe(true);
-        expect(Ok(Err('Some error message')).equal(Ok(Err('Some error message')))).toBe(true);
-        expect(Err('Some error message').equal(Err('Some error message'))).toBe(true);
-        expect(Err(Err('Some error message')).equal(Err(Err('Some error message')))).toBe(true);
-        expect(Err(Ok(1)).equal(Err(Ok(1)))).toBe(true);
+        expect(Err('err').equal(Err('err'))).toBe(true);
+
+        // simple false
 
         expect(Ok(1).equal(Ok(2))).toBe(false);
+        expect(Ok(1).equal(Ok('hello world'))).toBe(false);
+        expect(Ok(1).equal(Err('err'))).toBe(false);
+        expect(Err('err 1').equal(Err('err 2'))).toBe(false);
+        expect(Err('err 1').equal(Err(-1))).toBe(false);
+        expect(Err('error').equal(Ok(1))).toBe(false);
+
+        // nested true
+
+        expect(Ok(Ok(1)).equal(Ok(Ok(1)))).toBe(true);
+        expect(Ok(Err('err')).equal(Ok(Err('err')))).toBe(true);
+        expect(Err(Err('err')).equal(Err(Err('err')))).toBe(true);
+        expect(Err(Ok(1)).equal(Err(Ok(1)))).toBe(true);
+
+        // nested false
+
         expect(Ok(Ok(1)).equal(Ok(Ok(2)))).toBe(false);
-        expect(Ok(Err<number, string>('Some error message')).equal(Ok(Ok(1)))).toBe(false);
-        expect(Ok(Ok<number, string>(1)).equal(Ok(Err('Some error message')))).toBe(false);
-        expect(Err('Some error message 1').equal(Err('Some error message 2'))).toBe(false);
-        expect(Err(Err('Some error message 1')).equal(Err(Err('Some error message 2')))).toBe(false);
-        expect(Err(Ok<number, string>(1)).equal(Err(Err('Some error message')))).toBe(false);
-        expect(Err(Err<number, string>('Some error message')).equal(Err(Ok(1)))).toBe(false);
-        expect(Ok<number, string>(1).equal(Err('Some error message'))).toBe(false);
+        expect(Ok(Ok(1)).equal(Ok(Err('err')))).toBe(false);
+        expect(Ok(Err('err')).equal(Ok(Ok(1)))).toBe(false);
+        expect(Err(Err('err')).equal(Err(Ok(1)))).toBe(false);
+        expect(Err(Ok(1)).equal(Err(Err('err')))).toBe(false);
+
+        // object equality
 
         expect(Ok([1]).equal(Ok([1]))).toBe(false);
         expect(Ok({ foo: 1 }).equal(Ok({ foo: 1 }))).toBe(false);
+        expect(Err({ message: 'err' }).equal(Err({ message: 'err' }))).toBe(false);
         expect(Ok(Ok([1])).equal(Ok(Ok([1])))).toBe(false);
         expect(Ok(Ok({ foo: 1 })).equal(Ok(Ok({ foo: 1 })))).toBe(false);
-        expect(Err({ message: 'Some error message' }).equal(Err({ message: 'Some error message' }))).toBe(false);
-        expect(Err(Err({ message: 'Some error message' })).equal(Err(Err({ message: 'Some error message' })))).toBe(
-            false,
-        );
+        expect(Err(Err({ message: 'err' })).equal(Err(Err({ message: 'err' })))).toBe(false);
+    });
 
-        expect(Ok(1).equal(Ok('hello world'))).toBe(false);
-        expect(Ok(1).equal(Err('error'))).toBe(false);
-        expect(Err('error').equal(Ok(1))).toBe(false);
+    it('should have correct examples doc', () => {
+        function examples() {
+            assert(Ok(1).equal(Ok(1)));
+            assert(Ok(NaN).equal(Ok(NaN)));
+            assert(Err('err').equal(Err('err')));
+
+            assert(Ok(1).equal(Ok(2)) === false);
+            assert(Err('err 1').equal(Err(-1)) === false);
+
+            assert(Ok(Ok(1)).equal(Ok(Ok(1))));
+            assert(Ok(Err('err')).equal(Ok(Err('err'))));
+            assert(Err(Err('err')).equal(Err(Err('err'))));
+            assert(Err(Ok(1)).equal(Err(Ok(1))));
+
+            assert(Ok(Ok(1)).equal(Ok(Ok(2))) === false);
+            assert(Ok(Ok(1)).equal(Ok(Err('err'))) === false);
+            assert(Err(Ok(1)).equal(Err(Err('err'))) === false);
+
+            assert(Ok([1]).equal(Ok([1])) === false);
+            assert(Ok({ foo: 1 }).equal(Ok({ foo: 1 })) === false);
+            assert(Ok(Ok([1])).equal(Ok(Ok([1]))) === false);
+            assert(Ok(Ok({ foo: 1 })).equal(Ok(Ok({ foo: 1 }))) === false);
+        }
+
+        expect(examples).not.toThrow();
+    });
+});
+
+describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.async.name}\``, () => {
+    it('should convert a result to an async result', async () => {
+        const okResult = Ok(1).async();
+        expect(okResult).toBeInstanceOf(RustlikeResultAsync);
+        await expectResultAsync(okResult, { type: 'ok', value: 1, error: undefined });
+
+        const errResult = Err('Some error message').async();
+        expect(errResult).toBeInstanceOf(RustlikeResultAsync);
+        await expectResultAsync(errResult, { type: 'err', value: undefined, error: 'Some error message' });
+    });
+
+    it('should have correct examples doc', async () => {
+        async function examples() {
+            function fn(value: number): Promise<number> {
+                // do something asynchronously
+                return Promise.resolve(value ** 2);
+            }
+
+            const num = await Ok<number, string>(3)
+                .async()
+                .map(fn)
+                .inspectErr((err) => {
+                    console.log(err);
+                })
+                .ok();
+            assert(num === 9);
+        }
+
+        await expect(examples()).resolves.not.toThrow();
     });
 });
