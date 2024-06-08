@@ -81,8 +81,8 @@ export interface ResultAsync<T, E> extends PromiseLike<Result<T, E>> {
      * import { ErrAsync, OkAsync, type ResultAsync } from 'rustlike-result';
      *
      * enum ErrorKind {
-     *   NOT_FOUND,
-     *   PERMISSION_DENIED,
+     *     NOT_FOUND,
+     *     PERMISSION_DENIED,
      * }
      *
      * const x: ResultAsync<number, ErrorKind> = ErrAsync(ErrorKind.NOT_FOUND);
@@ -229,8 +229,6 @@ export interface ResultAsync<T, E> extends PromiseLike<Result<T, E>> {
      * Examples:
      *
      * ```
-     * import { resultify } from 'rustlike-result';
-     *
      * const num = await OkAsync(4)
      *     .inspect((value) => {
      *         console.log(`original: ${value}`);
@@ -250,8 +248,6 @@ export interface ResultAsync<T, E> extends PromiseLike<Result<T, E>> {
      * Examples:
      *
      * ```
-     * import { resultify } from 'rustlike-result';
-     *
      * const result = ErrAsync(new SyntaxError('Some error message')).inspectErr((err) => {
      *     console.log(`failed to do something: ${err.message}`);
      * });
@@ -591,6 +587,38 @@ export interface ResultAsync<T, E> extends PromiseLike<Result<T, E>> {
 
     /**
      * Asynchronously returns `true` if `self` equals to `other`.
+     *
+     * Examples:
+     *
+     * ```
+     * import { Err, ErrAsync, Ok, OkAsync, type ResultAsync } from 'rustlike-result';
+     *
+     * assert(await OkAsync(1).equal(Ok(1)));
+     * assert(await OkAsync(1).equal(Promise.resolve(Ok(1))));
+     * assert(await OkAsync(1).equal(OkAsync(1)));
+     *
+     * assert((await OkAsync(1).equal(Ok(2))) === false);
+     * assert((await OkAsync(1).equal(Promise.resolve(Ok(2)))) === false);
+     * assert((await OkAsync(1).equal(OkAsync(2))) === false);
+     *
+     * assert(await OkAsync(Ok(1)).equal(Ok(Ok(1))));
+     * assert(await OkAsync(Ok(1)).equal(Ok(OkAsync(1))));
+     * assert(await OkAsync(Ok(1)).equal(Promise.resolve(Ok(Ok(1)))));
+     * assert(await OkAsync(Ok(1)).equal(OkAsync(Promise.resolve(Ok(1)))));
+     * assert(await OkAsync(Ok(1)).equal(OkAsync(OkAsync(1))));
+     * assert(await OkAsync(Promise.resolve(Ok(1))).equal(Promise.resolve(Ok(OkAsync(1)))));
+     * assert(await OkAsync(OkAsync(1)).equal(OkAsync(Ok(1))));
+     *
+     * assert((await OkAsync([1]).equal(Ok([1]))) === false);
+     * assert((await OkAsync({ foo: 1 }).equal(Promise.resolve(Ok({ foo: 1 })))) === false);
+     * assert((await ErrAsync({ message: 'err' }).equal(ErrAsync({ message: 'err' }))) === false);
+     *
+     * assert((await OkAsync(Ok([1])).equal(Ok(Ok([1])))) === false);
+     * assert((await OkAsync(Ok([1])).equal(OkAsync(OkAsync([1])))) === false);
+     * assert((await OkAsync(Promise.resolve(Ok([1]))).equal(OkAsync(Ok([1])))) === false);
+     * assert((await OkAsync(Promise.resolve(Ok({ foo: 1 }))).equal(Ok(OkAsync({ foo: 1 })))) === false);
+     * assert((await OkAsync(OkAsync({ foo: 1 })).equal(OkAsync(OkAsync({ foo: 1 })))) === false);
+     * ```
      */
     equal(
         other: Result<unknown, unknown> | Promise<Result<unknown, unknown>> | ResultAsync<unknown, unknown>,

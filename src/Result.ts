@@ -105,8 +105,8 @@ export interface Result<T, E> {
      * import { Err, Ok, type Result } from 'rustlike-result';
      *
      * enum ErrorKind {
-     *   NOT_FOUND,
-     *   PERMISSION_DENIED,
+     *     NOT_FOUND,
+     *     PERMISSION_DENIED,
      * }
      *
      * const x: Result<number, ErrorKind> = Err(ErrorKind.NOT_FOUND);
@@ -134,8 +134,8 @@ export interface Result<T, E> {
      * import { Err, Ok, type Result } from 'rustlike-result';
      *
      * enum ErrorKind {
-     *   NOT_FOUND,
-     *   PERMISSION_DENIED,
+     *     NOT_FOUND,
+     *     PERMISSION_DENIED,
      * }
      *
      * const x: Result<number, ErrorKind> = Err(ErrorKind.NOT_FOUND);
@@ -867,11 +867,58 @@ export interface Result<T, E> {
 
     /**
      * Returns `true` if `self` equals to `other`.
+     *
+     * Examples:
+     *
+     * ```
+     * import { Err, Ok } from 'rustlike-result';
+     *
+     * assert(Ok(1).equal(Ok(1)));
+     * assert(Ok(NaN).equal(Ok(NaN)));
+     * assert(Err('err').equal(Err('err')));
+     *
+     * assert(Ok(1).equal(Ok(2)) === false);
+     * assert(Err('err 1').equal(Err(-1)) === false);
+     *
+     * assert(Ok(Ok(1)).equal(Ok(Ok(1))));
+     * assert(Ok(Err('err')).equal(Ok(Err('err'))));
+     * assert(Err(Err('err')).equal(Err(Err('err'))));
+     * assert(Err(Ok(1)).equal(Err(Ok(1))));
+     *
+     * assert(Ok(Ok(1)).equal(Ok(Ok(2))) === false);
+     * assert(Ok(Ok(1)).equal(Ok(Err('err'))) === false);
+     * assert(Err(Ok(1)).equal(Err(Err('err'))) === false);
+     *
+     * assert(Ok([1]).equal(Ok([1])) === false);
+     * assert(Ok({ foo: 1 }).equal(Ok({ foo: 1 })) === false);
+     * assert(Ok(Ok([1])).equal(Ok(Ok([1]))) === false);
+     * assert(Ok(Ok({ foo: 1 })).equal(Ok(Ok({ foo: 1 }))) === false);
+     * ```
      */
     equal(other: Result<unknown, unknown>): boolean;
 
     /**
      * Converts this result to an async `Result` so it can work in asynchronous code.
+     *
+     * Examples:
+     *
+     * ```
+     * import { Ok } from 'rustlike-result';
+     *
+     * function fn(value: number): Promise<number> {
+     *     // do something asynchronously
+     *     return Promise.resolve(value ** 2);
+     * }
+     *
+     * const num = await Ok<number, string>(3)
+     *     .async()
+     *     .map(fn)
+     *     .inspectErr((err) => {
+     *         console.log(err);
+     *     })
+     *     .ok();
+     * assert(num === 9);
+     * ```
      */
     async(): ResultAsync<T, E>;
 }

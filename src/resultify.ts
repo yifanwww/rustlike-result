@@ -18,6 +18,8 @@ async function resultifyPromiseLegacy<T, E>(promise: Promise<T>): Promise<Result
  *
  * Examples:
  * ```ts
+ * import { resultifyPromise } from 'rustlike-result';
+ *
  * const result = await resultifyPromise(promise);
  * ```
  *
@@ -43,6 +45,8 @@ type CurriedResultifySync<E> = <T, Args extends unknown[]>(
  *
  * Examples:
  * ```ts
+ * import { resultifySync } from 'rustlike-result';
+ *
  * function fn(): string {
  *   // throws error if failed
  * }
@@ -59,9 +63,12 @@ export function resultifySync<T, E, Args extends unknown[]>(
 ): (...args: Args) => Result<NoVoid<T>, E>;
 /**
  * Takes a function and returns a version that returns results synchronously.
+ * This overloaded function allows you to easily specify the error type.
  *
  * Examples:
  * ```ts
+ * import { resultifySync } from 'rustlike-result';
+ *
  * function fn(): string {
  *   // throws error if failed
  * }
@@ -215,6 +222,7 @@ type CurriedResultifyAsync<E> = <T, Args extends unknown[]>(
  * Examples:
  * ```ts
  * import fs from 'node:fs/promises';
+ * import { resultifyAsync } from 'rustlike-result';
  *
  * const copyFile = resultifyAsync(fs.copyFile);
  * ```
@@ -226,11 +234,12 @@ export function resultifyAsync<T, E, Args extends unknown[]>(
 ): (...args: Args) => ResultAsync<NoVoid<Awaited<T>>, E>;
 /**
  * Takes a function and returns a version that returns results asynchronously.
- * This overloaded function allows you to specify the error type.
+ * This overloaded function allows you to easily specify the error type.
  *
  * Examples:
  * ```ts
  * import fs from 'node:fs/promises';
+ * import { resultifyAsync } from 'rustlike-result';
  *
  * const copyFile = resultifyAsync<Error>()(fs.copyFile);
  * ```

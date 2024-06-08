@@ -1572,6 +1572,33 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         expect(Ok(Ok({ foo: 1 })).equal(Ok(Ok({ foo: 1 })))).toBe(false);
         expect(Err(Err({ message: 'err' })).equal(Err(Err({ message: 'err' })))).toBe(false);
     });
+
+    it('should have correct examples doc', () => {
+        function examples() {
+            assert(Ok(1).equal(Ok(1)));
+            assert(Ok(NaN).equal(Ok(NaN)));
+            assert(Err('err').equal(Err('err')));
+
+            assert(Ok(1).equal(Ok(2)) === false);
+            assert(Err('err 1').equal(Err(-1)) === false);
+
+            assert(Ok(Ok(1)).equal(Ok(Ok(1))));
+            assert(Ok(Err('err')).equal(Ok(Err('err'))));
+            assert(Err(Err('err')).equal(Err(Err('err'))));
+            assert(Err(Ok(1)).equal(Err(Ok(1))));
+
+            assert(Ok(Ok(1)).equal(Ok(Ok(2))) === false);
+            assert(Ok(Ok(1)).equal(Ok(Err('err'))) === false);
+            assert(Err(Ok(1)).equal(Err(Err('err'))) === false);
+
+            assert(Ok([1]).equal(Ok([1])) === false);
+            assert(Ok({ foo: 1 }).equal(Ok({ foo: 1 })) === false);
+            assert(Ok(Ok([1])).equal(Ok(Ok([1]))) === false);
+            assert(Ok(Ok({ foo: 1 })).equal(Ok(Ok({ foo: 1 }))) === false);
+        }
+
+        expect(examples).not.toThrow();
+    });
 });
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.async.name}\``, () => {
@@ -1583,5 +1610,25 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         const errResult = Err('Some error message').async();
         expect(errResult).toBeInstanceOf(RustlikeResultAsync);
         await expectResultAsync(errResult, { type: 'err', value: undefined, error: 'Some error message' });
+    });
+
+    it('should have correct examples doc', async () => {
+        async function examples() {
+            function fn(value: number): Promise<number> {
+                // do something asynchronously
+                return Promise.resolve(value ** 2);
+            }
+
+            const num = await Ok<number, string>(3)
+                .async()
+                .map(fn)
+                .inspectErr((err) => {
+                    console.log(err);
+                })
+                .ok();
+            assert(num === 9);
+        }
+
+        await expect(examples()).resolves.not.toThrow();
     });
 });
