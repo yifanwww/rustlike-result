@@ -1,4 +1,11 @@
 # CHANGELOG
+## rustlike-result v0.4.6 (2024-06-15)
+### Features
+
+Add new package exports for `jest`:
+- `rustlike-result/cjs`
+- `rustlike-result/cjs/serializr`
+
 ## rustlike-result v0.4.5 (2024-06-15)
 ### Features
 
