@@ -1,4 +1,9 @@
 # CHANGELOG
+## rustlike-result v0.4.5 (2024-06-15)
+### Features
+
+Add new factory `fromPromiseableResult`
+
 ## rustlike-result v0.4.4 (2024-06-08)
 ### Features
 
