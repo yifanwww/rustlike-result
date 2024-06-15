@@ -9,6 +9,7 @@ Rust-like `Result` and `ResultAsync` for JavaScript.
 - [Installation](#installation)
 - [Usage](#usage)
 - [About Rust `Option`](#about-rust-option)
+- [Factories](#factories)
 - [Methods Documentation](#methods-documentation)
   - [Rust `Result` Methods](#rust-result-methods)
     - [Synchronous Methods (`Result`)](#synchronous-methods-result)
@@ -120,6 +121,70 @@ This package doesn't implement Rust-like `Option`. Handling `undefined`/`null` i
 
 [proposal-optional-chaining]: https://github.com/tc39/proposal-optional-chaining
 [proposal-nullish-coalescing]: https://github.com/tc39/proposal-nullish-coalescing
+
+## Factories
+### `Ok`
+
+Creates a `Result` that contains the success value.
+
+Examples:
+
+```ts
+const result1 = Ok(1);
+const result2 = Ok<number, string>(1);
+const result3: Result<number, string> = Ok(1);
+```
+
+### `Err`
+
+Creates a `Result` that contains the error value.
+
+Examples:
+
+```ts
+const result1 = Err('Some error message');
+const result2 = Err<number, string>('Some error message');
+const result3: Result<number, string> = Err('Some error message');
+```
+
+### `OkAsync`
+
+Creates a `ResultAsync` that contains the success value.
+
+Examples:
+
+```ts
+const result1 = OkAsync(1);
+const result2 = OkAsync<number, string>(1);
+const result3: ResultAsync<number, string> = OkAsync(1);
+```
+
+### `ErrAsync`
+
+Creates a `ResultAsync` that contains the error value.
+
+Examples:
+
+```ts
+const result1 = ErrAsync('Some error message');
+const result2 = ErrAsync<number, string>('Some error message');
+const result3: ResultAsync<number, string> = ErrAsync('Some error message');
+```
+
+### `fromPromiseableResult`
+
+Creates a `ResultAsync` from a promiseable `Result`.
+
+Examples:
+
+```ts
+const result1 = fromPromiseableResult<number, string>(Ok(1));
+const result2 = fromPromiseableResult<number, string>(Err('Some error message'));
+const result3 = fromPromiseableResult<number, string>(Promise.resolve(Ok(1)));
+const result4 = fromPromiseableResult<number, string>(Promise.resolve(Err('Some error message')));
+const result5 = fromPromiseableResult<number, string>(OkAsync(1));
+const result6 = fromPromiseableResult<number, string>(ErrAsync('Some error message'));
+```
 
 ## Methods Documentation
 ### Rust `Result` Methods

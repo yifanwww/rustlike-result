@@ -26,6 +26,7 @@ export class RustlikeResult<T, E> implements Result<T, E> {
     /**
      * Creates a `Result` that contains the success value.
      */
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     static Ok<T, E = never>(value: T): Result<T, E> {
         return new RustlikeResult<T, E>('ok', value);
     }
@@ -33,6 +34,7 @@ export class RustlikeResult<T, E> implements Result<T, E> {
     /**
      * Creates a `Result` that contains the error value.
      */
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     static Err<E, T = never>(error: E): Result<T, E> {
         return new RustlikeResult<T, E>('err', error);
     }
