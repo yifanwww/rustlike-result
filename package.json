@@ -14,7 +14,9 @@
             "node": "./lib-commonjs/json/serializr.js",
             "import": "./lib/json/serializr.js",
             "default": "./lib-commonjs/json/serializr.js"
-        }
+        },
+        "./cjs": "./lib-commonjs/index.js",
+        "./cjs/serializr": "./lib-commonjs/json/serializr.js"
     },
     "main": "lib-commonjs/index.js",
     "module": "lib/index.js",
