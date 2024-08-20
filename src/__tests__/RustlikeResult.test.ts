@@ -3,7 +3,7 @@ import assert from 'node:assert';
 
 import { Err, Ok } from '../factory';
 import type { Result } from '../Result';
-import { resultify } from '../resultify';
+import { resultifySync } from '../resultify';
 import { RustlikeResult } from '../RustlikeResult';
 import { RustlikeResultAsync } from '../RustlikeResultAsync';
 
@@ -790,8 +790,7 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         jest.spyOn(console, 'log').mockImplementationOnce(() => {});
 
         function examples() {
-            const num = resultify
-                .sync<SyntaxError>()(JSON.parse)('4')
+            const num = resultifySync<SyntaxError>()(JSON.parse)('4')
                 .inspect((value: number) => console.log(`original: ${value}`))
                 .map((value) => value ** 3)
                 .expect('failed to parse number');
@@ -853,8 +852,7 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         async function examples() {
             jest.spyOn(console, 'log').mockImplementationOnce(() => {});
 
-            const num = await resultify
-                .sync<SyntaxError>()(JSON.parse)('4')
+            const num = await resultifySync<SyntaxError>()(JSON.parse)('4')
                 .inspectAsync((value: number) => {
                     console.log(`original: ${value}`);
                     return Promise.resolve();
@@ -903,9 +901,9 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         jest.spyOn(console, 'log').mockImplementationOnce(() => {});
 
         function examples() {
-            const num = resultify
-                .sync<SyntaxError>()(JSON.parse)('asdf')
-                .inspectErr((err) => console.log(`failed to parse json string: ${err.message}`));
+            const num = resultifySync<SyntaxError>()(JSON.parse)('asdf').inspectErr((err) =>
+                console.log(`failed to parse json string: ${err.message}`),
+            );
             assert(num.err() instanceof SyntaxError);
         }
 
@@ -964,12 +962,10 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         jest.spyOn(console, 'log').mockImplementationOnce(() => {});
 
         async function examples() {
-            const num = await resultify
-                .sync<SyntaxError>()(JSON.parse)('asdf')
-                .inspectErrAsync((err) => {
-                    console.log(`failed to parse json string: ${err.message}`);
-                    return Promise.resolve();
-                });
+            const num = await resultifySync<SyntaxError>()(JSON.parse)('asdf').inspectErrAsync((err) => {
+                console.log(`failed to parse json string: ${err.message}`);
+                return Promise.resolve();
+            });
             assert(num.err() instanceof SyntaxError);
         }
 
@@ -1285,9 +1281,7 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
     it('should have correct examples doc', () => {
         function examples() {
             const parseJSON = (json: string) =>
-                resultify
-                    .sync<SyntaxError>()(JSON.parse)(json)
-                    .mapErr((err) => err.message);
+                resultifySync<SyntaxError>()(JSON.parse)(json).mapErr((err) => err.message);
 
             assert(Ok<string, string>('2').andThen(parseJSON).equal(Ok(2)));
             assert(
@@ -1339,11 +1333,7 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
     it('should have correct examples doc', async () => {
         async function examples() {
             const parseJSON = (json: string) =>
-                Promise.resolve(
-                    resultify
-                        .sync<SyntaxError>()(JSON.parse)(json)
-                        .mapErr((err) => err.message),
-                );
+                Promise.resolve(resultifySync<SyntaxError>()(JSON.parse)(json).mapErr((err) => err.message));
 
             const x = await Ok<string, string>('2').andThenAsync(parseJSON);
             assert(x.equal(Ok(2)));
