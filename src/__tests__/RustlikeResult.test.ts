@@ -3,7 +3,7 @@ import assert from 'node:assert';
 
 import { Err, Ok } from '../factory';
 import type { Result } from '../Result';
-import { resultify } from '../resultify';
+import { resultifySync } from '../resultify';
 import { RustlikeResult } from '../RustlikeResult';
 import { RustlikeResultAsync } from '../RustlikeResultAsync';
 
@@ -11,10 +11,6 @@ import { expectResult, expectResultAsync } from './_helpers';
 
 function panicFn1(): never {
     throw new Error('error');
-}
-
-function panicFn2() {
-    return Promise.reject(new Error('error'));
 }
 
 describe(`Test static method \`${RustlikeResult.name}.${RustlikeResult.Ok.name}\``, () => {
@@ -103,64 +99,6 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
     });
 });
 
-describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.isOkAndAsync.name}\``, () => {
-    const fnFactory1 = () => jest.fn((num: number) => num > 1);
-    const fnFactory2 = () => jest.fn((num: number) => Promise.resolve(num > 1));
-
-    it('should return if itself is `Ok` and the value inside of it matches a predicate', async () => {
-        const _it = async (fn: (num: number) => boolean | Promise<boolean>) => {
-            await expect(Ok(2).isOkAndAsync(fn)).resolves.toBe(true);
-            await expect(Ok(0).isOkAndAsync(fn)).resolves.toBe(false);
-            await expect(Err('Some error message').isOkAndAsync(fn)).resolves.toBe(false);
-        };
-
-        await _it(fnFactory1());
-        await _it(fnFactory2());
-    });
-
-    it('should call fn only once if itself is `Ok`', async () => {
-        const _it = async (fn: (num: number) => boolean | Promise<boolean>) => {
-            expect(fn).toHaveBeenCalledTimes(0);
-            await Ok(2).isOkAndAsync(fn);
-            expect(fn).toHaveBeenCalledTimes(1);
-        };
-
-        await _it(fnFactory1());
-        await _it(fnFactory2());
-    });
-
-    it('should not call fn if itself is `Err`', async () => {
-        const _it = async (fn: (num: number) => boolean | Promise<boolean>) => {
-            expect(fn).toHaveBeenCalledTimes(0);
-            await Err('Some error message').isOkAndAsync(fn);
-            expect(fn).toHaveBeenCalledTimes(0);
-        };
-
-        await _it(fnFactory1());
-        await _it(fnFactory2());
-    });
-
-    it('should panic if fn panic', async () => {
-        await expect(() => Ok(2).isOkAndAsync(panicFn1)).rejects.toThrow(Error('error'));
-        await expect(() => Ok(2).isOkAndAsync(panicFn2)).rejects.toThrow(Error('error'));
-    });
-
-    it('should have correct examples doc', async () => {
-        async function examples() {
-            const x: Result<number, string> = Ok(2);
-            assert((await x.isOkAndAsync((value) => Promise.resolve(value > 1))) === true);
-
-            const y: Result<number, string> = Ok(0);
-            assert((await y.isOkAndAsync((value) => Promise.resolve(value > 1))) === false);
-
-            const z: Result<number, string> = Err('Some error message');
-            assert((await z.isOkAndAsync((value) => Promise.resolve(value > 1))) === false);
-        }
-
-        await expect(examples()).resolves.not.toThrow();
-    });
-});
-
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.isErr.name}\``, () => {
     it('should return if itself is `Err`', () => {
         expect(Ok(1).isErr()).toBe(false);
@@ -235,69 +173,6 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         }
 
         expect(examples).not.toThrow();
-    });
-});
-
-describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.isErrAndAsync.name}\``, () => {
-    enum ErrorKind {
-        NOT_FOUND,
-        PERMISSION_DENIED,
-    }
-
-    const fnFactory1 = () => jest.fn((err: ErrorKind) => err === ErrorKind.NOT_FOUND);
-    const fnFactory2 = () => jest.fn((err: ErrorKind) => Promise.resolve(err === ErrorKind.NOT_FOUND));
-
-    it('should return if itself is `Err` and the value inside of it matches a predicate', async () => {
-        const _it = async (fn: (err: ErrorKind) => boolean | Promise<boolean>) => {
-            await expect(Err(ErrorKind.NOT_FOUND).isErrAndAsync(fn)).resolves.toBe(true);
-            await expect(Err(ErrorKind.PERMISSION_DENIED).isErrAndAsync(fn)).resolves.toBe(false);
-            await expect(Ok(123).isErrAndAsync(fn)).resolves.toBe(false);
-        };
-
-        await _it(fnFactory1());
-        await _it(fnFactory2());
-    });
-
-    it('should call fn only once if itself is `Err`', async () => {
-        const _it = async (fn: (err: ErrorKind) => boolean | Promise<boolean>) => {
-            expect(fn).toHaveBeenCalledTimes(0);
-            await Err(ErrorKind.NOT_FOUND).isErrAndAsync(fn);
-            expect(fn).toHaveBeenCalledTimes(1);
-        };
-
-        await _it(fnFactory1());
-        await _it(fnFactory2());
-    });
-
-    it('should not call fn if itself is `Ok`', async () => {
-        const _it = async (fn: (err: ErrorKind) => boolean | Promise<boolean>) => {
-            expect(fn).toHaveBeenCalledTimes(0);
-            await Ok(123).isErrAndAsync(fn);
-            expect(fn).toHaveBeenCalledTimes(0);
-        };
-
-        await _it(fnFactory1());
-        await _it(fnFactory2());
-    });
-
-    it('should panic if fn panic', async () => {
-        await expect(() => Err(ErrorKind.NOT_FOUND).isErrAndAsync(panicFn1)).rejects.toThrow(Error('error'));
-        await expect(() => Err(ErrorKind.NOT_FOUND).isErrAndAsync(panicFn2)).rejects.toThrow(Error('error'));
-    });
-
-    it('should have correct examples doc', async () => {
-        async function examples() {
-            const x: Result<number, ErrorKind> = Err(ErrorKind.NOT_FOUND);
-            assert((await x.isErrAndAsync((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === true);
-
-            const y: Result<number, ErrorKind> = Err(ErrorKind.PERMISSION_DENIED);
-            assert((await y.isErrAndAsync((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === false);
-
-            const z: Result<number, ErrorKind> = Ok(123);
-            assert((await z.isErrAndAsync((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === false);
-        }
-
-        await expect(examples()).resolves.not.toThrow();
     });
 });
 
@@ -376,57 +251,6 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
     });
 });
 
-describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.mapAsync.name}\``, () => {
-    const mapFactory1 = () => jest.fn((num: number) => String(num));
-    const mapFactory2 = () => jest.fn((num: number) => Promise.resolve(String(num)));
-
-    it('should map itself to another result', async () => {
-        const _it = async (map: (num: number) => string | Promise<string>) => {
-            await expect(Ok(1).mapAsync(map)).resolves.toStrictEqual(Ok('1'));
-            await expect(Err('Some error message').mapAsync(map)).resolves.toStrictEqual(Err('Some error message'));
-        };
-
-        await _it(mapFactory1());
-        await _it(mapFactory2());
-    });
-
-    it('should call map fn only once if itself is `Ok`', async () => {
-        const _it = async (map: (num: number) => string | Promise<string>) => {
-            expect(map).toHaveBeenCalledTimes(0);
-            await Ok(1).mapAsync(map);
-            expect(map).toHaveBeenCalledTimes(1);
-        };
-
-        await _it(mapFactory1());
-        await _it(mapFactory2());
-    });
-
-    it('should not call map fn if itself is `Err`', async () => {
-        const _it = async (map: (num: number) => string | Promise<string>) => {
-            expect(map).toHaveBeenCalledTimes(0);
-            await Err('Some error message').mapAsync(map);
-            expect(map).toHaveBeenCalledTimes(0);
-        };
-
-        await _it(mapFactory1());
-        await _it(mapFactory2());
-    });
-
-    it('should panic if fn panic', async () => {
-        await expect(() => Ok(1).mapAsync(panicFn1)).rejects.toThrow(Error('error'));
-        await expect(() => Ok(1).mapAsync(panicFn2)).rejects.toThrow(Error('error'));
-    });
-
-    it('should have correct examples doc', async () => {
-        async function examples() {
-            const x = await Ok<string, string>('foo').mapAsync((value) => Promise.resolve(value.length));
-            assert(x.ok() === 3);
-        }
-
-        await expect(examples()).resolves.not.toThrow();
-    });
-});
-
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.mapOr.name}\``, () => {
     const mapFactory = () => jest.fn((num: number) => num * 2);
 
@@ -464,60 +288,6 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         }
 
         expect(examples).not.toThrow();
-    });
-});
-
-describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.mapOrAsync.name}\``, () => {
-    const mapFactory1 = () => jest.fn((num: number) => num * 2);
-    const mapFactory2 = () => jest.fn((num: number) => Promise.resolve(num * 2));
-
-    it('should map itself to another result', async () => {
-        const _it = async (map: (num: number) => number | Promise<number>) => {
-            await expect(Ok(1).mapOrAsync(-1, map)).resolves.toBe(2);
-            await expect(Err('Some error message').mapOrAsync(-1, map)).resolves.toBe(-1);
-        };
-
-        await _it(mapFactory1());
-        await _it(mapFactory2());
-    });
-
-    it('should call map fn only once if itself is `Ok`', async () => {
-        const _it = async (map: (num: number) => number | Promise<number>) => {
-            expect(map).toHaveBeenCalledTimes(0);
-            await Ok(1).mapOrAsync(-1, map);
-            expect(map).toHaveBeenCalledTimes(1);
-        };
-
-        await _it(mapFactory1());
-        await _it(mapFactory2());
-    });
-
-    it('should not call map fn if itself is `Err`', async () => {
-        const _it = async (map: (num: number) => number | Promise<number>) => {
-            expect(map).toHaveBeenCalledTimes(0);
-            await Err('Some error message').mapOrAsync(-1, map);
-            expect(map).toHaveBeenCalledTimes(0);
-        };
-
-        await _it(mapFactory1());
-        await _it(mapFactory2());
-    });
-
-    it('should panic if fn panic', async () => {
-        await expect(() => Ok(1).mapOrAsync(Err('err'), panicFn1)).rejects.toThrow(Error('error'));
-        await expect(() => Ok(1).mapOrAsync(Err('err'), panicFn2)).rejects.toThrow(Error('error'));
-    });
-
-    it('should have correct examples doc', async () => {
-        async function examples() {
-            const x: Result<string, string> = Ok('foo');
-            assert((await x.mapOrAsync(42, (value) => value.length)) === 3);
-
-            const y: Result<string, string> = Err('bar');
-            assert((await y.mapOrAsync(42, (value) => value.length)) === 42);
-        }
-
-        await expect(examples()).resolves.not.toThrow();
     });
 });
 
@@ -584,89 +354,6 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
     });
 });
 
-describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.mapOrElseAsync.name}\``, () => {
-    const mapFactory1 = () => jest.fn(jest.fn((num: number) => String(num)));
-    const mapFactory2 = () => jest.fn(jest.fn((num: number) => Promise.resolve(String(num))));
-    const fallbackFactory1 = () => jest.fn(jest.fn((str: string) => str));
-    const fallbackFactory2 = () => jest.fn(jest.fn((str: string) => Promise.resolve(str)));
-
-    it('should map itself to another value', async () => {
-        const _it = async (
-            map: (num: number) => string | Promise<string>,
-            fallback: (str: string) => string | Promise<string>,
-        ) => {
-            await expect(Ok(1).mapOrElseAsync(fallback, map)).resolves.toBe('1');
-            await expect(Err('Some error message').mapOrElseAsync(fallback, map)).resolves.toBe('Some error message');
-        };
-
-        await _it(mapFactory1(), fallbackFactory1());
-        await _it(mapFactory2(), fallbackFactory2());
-    });
-
-    it('should call map fn only once if itself is `Ok`', async () => {
-        const _it = async (
-            map: (num: number) => string | Promise<string>,
-            fallback: (str: string) => string | Promise<string>,
-        ) => {
-            expect(map).toHaveBeenCalledTimes(0);
-            expect(fallback).toHaveBeenCalledTimes(0);
-            await Ok(1).mapOrElseAsync(fallback, map);
-            expect(map).toHaveBeenCalledTimes(1);
-            expect(fallback).toHaveBeenCalledTimes(0);
-        };
-
-        await _it(mapFactory1(), fallbackFactory1());
-        await _it(mapFactory2(), fallbackFactory2());
-    });
-
-    it('should call fallback fn only once if itself is `Err`', async () => {
-        const _it = async (
-            map: (num: number) => string | Promise<string>,
-            fallback: (str: string) => string | Promise<string>,
-        ) => {
-            expect(map).toHaveBeenCalledTimes(0);
-            expect(fallback).toHaveBeenCalledTimes(0);
-            await Err('Some error message').mapOrElseAsync(fallback, map);
-            expect(map).toHaveBeenCalledTimes(0);
-            expect(fallback).toHaveBeenCalledTimes(1);
-        };
-
-        await _it(mapFactory1(), fallbackFactory1());
-        await _it(mapFactory2(), fallbackFactory2());
-    });
-
-    it('should panic if fn panic', async () => {
-        await expect(() => Ok(1).mapOrElseAsync(panicFn1, panicFn1)).rejects.toThrow(Error('error'));
-        await expect(() => Err('err').mapOrElseAsync(panicFn1, panicFn1)).rejects.toThrow(Error('error'));
-        await expect(() => Ok(1).mapOrElseAsync(panicFn2, panicFn2)).rejects.toThrow(Error('error'));
-        await expect(() => Err('err').mapOrElseAsync(panicFn2, panicFn2)).rejects.toThrow(Error('error'));
-    });
-
-    it('should have correct examples doc', async () => {
-        async function examples() {
-            const k = 21;
-
-            const x: Result<string, string> = Ok('foo');
-            assert(
-                (await x.mapOrElseAsync(
-                    () => Promise.resolve(k * 2),
-                    (value) => Promise.resolve(value.length),
-                )) === 3,
-            );
-
-            const y: Result<string, string> = Err('bar');
-            assert(
-                (await y.mapOrElseAsync(
-                    () => Promise.resolve(k * 2),
-                    (value) => Promise.resolve(value.length),
-                )) === 42,
-            );
-        }
-
-        await expect(examples()).resolves.not.toThrow();
-    });
-});
-
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.mapErr.name}\``, () => {
     const mapFactory = () => jest.fn((num: number) => `error code: ${num}`);
 
@@ -701,57 +388,6 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         }
 
         expect(examples).not.toThrow();
-    });
-});
-
-describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.mapErrAsync.name}\``, () => {
-    const mapFactory1 = () => jest.fn((num: number) => `error code: ${num}`);
-    const mapFactory2 = () => jest.fn((num: number) => Promise.resolve(`error code: ${num}`));
-
-    it('should map itself to another result', async () => {
-        const _it = async (map: (num: number) => string | Promise<string>) => {
-            await expect(Ok(1).mapErrAsync(map)).resolves.toStrictEqual(Ok(1));
-            await expect(Err(2).mapErrAsync(map)).resolves.toStrictEqual(Err('error code: 2'));
-        };
-
-        await _it(mapFactory1());
-        await _it(mapFactory2());
-    });
-
-    it('should call map fn only once if itself is `Err`', async () => {
-        const _it = async (map: (num: number) => string | Promise<string>) => {
-            expect(map).toHaveBeenCalledTimes(0);
-            await Err(2).mapErrAsync(map);
-            expect(map).toHaveBeenCalledTimes(1);
-        };
-
-        await _it(mapFactory1());
-        await _it(mapFactory2());
-    });
-
-    it('should not call map fn if itself is `Ok`', async () => {
-        const _it = async (map: (num: number) => string | Promise<string>) => {
-            expect(map).toHaveBeenCalledTimes(0);
-            await Ok(1).mapErrAsync(map);
-            expect(map).toHaveBeenCalledTimes(0);
-        };
-
-        await _it(mapFactory1());
-        await _it(mapFactory2());
-    });
-
-    it('should panic if fn panic', async () => {
-        await expect(() => Err('err').mapErrAsync(panicFn1)).rejects.toThrow(Error('error'));
-        await expect(() => Err('err').mapErrAsync(panicFn2)).rejects.toThrow(Error('error'));
-    });
-
-    it('should have correct examples doc', async () => {
-        async function examples() {
-            const x = await Err(new Error('Some error message')).mapErrAsync((err) => Promise.resolve(err.message));
-            assert(x.err() === 'Some error message');
-        }
-
-        await expect(examples()).resolves.not.toThrow();
     });
 });
 
@@ -790,8 +426,7 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         jest.spyOn(console, 'log').mockImplementationOnce(() => {});
 
         function examples() {
-            const num = resultify
-                .sync<SyntaxError>()(JSON.parse)('4')
+            const num = resultifySync<SyntaxError>()(JSON.parse)('4')
                 .inspect((value: number) => console.log(`original: ${value}`))
                 .map((value) => value ** 3)
                 .expect('failed to parse number');
@@ -799,72 +434,6 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         }
 
         expect(examples).not.toThrow();
-    });
-});
-
-describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.inspectAsync.name}\``, () => {
-    it('should return itself', async () => {
-        const fn1 = () => {
-            // do something
-        };
-        const fn2 = () => {
-            // do something
-            return Promise.resolve();
-        };
-
-        const okResult = Ok(1);
-        const errResult = Err(0);
-
-        await expect(okResult.inspectAsync(fn1)).resolves.toBe(okResult);
-        await expect(errResult.inspectAsync(fn1)).resolves.toBe(errResult);
-        await expect(okResult.inspectAsync(fn2)).resolves.toBe(okResult);
-        await expect(errResult.inspectAsync(fn2)).resolves.toBe(errResult);
-    });
-
-    it('should inspect ok value', async () => {
-        const fn1 = jest.fn((value: number) => expect(value).toBe(1));
-        const fn2 = jest.fn((value: number) => {
-            expect(value).toBe(1);
-            return Promise.resolve();
-        });
-        expect(fn1).toHaveBeenCalledTimes(0);
-        expect(fn2).toHaveBeenCalledTimes(0);
-        await Ok(1).inspectAsync(fn1);
-        await Ok(1).inspectAsync(fn2);
-        expect(fn1).toHaveBeenCalledTimes(1);
-        expect(fn2).toHaveBeenCalledTimes(1);
-    });
-
-    it('should not inspect err value', async () => {
-        const fn = jest.fn(() => {
-            // do something
-        });
-        expect(fn).toHaveBeenCalledTimes(0);
-        await Err(1).inspectAsync(fn);
-        expect(fn).toHaveBeenCalledTimes(0);
-    });
-
-    it('should panic if fn panic', async () => {
-        await expect(() => Ok(1).inspectAsync(panicFn1)).rejects.toThrow(Error('error'));
-        await expect(() => Ok(1).inspectAsync(panicFn2)).rejects.toThrow(Error('error'));
-    });
-
-    it('should have correct examples doc', async () => {
-        async function examples() {
-            jest.spyOn(console, 'log').mockImplementationOnce(() => {});
-
-            const num = await resultify
-                .sync<SyntaxError>()(JSON.parse)('4')
-                .inspectAsync((value: number) => {
-                    console.log(`original: ${value}`);
-                    return Promise.resolve();
-                })
-                .then((result) => result.map((value) => value ** 3))
-                .then((result) => result.expect('failed to parse number'));
-            assert(num === 64);
-        }
-
-        await expect(examples()).resolves.not.toThrow();
     });
 });
 
@@ -903,77 +472,13 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         jest.spyOn(console, 'log').mockImplementationOnce(() => {});
 
         function examples() {
-            const num = resultify
-                .sync<SyntaxError>()(JSON.parse)('asdf')
-                .inspectErr((err) => console.log(`failed to parse json string: ${err.message}`));
+            const num = resultifySync<SyntaxError>()(JSON.parse)('asdf').inspectErr((err) =>
+                console.log(`failed to parse json string: ${err.message}`),
+            );
             assert(num.err() instanceof SyntaxError);
         }
 
         expect(examples).not.toThrow();
-    });
-});
-
-describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.inspectErrAsync.name}\``, () => {
-    it('should return itself', async () => {
-        const fn1 = () => {
-            // do something
-        };
-        const fn2 = () => {
-            // do something
-            return Promise.resolve();
-        };
-
-        const okResult = Ok(1);
-        const errResult = Err(0);
-
-        await expect(okResult.inspectErrAsync(fn1)).resolves.toBe(okResult);
-        await expect(errResult.inspectErrAsync(fn1)).resolves.toBe(errResult);
-        await expect(okResult.inspectErrAsync(fn2)).resolves.toBe(okResult);
-        await expect(errResult.inspectErrAsync(fn2)).resolves.toBe(errResult);
-    });
-
-    it('should not inspect ok value', async () => {
-        const fn = jest.fn(() => {
-            // do something
-        });
-        expect(fn).toHaveBeenCalledTimes(0);
-        await Ok(1).inspectErrAsync(fn);
-        expect(fn).toHaveBeenCalledTimes(0);
-    });
-
-    it('should inspect err value', async () => {
-        const fn1 = jest.fn((value: number) => expect(value).toBe(1));
-        const fn2 = jest.fn((value: number) => {
-            expect(value).toBe(1);
-            return Promise.resolve();
-        });
-        expect(fn1).toHaveBeenCalledTimes(0);
-        expect(fn2).toHaveBeenCalledTimes(0);
-        await Err(1).inspectErrAsync(fn1);
-        await Err(1).inspectErrAsync(fn2);
-        expect(fn1).toHaveBeenCalledTimes(1);
-        expect(fn2).toHaveBeenCalledTimes(1);
-    });
-
-    it('should panic if fn panic', async () => {
-        await expect(() => Err('err').inspectErrAsync(panicFn1)).rejects.toThrow(Error('error'));
-        await expect(() => Err('err').inspectErrAsync(panicFn2)).rejects.toThrow(Error('error'));
-    });
-
-    it('should have correct examples doc', async () => {
-        jest.spyOn(console, 'log').mockImplementationOnce(() => {});
-
-        async function examples() {
-            const num = await resultify
-                .sync<SyntaxError>()(JSON.parse)('asdf')
-                .inspectErrAsync((err) => {
-                    console.log(`failed to parse json string: ${err.message}`);
-                    return Promise.resolve();
-                });
-            assert(num.err() instanceof SyntaxError);
-        }
-
-        await expect(examples()).resolves.not.toThrow();
     });
 });
 
@@ -1112,66 +617,6 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
     });
 });
 
-describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.unwrapOrElseAsync.name}\``, () => {
-    const fnFactory1 = () =>
-        jest.fn((msg: string) => {
-            if (msg === 'I got this.') return 50;
-            throw new Error('BadBad');
-        });
-    const fnFactory2 = () =>
-        jest.fn((msg: string) => {
-            if (msg === 'I got this.') return Promise.resolve(50);
-            throw new Error('BadBad');
-        });
-
-    it('should unwrap itself to get the contained `Ok` value or computes it from a closure', async () => {
-        const _it = async (op: (msg: string) => number | Promise<number>) => {
-            await expect(Ok(100).unwrapOrElseAsync(op)).resolves.toBe(100);
-            await expect(Err<number, string>('I got this.').unwrapOrElseAsync(op)).resolves.toBe(50);
-        };
-
-        await _it(fnFactory1());
-        await _it(fnFactory2());
-    });
-
-    it('should call op only once if itself if `Err`', async () => {
-        const _it = async (op: (msg: string) => number | Promise<number>) => {
-            expect(op).toHaveBeenCalledTimes(0);
-            await Err<number, string>('I got this.').unwrapOrElseAsync(op);
-            expect(op).toHaveBeenCalledTimes(1);
-        };
-
-        await _it(fnFactory1());
-        await _it(fnFactory2());
-    });
-
-    it('should not call op if itself if `Ok`', async () => {
-        const _it = async (op: (msg: string) => number | Promise<number>) => {
-            expect(op).toHaveBeenCalledTimes(0);
-            await Ok(100).unwrapOrElseAsync(op);
-            expect(op).toHaveBeenCalledTimes(0);
-        };
-
-        await _it(fnFactory1());
-        await _it(fnFactory2());
-    });
-
-    it('should panic if fn panic', async () => {
-        await expect(() => Err('err').unwrapOrElseAsync(panicFn1)).rejects.toThrow(Error('error'));
-        await expect(() => Err('err').unwrapOrElseAsync(panicFn2)).rejects.toThrow(Error('error'));
-    });
-
-    it('should have correct examples doc', async () => {
-        async function examples() {
-            const count = (err: string) => Promise.resolve(err.length);
-            assert((await Ok<number, string>(2).unwrapOrElseAsync(count)) === 2);
-            assert((await Err<number, string>('foo').unwrapOrElseAsync(count)) === 3);
-        }
-
-        await expect(examples()).resolves.not.toThrow();
-    });
-});
-
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.unwrapUnchecked.name}\``, () => {
     it('should unwrap itself to get the contained `Ok` value', () => {
         expect(Ok(100).unwrapUnchecked()).toBe(100);
@@ -1285,9 +730,7 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
     it('should have correct examples doc', () => {
         function examples() {
             const parseJSON = (json: string) =>
-                resultify
-                    .sync<SyntaxError>()(JSON.parse)(json)
-                    .mapErr((err) => err.message);
+                resultifySync<SyntaxError>()(JSON.parse)(json).mapErr((err) => err.message);
 
             assert(Ok<string, string>('2').andThen(parseJSON).equal(Ok(2)));
             assert(
@@ -1299,63 +742,6 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         }
 
         expect(examples).not.toThrow();
-    });
-});
-
-describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.andThenAsync.name}\``, () => {
-    it('should return `res`', async () => {
-        await expect(op1().andThenAsync((num) => Ok(num + 1))).resolves.toStrictEqual(Ok(667));
-        await expect(op1().andThenAsync((num) => Promise.resolve(Ok(num + 1)))).resolves.toStrictEqual(Ok(667));
-        await expect(op1().andThenAsync(() => Err('bad'))).resolves.toStrictEqual(Err('bad'));
-        await expect(op1().andThenAsync(() => Promise.resolve(Err('bad')))).resolves.toStrictEqual(Err('bad'));
-    });
-
-    it('should return the `Err` result', async () => {
-        await expect(op2().andThenAsync((num) => Ok(num + 1))).resolves.toStrictEqual(Err('sadface'));
-        await expect(op2().andThenAsync((num) => Promise.resolve(Ok(num + 1)))).resolves.toStrictEqual(Err('sadface'));
-        await expect(op2().andThenAsync(() => Err('bad'))).resolves.toStrictEqual(Err('sadface'));
-        await expect(op2().andThenAsync(() => Promise.resolve(Err('bad')))).resolves.toStrictEqual(Err('sadface'));
-    });
-
-    it('should call op fn only once if itself is `Ok`', async () => {
-        const fn = jest.fn((num: number) => Promise.resolve(Ok(num + 1)));
-        expect(fn).toHaveBeenCalledTimes(0);
-        await op1().andThenAsync(fn);
-        expect(fn).toHaveBeenCalledTimes(1);
-    });
-
-    it('should not call op fn if itself is `Err`', async () => {
-        const fn = jest.fn((num: number) => Promise.resolve(Ok(num + 1)));
-        expect(fn).toHaveBeenCalledTimes(0);
-        await op2().andThenAsync(fn);
-        expect(fn).toHaveBeenCalledTimes(0);
-    });
-
-    it('should panic if fn panic', async () => {
-        await expect(() => Ok(1).andThenAsync(panicFn1)).rejects.toThrow(Error('error'));
-        await expect(() => Ok(1).andThenAsync(panicFn2)).rejects.toThrow(Error('error'));
-    });
-
-    it('should have correct examples doc', async () => {
-        async function examples() {
-            const parseJSON = (json: string) =>
-                Promise.resolve(
-                    resultify
-                        .sync<SyntaxError>()(JSON.parse)(json)
-                        .mapErr((err) => err.message),
-                );
-
-            const x = await Ok<string, string>('2').andThenAsync(parseJSON);
-            assert(x.equal(Ok(2)));
-
-            const y = await Ok<string, string>('asdf').andThenAsync(parseJSON);
-            assert(y.equal(Err('Unexpected token \'a\', "asdf" is not valid JSON')));
-
-            const z = await Err('not a valid json string').andThenAsync(parseJSON);
-            assert(z.equal(Err('not a valid json string')));
-        }
-
-        await expect(examples()).resolves.not.toThrow();
     });
 });
 
@@ -1437,65 +823,6 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
         }
 
         expect(examples).not.toThrow();
-    });
-});
-
-describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.orElseAsync.name}\``, () => {
-    it('should return the `Ok` result', async () => {
-        await expect(op1().orElseAsync(() => Ok(667))).resolves.toStrictEqual(Ok(666));
-        await expect(op1().orElseAsync(() => Promise.resolve(Ok(667)))).resolves.toStrictEqual(Ok(666));
-        await expect(op1().orElseAsync((err) => Err(err))).resolves.toStrictEqual(Ok(666));
-        await expect(op1().orElseAsync((err) => Promise.resolve(Err(err)))).resolves.toStrictEqual(Ok(666));
-    });
-
-    it('should return `res`', async () => {
-        await expect(op2().orElseAsync(() => Ok(667))).resolves.toStrictEqual(Ok(667));
-        await expect(op2().orElseAsync(() => Promise.resolve(Ok(667)))).resolves.toStrictEqual(Ok(667));
-        await expect(op2().orElseAsync((err) => Err(err))).resolves.toStrictEqual(Err('sadface'));
-        await expect(op2().orElseAsync((err) => Promise.resolve(Err(err)))).resolves.toStrictEqual(Err('sadface'));
-    });
-
-    it('should call op fn only once if itself is `Err`', async () => {
-        const fn = jest.fn((err: string) => Promise.resolve(Err(err)));
-        expect(fn).toHaveBeenCalledTimes(0);
-        await op2().orElseAsync(fn);
-        expect(fn).toHaveBeenCalledTimes(1);
-    });
-
-    it('should not call op fn if itself is `Ok`', async () => {
-        const fn = jest.fn((err: string) => Promise.resolve(Err(err)));
-        expect(fn).toHaveBeenCalledTimes(0);
-        await op1().orElseAsync(fn);
-        expect(fn).toHaveBeenCalledTimes(0);
-    });
-
-    it('should panic if fn panic', async () => {
-        await expect(() => Err('err').orElseAsync(panicFn1)).rejects.toThrow(Error('error'));
-        await expect(() => Err('err').orElseAsync(panicFn2)).rejects.toThrow(Error('error'));
-    });
-
-    it('should have correct examples doc', async () => {
-        async function examples() {
-            const sq = (num: number): Promise<Result<number, number>> => Promise.resolve(Ok(num * num));
-            const err = (num: number): Promise<Result<number, number>> => Promise.resolve(Err(num));
-
-            const x = await Ok(2)
-                .orElseAsync(sq)
-                .then((result) => result.orElseAsync(sq));
-            assert(x.equal(Ok(2)));
-
-            const y = await Err<number, number>(3)
-                .orElseAsync(sq)
-                .then((result) => result.orElseAsync(err));
-            assert(y.equal(Ok(9)));
-
-            const z = await Err<number, number>(3)
-                .orElseAsync(err)
-                .then((result) => result.orElseAsync(err));
-            assert(z.equal(Err(3)));
-        }
-
-        await expect(examples()).resolves.not.toThrow();
     });
 });
 

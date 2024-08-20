@@ -54,30 +54,6 @@ export interface Result<T, E> {
     isOkAnd(fn: (value: T) => boolean): boolean;
 
     /**
-     * @deprecated Please use `.async().isOkAnd(fn)` instead.
-     *
-     * Asynchronously returns `true` if the result is `Ok` and the value inside of it matches a predicate.
-     *
-     * Examples:
-     *
-     * ```
-     * import { Err, Ok, type Result } from 'rustlike-result';
-     *
-     * const x: Result<number, string> = Ok(2);
-     * assert((await x.isOkAndAsync((value) => Promise.resolve(value > 1))) === true);
-     *
-     * const y: Result<number, string> = Ok(0);
-     * assert((await y.isOkAndAsync((value) => Promise.resolve(value > 1))) === false);
-     *
-     * const z: Result<number, string> = Err('Some error message');
-     * assert((await z.isOkAndAsync((value) => Promise.resolve(value > 1))) === false);
-     * ```
-     *
-     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_ok_and
-     */
-    isOkAndAsync(fn: (value: T) => boolean | Promise<boolean>): Promise<boolean>;
-
-    /**
      * Returns `true` if the result is `Err`.
      *
      * Examples:
@@ -122,35 +98,6 @@ export interface Result<T, E> {
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_err_and
      */
     isErrAnd(fn: (err: E) => boolean): boolean;
-
-    /**
-     * @deprecated Please use `.async().isErrAnd(fn)` instead.
-     *
-     * Asynchronously returns `true` if the result is `Err` and the value inside of it matches a predicate.
-     *
-     * Examples:
-     *
-     * ```
-     * import { Err, Ok, type Result } from 'rustlike-result';
-     *
-     * enum ErrorKind {
-     *     NOT_FOUND,
-     *     PERMISSION_DENIED,
-     * }
-     *
-     * const x: Result<number, ErrorKind> = Err(ErrorKind.NOT_FOUND);
-     * assert((await x.isErrAndAsync((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === true);
-     *
-     * const y: Result<number, ErrorKind> = Err(ErrorKind.PERMISSION_DENIED);
-     * assert((await y.isErrAndAsync((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === false);
-     *
-     * const z: Result<number, ErrorKind> = Ok(123);
-     * assert((await z.isErrAndAsync((value) => Promise.resolve(value === ErrorKind.NOT_FOUND))) === false);
-     * ```
-     *
-     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.is_err_and
-     */
-    isErrAndAsync(fn: (err: E) => boolean | Promise<boolean>): Promise<boolean>;
 
     /**
      * Converts from `Result<T, E>` to `Optional<T>` and discarding the error, if any.
@@ -210,27 +157,6 @@ export interface Result<T, E> {
     map<U>(op: (value: T) => U): Result<U, E>;
 
     /**
-     * @deprecated Please use `.async().map(op)` instead.
-     *
-     * Asynchronously maps a `Result<T, E>` to `Result<U, E>` by applying a function to a contained `Ok` value,
-     * leaving an `Err` value untouched.
-     *
-     * This function can be used to compose the results of two functions.
-     *
-     * Examples:
-     *
-     * ```
-     * import { Ok } from 'rustlike-result';
-     *
-     * const x = await Ok<string, string>('foo').mapAsync((value) => Promise.resolve(value.length));
-     * assert(x.ok() === 3);
-     * ```
-     *
-     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map
-     */
-    mapAsync<U>(op: (value: T) => U | Promise<U>): Promise<Result<U, E>>;
-
-    /**
      * Returns the provided `fallback` (if `Err`), or applies a function to the contained value (if `Ok`).
      *
      * Arguments passed to `mapOr` are eagerly evaluated;
@@ -252,32 +178,6 @@ export interface Result<T, E> {
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or
      */
     mapOr<U>(fallback: U, map: (value: T) => U): U;
-
-    /**
-     * @deprecated Please use `.async().mapOr(fallback, map)` instead.
-     *
-     * Asynchronously returns the provided `fallback` (if `Err`),
-     * or applies a function to the contained value (if `Ok`).
-     *
-     * Arguments passed to `mapOr` are eagerly evaluated;
-     * if you are passing the result of a function call,
-     * it is recommended to use `mapOrElse`, which is lazily evaluated.
-     *
-     * Examples:
-     *
-     * ```
-     * import { Err, Ok, type Result } from 'rustlike-result';
-     *
-     * const x: Result<string, string> = Ok('foo');
-     * assert((await x.mapOrAsync(42, (value) => value.length)) === 3);
-     *
-     * const y: Result<string, string> = Err('bar');
-     * assert((await y.mapOrAsync(42, (value) => value.length)) === 42);
-     * ```
-     *
-     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or
-     */
-    mapOrAsync<U>(fallback: U, map: (value: T) => U | Promise<U>): Promise<U>;
 
     /**
      * Maps a `Result<T, E>` to `U` by applying fallback function `fallback` to a contained `Err` value,
@@ -304,32 +204,6 @@ export interface Result<T, E> {
     mapOrElse<U>(fallback: (err: E) => U, map: (value: T) => U): U;
 
     /**
-     * @deprecated Please use `.async().mapOrElse(fallback, map)` instead.
-     *
-     * Asynchronously maps a `Result<T, E>` to `U` by applying fallback function `fallback` to a contained `Err` value,
-     * or function `map` to a contained `Ok` value.
-     *
-     * This function can be used to unpack a successful result while handling an error.
-     *
-     * Examples:
-     *
-     * ```
-     * import { Err, Ok, type Result } from 'rustlike-result';
-     *
-     * const k = 21;
-     *
-     * const x: Result<string, string> = Ok('foo');
-     * assert((await x.mapOrElseAsync(() => Promise.resolve(k * 2), (value) => Promise.resolve(value.length))) === 3);
-     *
-     * const y: Result<string, string> = Err('bar');
-     * assert((await y.mapOrElseAsync(() => Promise.resolve(k * 2), (value) => Promise.resolve(value.length))) === 42);
-     * ```
-     *
-     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or_else
-     */
-    mapOrElseAsync<U>(fallback: (err: E) => U | Promise<U>, map: (value: T) => U | Promise<U>): Promise<U>;
-
-    /**
      * Maps a `Result<T, E>` to `Result<T, F>` by applying a function to a contained `Err` value,
      * leaving an `Ok` value untouched.
      *
@@ -349,36 +223,14 @@ export interface Result<T, E> {
     mapErr<F>(op: (err: E) => F): Result<T, F>;
 
     /**
-     * @deprecated Please use `.async().mapErr(op)` instead.
-     *
-     * Asynchronously maps a `Result<T, E>` to `Result<T, F>` by applying a function to a contained `Err` value,
-     * leaving an `Ok` value untouched.
-     *
-     * This function can be used to pass through a successful result while handling an error.
-     *
-     * Examples:
-     *
-     * ```
-     * import { Err } from 'rustlike-result';
-     *
-     * const x = await Err(new Error('Some error message')).mapErrAsync((err) => Promise.resolve(err.message));
-     * assert(x.err() === 'Some error message');
-     * ```
-     *
-     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.map_err
-     */
-    mapErrAsync<F>(op: (err: E) => F | Promise<F>): Promise<Result<T, F>>;
-
-    /**
      * Calls the provided closure with a reference to the contained value if `Ok`.
      *
      * Examples:
      *
      * ```
-     * import { resultify } from 'rustlike-result';
+     * import { resultifySync } from 'rustlike-result';
      *
-     * const num = resultify
-     *     .sync<SyntaxError>()(JSON.parse)('4')
+     * const num = resultifySync<SyntaxError>()(JSON.parse)('4')
      *     .inspect((value: number) => console.log(`original: ${value}`))
      *     .map((value) => value ** 3)
      *     .expect('failed to parse number');
@@ -390,40 +242,14 @@ export interface Result<T, E> {
     inspect(fn: (value: T) => void): this;
 
     /**
-     * @deprecated Please use `.async().inspect(fn)` instead.
-     *
-     * Asynchronously calls the provided closure with a reference to the contained value if `Ok`.
-     *
-     * Examples:
-     *
-     * ```
-     * import { resultify } from 'rustlike-result';
-     *
-     * const num = await resultify
-     *     .sync<SyntaxError>()(JSON.parse)('4')
-     *     .inspectAsync((value: number) => {
-     *         console.log(`original: ${value}`);
-     *         return Promise.resolve();
-     *     })
-     *     .then((result) => result.map((value) => value ** 3))
-     *     .then((result) => result.expect('failed to parse number'));
-     * assert(num === 64);
-     * ```
-     *
-     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect
-     */
-    inspectAsync(fn: (value: T) => void | Promise<void>): Promise<this>;
-
-    /**
      * Calls the provided closure with a reference to the contained value if `Err`.
      *
      * Examples:
      *
      * ```
-     * import { resultify } from 'rustlike-result';
+     * import { resultifySync } from 'rustlike-result';
      *
-     * const num = resultify
-     *     .sync<SyntaxError>()(JSON.parse)('asdf')
+     * const num = resultifySync<SyntaxError>()(JSON.parse)('asdf')
      *     .inspectErr((err) => console.log(`failed to parse json string: ${err.message}`));
      * assert(num.err() instanceof SyntaxError);
      * ```
@@ -431,29 +257,6 @@ export interface Result<T, E> {
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect_err
      */
     inspectErr(fn: (err: E) => void): this;
-
-    /**
-     * @deprecated Please use `.async().inspectErr(fn)` instead.
-     *
-     * Asynchronously calls the provided closure with a reference to the contained value if `Err`.
-     *
-     * Examples:
-     *
-     * ```
-     * import { resultify } from 'rustlike-result';
-     *
-     * const num = await resultify
-     *     .sync<SyntaxError>()(JSON.parse)('asdf')
-     *     .inspectErrAsync((err) => {
-     *         console.log(`failed to parse json string: ${err.message}`);
-     *         return Promise.resolve();
-     *     });
-     * assert(num.err() instanceof SyntaxError);
-     * ```
-     *
-     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect_err
-     */
-    inspectErrAsync(fn: (err: E) => void | Promise<void>): Promise<this>;
 
     /**
      * Returns the contained `Ok` value.
@@ -582,25 +385,6 @@ export interface Result<T, E> {
     unwrapOrElse(op: (err: E) => T): T;
 
     /**
-     * @deprecated Please use `.async().unwrapOrElse(op)` instead.
-     *
-     * Asynchronously returns the contained `Ok` value or computes it from a closure.
-     *
-     * Examples:
-     *
-     * ```
-     * import { Err, Ok } from 'rustlike-result';
-     *
-     * const count = (err: string) => Promise.resolve(err.length);
-     * assert((await Ok<number, string>(2).unwrapOrElseAsync(count)) === 2);
-     * assert((await Err<number, string>('foo').unwrapOrElseAsync(count)) === 3);
-     * ```
-     *
-     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or_else
-     */
-    unwrapOrElseAsync(op: (err: E) => T | Promise<T>): Promise<T>;
-
-    /**
      * Returns the contained `Ok` value, without checking that the value is not an `Err`.
      *
      * **SAFETY**: Calling this method on an `Err` is undefined behavior.
@@ -687,12 +471,10 @@ export interface Result<T, E> {
      * Examples:
      *
      * ```
-     * import { Err, Ok } from 'rustlike-result';
+     * import { Err, Ok, resultifySync } from 'rustlike-result';
      *
      * const parseJSON = (json: string) =>
-     *     resultify
-     *        .sync<SyntaxError>()(JSON.parse)(json)
-     *         .mapErr((err) => err.message);
+     *     resultifySync<SyntaxError>()(JSON.parse)(json).mapErr((err) => err.message);
      *
      * assert(Ok<string, string>('2').andThen(parseJSON).equal(Ok(2)));
      * assert(
@@ -705,39 +487,6 @@ export interface Result<T, E> {
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.and_then
      */
     andThen<U>(op: (value: T) => Result<U, E>): Result<U, E>;
-
-    /**
-     * @deprecated Please use `.async().andThen(op)` instead.
-     *
-     * Asynchronously calls `op` if itself is `Ok`, otherwise returns the `Err` value of itself.
-     *
-     * This function can be used for control flow based on `Result` values.
-     *
-     * Examples:
-     *
-     * ```
-     * import { Err, Ok } from 'rustlike-result';
-     *
-     * const parseJSON = (json: string) =>
-     *     Promise.resolve(
-     *         resultify
-     *             .sync<SyntaxError>()(JSON.parse)(json)
-     *             .mapErr((err) => err.message),
-     *     );
-     *
-     * const x = await Ok<string, string>('2').andThenAsync(parseJSON);
-     * assert(x.equal(Ok(2)));
-     *
-     * const y = await Ok<string, string>('asdf').andThenAsync(parseJSON);
-     * assert(y.equal(Err('Unexpected token \'a\', "asdf" is not valid JSON')));
-     *
-     * const z = await Err('not a valid json string').andThenAsync(parseJSON);
-     * assert(z.equal(Err('not a valid json string')));
-     * ```
-     *
-     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.and_then
-     */
-    andThenAsync<U>(op: (value: T) => Result<U, E> | Promise<Result<U, E>>): Promise<Result<U, E>>;
 
     /**
      * Returns `res` if itself is `Err`, otherwise returns the `Ok` value of itself.
@@ -796,41 +545,6 @@ export interface Result<T, E> {
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.or_else
      */
     orElse<F>(op: (err: E) => Result<T, F>): Result<T, F>;
-
-    /**
-     * @deprecated Please use `.async().orElse(op)` instead.
-     *
-     * Asynchronously calls `op` if the result is `Err`, otherwise returns the `Ok` value of self.
-     *
-     * This function can be used for control flow based on `Result` values.
-     *
-     * Examples:
-     *
-     * ```
-     * import { Err, Ok, type Result } from 'rustlike-result';
-     *
-     * const sq = (num: number): Promise<Result<number, number>> => Promise.resolve(Ok(num * num));
-     * const err = (num: number): Promise<Result<number, number>> => Promise.resolve(Err(num));
-     *
-     * const x = await Ok(2)
-     *     .orElseAsync(sq)
-     *     .then((result) => result.orElseAsync(sq));
-     * assert(x.equal(Ok(2)));
-     *
-     * const y = await Err<number, number>(3)
-     *     .orElseAsync(sq)
-     *     .then((result) => result.orElseAsync(err));
-     * assert(y.equal(Ok(9)));
-     *
-     * const z = await Err<number, number>(3)
-     *     .orElseAsync(err)
-     *     .then((result) => result.orElseAsync(err));
-     * assert(z.equal(Err(3)));
-     * ```
-     *
-     * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.or_else
-     */
-    orElseAsync<F>(op: (err: E) => Result<T, F> | Promise<Result<T, F>>): Promise<Result<T, F>>;
 
     /**
      * Transposes a `Result` of an optional value into an optional of a `Result`.

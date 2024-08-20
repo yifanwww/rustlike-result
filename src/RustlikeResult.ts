@@ -47,19 +47,11 @@ export class RustlikeResult<T, E> implements Result<T, E> {
         return this.isOk() && fn(this._value!);
     }
 
-    async isOkAndAsync(fn: (value: T) => boolean | Promise<boolean>): Promise<boolean> {
-        return this.isOk() && fn(this._value!);
-    }
-
     isErr(): this is Result<never, E> {
         return this._type === 'err';
     }
 
     isErrAnd(fn: (err: E) => boolean): boolean {
-        return this.isErr() && fn(this._error!);
-    }
-
-    async isErrAndAsync(fn: (err: E) => boolean | Promise<boolean>): Promise<boolean> {
         return this.isErr() && fn(this._error!);
     }
 
@@ -75,15 +67,7 @@ export class RustlikeResult<T, E> implements Result<T, E> {
         return this.isOk() ? RustlikeResult.Ok(op(this._value!)) : RustlikeResult.Err(this._error!);
     }
 
-    async mapAsync<U>(op: (value: T) => U | Promise<U>): Promise<Result<U, E>> {
-        return this.isOk() ? RustlikeResult.Ok(await op(this._value!)) : RustlikeResult.Err(this._error!);
-    }
-
     mapOr<U>(fallback: U, map: (value: T) => U): U {
-        return this.isOk() ? map(this._value!) : fallback;
-    }
-
-    async mapOrAsync<U>(fallback: U, map: (value: T) => U | Promise<U>): Promise<U> {
         return this.isOk() ? map(this._value!) : fallback;
     }
 
@@ -91,16 +75,8 @@ export class RustlikeResult<T, E> implements Result<T, E> {
         return this.isOk() ? map(this._value!) : fallback(this._error!);
     }
 
-    async mapOrElseAsync<U>(fallback: (err: E) => U | Promise<U>, map: (value: T) => U | Promise<U>): Promise<U> {
-        return this.isOk() ? map(this._value!) : fallback(this._error!);
-    }
-
     mapErr<F>(op: (err: E) => F): Result<T, F> {
         return this.isOk() ? RustlikeResult.Ok(this._value!) : RustlikeResult.Err(op(this._error!));
-    }
-
-    async mapErrAsync<F>(op: (err: E) => F | Promise<F>): Promise<Result<T, F>> {
-        return this.isOk() ? RustlikeResult.Ok(this._value!) : RustlikeResult.Err(await op(this._error!));
     }
 
     inspect(fn: (value: T) => void): this {
@@ -110,23 +86,9 @@ export class RustlikeResult<T, E> implements Result<T, E> {
         return this;
     }
 
-    async inspectAsync(fn: (value: T) => void | Promise<void>): Promise<this> {
-        if (this.isOk()) {
-            await fn(this._value!);
-        }
-        return this;
-    }
-
     inspectErr(fn: (err: E) => void): this {
         if (this.isErr()) {
             fn(this._error!);
-        }
-        return this;
-    }
-
-    async inspectErrAsync(fn: (err: E) => void | Promise<void>): Promise<this> {
-        if (this.isErr()) {
-            await fn(this._error!);
         }
         return this;
     }
@@ -161,10 +123,6 @@ export class RustlikeResult<T, E> implements Result<T, E> {
         return this.isOk() ? this._value! : op(this._error!);
     }
 
-    async unwrapOrElseAsync(op: (err: E) => T | Promise<T>): Promise<T> {
-        return this.isOk() ? this._value! : op(this._error!);
-    }
-
     // TODO: find a way to do the check in debug/development mode.
     unwrapUnchecked(): T {
         return this._value!;
@@ -183,19 +141,11 @@ export class RustlikeResult<T, E> implements Result<T, E> {
         return this.isOk() ? op(this._value!) : RustlikeResult.Err(this._error!);
     }
 
-    async andThenAsync<U>(op: (value: T) => Result<U, E> | Promise<Result<U, E>>): Promise<Result<U, E>> {
-        return this.isOk() ? op(this._value!) : RustlikeResult.Err(this._error!);
-    }
-
     or<F>(res: Result<T, F>): Result<T, F> {
         return this.isOk() ? RustlikeResult.Ok(this._value!) : res;
     }
 
     orElse<F>(op: (err: E) => Result<T, F>): Result<T, F> {
-        return this.isOk() ? RustlikeResult.Ok(this._value!) : op(this._error!);
-    }
-
-    async orElseAsync<F>(op: (err: E) => Result<T, F> | Promise<Result<T, F>>): Promise<Result<T, F>> {
         return this.isOk() ? RustlikeResult.Ok(this._value!) : op(this._error!);
     }
 

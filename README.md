@@ -454,10 +454,9 @@ Calls the provided closure with a reference to the contained value if `Ok`.
 Examples:
 
 ```ts
-import { resultify } from 'rustlike-result';
+import { resultifySync } from 'rustlike-result';
 
-const num = resultify
-    .sync<SyntaxError>()(JSON.parse)('4')
+const num = resultifySync<SyntaxError>()(JSON.parse)('4')
     .inspect((value: number) => console.log(`original: ${value}`))
     .map((value) => value ** 3)
     .expect('failed to parse number');
@@ -471,10 +470,9 @@ Calls the provided closure with a reference to the contained value if `Err`.
 Examples:
 
 ```ts
-import { resultify } from 'rustlike-result';
+import { resultifySync } from 'rustlike-result';
 
-const num = resultify
-    .sync<SyntaxError>()(JSON.parse)('asdf')
+const num = resultifySync<SyntaxError>()(JSON.parse)('asdf')
     .inspectErr((err) => console.log(`failed to parse json string: ${err.message}`));
 assert(num.err() instanceof SyntaxError);
 ```
@@ -660,12 +658,10 @@ This function can be used for control flow based on `Result` values.
 Examples:
 
 ```ts
-import { Err, Ok } from 'rustlike-result';
+import { Err, Ok, resultifySync } from 'rustlike-result';
 
 const parseJSON = (json: string) =>
-    resultify
-    .sync<SyntaxError>()(JSON.parse)(json)
-        .mapErr((err) => err.message);
+    resultifySync<SyntaxError>()(JSON.parse)(json).mapErr((err) => err.message);
 
 assert(Ok<string, string>('2').andThen(parseJSON).equal(Ok(2)));
 assert(
