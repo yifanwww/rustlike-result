@@ -1,6 +1,6 @@
 {
     "name": "rustlike-result",
-    "version": "0.4.6",
+    "version": "0.5.0",
     "description": "Rust-like Result for Javascript",
     "exports": {
         ".": {

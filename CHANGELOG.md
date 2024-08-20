@@ -1,4 +1,23 @@
 # CHANGELOG
+## rustlike-result v0.5.0 (2024-08-20)
+### Breaking Changes
+
+All deprecated functions and methods are deleted:
+- `Result.isOkAndAsync`
+- `Result.isErrAndAsync`
+- `Result.mapAsync`
+- `Result.mapOrAsync`
+- `Result.mapOrElseAsync`
+- `Result.mapErrAsync`
+- `Result.inspectAsync`
+- `Result.inspectErrAsync`
+- `Result.unwrapOrElseAsync`
+- `Result.andThenAsync`
+- `Result.orElseAsync`
+- `resultify`
+- `resultify.sync`
+- `resultify.promise`
+
 ## rustlike-result v0.4.6 (2024-06-15)
 ### Features
 
