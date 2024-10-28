@@ -10,13 +10,13 @@
             "default": "./lib-commonjs/index.js"
         },
         "./serializr": {
-            "types": "./lib/json/serializr.d.ts",
-            "node": "./lib-commonjs/json/serializr.js",
-            "import": "./lib/json/serializr.js",
-            "default": "./lib-commonjs/json/serializr.js"
+            "types": "./lib/serializr/index.d.ts",
+            "node": "./lib-commonjs/serializr/index.js",
+            "import": "./lib/serializr/index.js",
+            "default": "./lib-commonjs/serializr/index.js"
         },
         "./cjs": "./lib-commonjs/index.js",
-        "./cjs/serializr": "./lib-commonjs/json/serializr.js"
+        "./cjs/serializr": "./lib-commonjs/serializr/index.js"
     },
     "main": "lib-commonjs/index.js",
     "module": "lib/index.js",

@@ -2,11 +2,10 @@ import { SKIP, alias, createModelSchema, custom, raw } from 'serializr';
 import type { AdditionalPropArgs, ModelSchema, PropDeserializer, PropSchema, PropSerializer } from 'serializr';
 
 import { Err, Ok } from '../factory';
+import type { ResultJson } from '../json/types';
 import type { Result } from '../Result';
 import { RustlikeResult } from '../RustlikeResult';
 import type { Optional, ResultType } from '../types.internal';
-
-import type { ResultJson } from './types';
 
 export interface ResultPropSchemas {
     ok?: PropSchema;
