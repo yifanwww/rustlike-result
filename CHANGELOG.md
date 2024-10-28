@@ -1,4 +1,10 @@
 # CHANGELOG
+## rustlike-result v0.5.1 (2024-10-28)
+### Features
+
+Add helpers for TypeORM:
+- `typeormTransaction`
+
 ## rustlike-result v0.5.0 (2024-08-20)
 ### Breaking Changes
 
