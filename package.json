@@ -15,8 +15,15 @@
             "import": "./lib/serializr/index.js",
             "default": "./lib-commonjs/serializr/index.js"
         },
+        "./typeorm": {
+            "types": "./lib/typeorm/index.d.ts",
+            "node": "./lib-commonjs/typeorm/index.js",
+            "import": "./lib/typeorm/index.js",
+            "default": "./lib-commonjs/typeorm/index.js"
+        },
         "./cjs": "./lib-commonjs/index.js",
-        "./cjs/serializr": "./lib-commonjs/serializr/index.js"
+        "./cjs/serializr": "./lib-commonjs/serializr/index.js",
+        "./cjs/typeorm": "./lib-commonjs/typeorm/index.js"
     },
     "main": "lib-commonjs/index.js",
     "module": "lib/index.js",
@@ -68,13 +75,18 @@
         "rimraf": "^5.0.6",
         "semver": "^7.6.2",
         "serializr": "^3.0.2",
+        "typeorm": "^0.3.0",
         "typescript": "5.4.5"
     },
     "peerDependencies": {
-        "serializr": "^3.0.2"
+        "serializr": "^3.0.2",
+        "typeorm": "^0.3.0"
     },
     "peerDependenciesMeta": {
         "serializr": {
+            "optional": true
+        },
+        "typeorm": {
             "optional": true
         }
     },
