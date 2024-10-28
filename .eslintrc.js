@@ -364,6 +364,9 @@ module.exports = {
         {
             files: ['src/**/__tests__/*.{ts,tsx}', 'src/**/*.{spec,test}.{ts,tsx}', 'test/**/*.{ts,tsx}'],
             rules: {
+                // https://eslint.org/docs/latest/rules/max-classes-per-file
+                'max-classes-per-file': 'off',
+
                 // https://typescript-eslint.io/rules/dot-notation
                 '@typescript-eslint/dot-notation': [
                     'error',

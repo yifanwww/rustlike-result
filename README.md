@@ -79,6 +79,8 @@ Rust-like `Result` and `ResultAsync` for JavaScript.
     - [serializr](#serializr)
     - [class-transformer](#class-transformer)
   - [JSON Representation Format](#json-representation-format)
+- [Helpers For Third-Party Libraries](#helpers-for-third-party-libraries)
+  - [TypeORM](#typeorm)
 - [Write Your Own Implementation of `Result`?](#write-your-own-implementation-of-result)
 - [License](#license)
 
@@ -1472,6 +1474,56 @@ The reason it doesn't follow the [externally tagged enum representation] (the de
 
 [adjacently tagged enum representation]: https://serde.rs/enum-representations.html#adjacently-tagged
 [externally tagged enum representation]: https://serde.rs/enum-representations.html#externally-tagged
+
+## Helpers For Third-Party Libraries
+
+`Result` is not a built-in feature in JavaScript world. You will definitely feel that it's hard to use `Result` with some third-party libraries. This package provides some helper functions to help you.
+
+### TypeORM
+
+- `typeormTransaction`
+
+A helper function that helps you run you queries inside a transaction in `Result` style.
+
+```ts
+import { ConflictException, HttpException, Injectable } from '@nestjs/common';
+import { typeormTransaction } from 'rustlike-result/typeorm';
+import { type DataSource, type InsertResult } from 'typeorm';
+
+@Injectable()
+class Service {
+  constructor(private dataSource: DataSource) {}
+
+  async create(...): Promise<Result<number, HttpException>>  {
+    const result = await typeormTransaction(
+      this.dataSource,
+      async (manager): Promise<Result<InsertResult, HttpException | Error>> => {
+        const passCheck = await checkSomething(manager, ...);
+        if (!passCheck) {
+          // log something
+          return Err(new ConflictException('errmsg'));
+        }
+
+        return resultifyPromise<InsertResult, Error>(manager.insert(Entity, { ... }));
+      },
+    );
+
+    return result
+      .inspect(() => {
+        // log something
+      })
+      .inspectErr((err) => {
+        if (!(err instanceof HttpException)) {
+          // log something
+        }
+      })
+      .map((insertResult) => insertResult.identifiers[0].id as number)
+      .mapErr((err) =>
+        err instanceof HttpException ? err : new UnprocessableEntityException('errmsg'),
+      );
+  }
+}
+```
 
 ## Write Your Own Implementation of `Result`?
 
