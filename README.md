@@ -1488,7 +1488,7 @@ A helper function that helps you run you queries inside a transaction in `Result
 ```ts
 import { ConflictException, HttpException, Injectable } from '@nestjs/common';
 import { typeormTransaction } from 'rustlike-result/typeorm';
-import { type DataSource, type InsertResult } from 'typeorm';
+import { DataSource, type InsertResult } from 'typeorm';
 
 @Injectable()
 class Service {
