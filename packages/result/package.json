@@ -35,8 +35,8 @@
         "format": "prettier --write \"**/*.{cjs,js,mjs,json,ts,yaml,yml}\"",
         "lint": "eslint .",
         "lint-fix": "eslint . --fix",
-        "test": "node scripts/unit-test.js",
-        "test-full": "node scripts/unit-test.js",
+        "test": "node ../../scripts/unit-test.mjs --watch",
+        "test-full": "node ../../scripts/unit-test.mjs --coverage",
         "typecheck": "tsc --project tsconfig.json --noEmit --incremental false"
     },
     "devDependencies": {

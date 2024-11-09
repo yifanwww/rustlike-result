@@ -1,20 +1,22 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const repository = path.join(__dirname, '../..');
-const nodeModules = path.resolve(repository, 'node_modules');
+const repo = path.join(__dirname, '../..');
 
 /** @returns {import('@jest/types').Config.InitialOptions} */
 function getConfig() {
-    const testSetup = path.resolve(repository, 'src/test.setup.ts');
-    const hasTestSetup = fs.existsSync(testSetup);
+    const packageJson = process.env.npm_package_json;
+    const packageDir = packageJson ? path.dirname(packageJson) : process.cwd();
+
+    const packageOwnTestSetup = path.resolve(packageDir, 'src/test.setup.ts');
+    const hasPackageOwnTestSetup = fs.existsSync(packageOwnTestSetup);
 
     return {
-        rootDir: repository,
+        rootDir: packageDir,
         roots: ['<rootDir>/src'],
-        cacheDirectory: path.resolve(nodeModules, '.cache/jest'),
+        cacheDirectory: path.resolve(repo, 'node_modules', '.cache/jest'),
 
-        setupFilesAfterEnv: hasTestSetup ? [testSetup] : [],
+        setupFilesAfterEnv: hasPackageOwnTestSetup ? [packageOwnTestSetup] : [],
 
         collectCoverageFrom: [
             'src/**/*.ts',
@@ -32,8 +34,7 @@ function getConfig() {
                 {
                     jsc: {
                         transform: {
-                            react: { runtime: 'automatic' },
-                            useDefineForClassFields: true,
+                            useDefineForClassFields: false,
                         },
                     },
                     isModule: true,
