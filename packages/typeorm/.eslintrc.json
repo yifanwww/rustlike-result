@@ -1,0 +1,8 @@
+{
+    "root": true,
+    "extends": "../../configs/eslint/.eslintrc.basic.js",
+    "ignorePatterns": ["*.cjs", "*.js", "*.mjs", "/coverage", "/lib", "/lib-commonjs"],
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    }
+}

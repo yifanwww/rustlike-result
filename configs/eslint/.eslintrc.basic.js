@@ -42,7 +42,6 @@ const naming = [
 ];
 
 module.exports = {
-    root: true,
     env: {
         browser: true,
         es2018: true,
@@ -58,31 +57,22 @@ module.exports = {
         'plugin:jest/recommended',
         'plugin:jest/style',
     ],
-    ignorePatterns: ['*.cjs', '*.js', '*.mjs', '/coverage', '/lib', '/lib-commonjs', '/scripts'],
     plugins: ['@typescript-eslint', 'import', 'jest', 'prettier'],
-    parserOptions: {
-        project: './tsconfig.json',
-    },
     settings: {
-        // Append 'ts' extensions to Airbnb 'import/extensions' setting
-        // Original: ['.js', '.mjs', '.jsx']
-        'import/extensions': ['.js', '.mjs', '.jsx', '.ts', '.tsx', '.d.ts'],
-
-        // Resolve type definition packages
-        'import/external-module-folders': ['node_modules', 'node_modules/@types'],
+        // Override Airbnb's 'import/extensions'
+        'import/extensions': ['.js', '.jsx', '.ts', '.tsx'],
 
         'import/internal-regex': '^src',
 
         // Apply special parsing for TypeScript files
         'import/parsers': {
-            '@typescript-eslint/parser': ['.ts', '.tsx', '.d.ts'],
+            '@typescript-eslint/parser': ['.ts', '.tsx'],
         },
 
-        // Append 'ts' extensions to Airbnb 'import/resolver' setting
-        // Original: ['.js', '.jsx', '.json']
+        // Override Airbnb's 'import/resolver'
         'import/resolver': {
             node: {
-                extensions: ['.mjs', '.js', '.jsx', '.json', '.ts', '.tsx', '.d.ts'],
+                extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
             },
         },
     },
@@ -362,10 +352,13 @@ module.exports = {
             },
         },
         {
-            files: ['src/**/__tests__/*.{ts,tsx}', 'src/**/*.{spec,test}.{ts,tsx}', 'test/**/*.{ts,tsx}'],
+            files: ['src/**/__tests__/*.ts', 'src/**/*.{spec,test}.ts'],
             rules: {
                 // https://eslint.org/docs/latest/rules/max-classes-per-file
                 'max-classes-per-file': 'off',
+
+                // https://eslint.org/docs/latest/rules/no-console
+                'no-console': 'off',
 
                 // https://typescript-eslint.io/rules/dot-notation
                 '@typescript-eslint/dot-notation': [
@@ -379,12 +372,6 @@ module.exports = {
 
                 // https://typescript-eslint.io/rules/unbound-method/
                 '@typescript-eslint/unbound-method': 'off',
-            },
-        },
-        {
-            files: ['src/**/__tests__/*.{ts,tsx}', 'src/**/*.{spec,test}.{ts,tsx}'],
-            rules: {
-                'no-console': 'off',
             },
         },
     ],

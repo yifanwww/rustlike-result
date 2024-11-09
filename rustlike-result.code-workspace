@@ -1,10 +1,4 @@
 {
-    "folders": [
-        {
-            "name": "rustlike-result",
-            "path": "."
-        }
-    ],
     "settings": {
         // --------------------------------------------------------------------------------- Visual Studio Code Settings
 
@@ -47,5 +41,27 @@
             "editor.insertSpaces": true,
             "editor.tabSize": 2
         }
-    }
+    },
+    "folders": [
+        {
+            "name": "rustlike-result",
+            "path": "."
+        },
+        {
+            "name": "@result/result",
+            "path": "packages/result"
+        },
+        {
+            "name": "@result/json",
+            "path": "packages/json"
+        },
+        {
+            "name": "@result/json-serializr",
+            "path": "packages/json-serializr"
+        },
+        {
+            "name": "@result/typeorm",
+            "path": "packages/typeorm"
+        }
+    ]
 }
