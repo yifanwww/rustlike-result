@@ -5,9 +5,6 @@ import type { ResultAsync } from './ResultAsync';
 import { RustlikeResult } from './RustlikeResult';
 import type { Optional } from './types.internal';
 
-/**
- * The default implementation of interface `ResultAsync`.
- */
 export class RustlikeResultAsync<T, E> implements ResultAsync<T, E> {
     private readonly _promise: Promise<Result<T, E>>;
 

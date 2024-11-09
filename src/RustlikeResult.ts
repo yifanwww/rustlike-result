@@ -18,7 +18,9 @@ export class RustlikeResult<T, E> implements Result<T, E> {
         this._type = type;
         if (type === 'ok') {
             this._value = value as T;
+            this._error = undefined;
         } else {
+            this._value = undefined;
             this._error = value as E;
         }
     }

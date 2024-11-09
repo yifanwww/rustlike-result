@@ -5,3 +5,4 @@ export * from './ResultAsync';
 export * from './resultify';
 export * from './ResultJson';
 export * from './RustlikeResult';
+export type { ResultType } from './types.internal';

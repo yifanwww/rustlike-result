@@ -1,3 +1,6 @@
+/**
+ * DO NOT USE THIS TYPE! This is for internal use.
+ */
 export type ResultType = 'ok' | 'err';
 
 /**
@@ -7,8 +10,7 @@ export type ResultType = 'ok' | 'err';
  *
  * We don't need Rust-like Option anymore in most cases unless we want functional programming.
  *
- * This type doesn't use the name `Option`,
- * by giving it a different name we can easily know that this is not Rust-like Option.
+ * This type doesn't use the name `Option` to let us distinguish it from the Rust `Option`.
  *
  * This type is not exported since there's no convention for using `Optional` type in TypeScript world.
  * People just simply write `T | undefined`.
