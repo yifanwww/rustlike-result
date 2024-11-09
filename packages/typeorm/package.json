@@ -1,6 +1,6 @@
 {
     "name": "@result/typeorm",
-    "version": "0.6.0-alpha.0",
+    "version": "0.6.0-alpha",
     "description": "A TypeORM toolkit for @result/result",
     "exports": {
         ".": {
@@ -40,7 +40,7 @@
         "typecheck": "tsc --project tsconfig.json --noEmit --incremental false"
     },
     "dependencies": {
-        "@result/result": "workspace:0.6.0-alpha.0",
+        "@result/result": "workspace:0.6.0-alpha",
         "typeorm": "^0.3.0"
     },
     "devDependencies": {
