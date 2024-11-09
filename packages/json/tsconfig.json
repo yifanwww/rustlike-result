@@ -1,5 +1,5 @@
 {
-    "extends": "./configs/tsconfigs/tsconfig.base.json",
+    "extends": "../../configs/tsconfigs/tsconfig.base.json",
     "compilerOptions": {
         "incremental": false,
         "noEmit": true,

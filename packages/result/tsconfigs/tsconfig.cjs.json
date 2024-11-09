@@ -1,7 +1,7 @@
 {
-    "extends": "../configs/tsconfigs/tsconfig.types.json",
+    "extends": "../../../configs/tsconfigs/tsconfig.cjs.json",
     "compilerOptions": {
-        "declarationDir": "../lib",
+        "outDir": "../lib-commonjs",
         "rootDir": "../src"
     },
     "include": ["../src/**/*"],
