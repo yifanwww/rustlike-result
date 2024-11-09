@@ -3,13 +3,13 @@ name: Release
 on:
   push:
     tags:
-      - v[0-9]+.[0-9]+.[0-9]+
-      - v[0-9]+.[0-9]+.[0-9]+-alpha
-      - v[0-9]+.[0-9]+.[0-9]+-alpha.[0-9]+
-      - v[0-9]+.[0-9]+.[0-9]+-beta
-      - v[0-9]+.[0-9]+.[0-9]+-beta.[0-9]+
-      - v[0-9]+.[0-9]+.[0-9]+-rc
-      - v[0-9]+.[0-9]+.[0-9]+-rc.[0-9]+
+      - '@result/*_v[0-9]+.[0-9]+.[0-9]+'
+      - '@result/*_v[0-9]+.[0-9]+.[0-9]+-alpha'
+      - '@result/*_v[0-9]+.[0-9]+.[0-9]+-alpha.[0-9]+'
+      - '@result/*_v[0-9]+.[0-9]+.[0-9]+-beta'
+      - '@result/*_v[0-9]+.[0-9]+.[0-9]+-beta.[0-9]+'
+      - '@result/*_v[0-9]+.[0-9]+.[0-9]+-rc'
+      - '@result/*_v[0-9]+.[0-9]+.[0-9]+-rc.[0-9]+'
 
 jobs:
   release:
@@ -24,9 +24,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup PNPM environment
-        uses: pnpm/action-setup@v3
-        with:
-          version: 8
+        uses: pnpm/action-setup@v4
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
@@ -42,6 +40,7 @@ jobs:
         run: pnpm run build
 
       - name: Publish
-        run: node scripts/release.js
+        run: node scripts/release.mjs
         env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
