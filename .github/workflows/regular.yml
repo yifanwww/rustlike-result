@@ -64,6 +64,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Build Result
+        run: pnpm run build-result
+
       - name: Lint
         run: pnpm run lint
 
@@ -88,6 +91,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+
+      - name: Build Result
+        run: pnpm run build-result
 
       - name: Do coverage test
         run: pnpm run test-full

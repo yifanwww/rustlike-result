@@ -46,6 +46,7 @@
         "build:root:cjs": "tsc --project tsconfigs/tsconfig.cjs.json",
         "build:root:esm": "tsc --project tsconfigs/tsconfig.esm.json",
         "build:root:types": "tsc --project tsconfigs/tsconfig.types.json",
+        "build-result": "pnpm run --filter @result/result build",
         "clean": "pnpm run clean:root && pnpm run clean:workspaces",
         "clean:workspaces": "pnpm run --recursive --no-sort clean",
         "clean:root": "rimraf --glob coverage lib lib-commonjs tsconfigs/*.tsbuildinfo",
