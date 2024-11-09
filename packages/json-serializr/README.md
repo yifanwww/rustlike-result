@@ -1,1 +1,1 @@
-# @result/json-serializr
+# @rustresult/json-serializr

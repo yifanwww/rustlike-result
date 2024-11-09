@@ -3,13 +3,13 @@ name: Release
 on:
   push:
     tags:
-      - '@result/*_v[0-9]+.[0-9]+.[0-9]+'
-      - '@result/*_v[0-9]+.[0-9]+.[0-9]+-alpha'
-      - '@result/*_v[0-9]+.[0-9]+.[0-9]+-alpha.[0-9]+'
-      - '@result/*_v[0-9]+.[0-9]+.[0-9]+-beta'
-      - '@result/*_v[0-9]+.[0-9]+.[0-9]+-beta.[0-9]+'
-      - '@result/*_v[0-9]+.[0-9]+.[0-9]+-rc'
-      - '@result/*_v[0-9]+.[0-9]+.[0-9]+-rc.[0-9]+'
+      - '@rustresult/*_v[0-9]+.[0-9]+.[0-9]+'
+      - '@rustresult/*_v[0-9]+.[0-9]+.[0-9]+-alpha'
+      - '@rustresult/*_v[0-9]+.[0-9]+.[0-9]+-alpha.[0-9]+'
+      - '@rustresult/*_v[0-9]+.[0-9]+.[0-9]+-beta'
+      - '@rustresult/*_v[0-9]+.[0-9]+.[0-9]+-beta.[0-9]+'
+      - '@rustresult/*_v[0-9]+.[0-9]+.[0-9]+-rc'
+      - '@rustresult/*_v[0-9]+.[0-9]+.[0-9]+-rc.[0-9]+'
 
 jobs:
   release:

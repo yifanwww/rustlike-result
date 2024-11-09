@@ -1,7 +1,7 @@
 {
-    "name": "@result/json",
+    "name": "@rustresult/json",
     "version": "0.6.0-alpha",
-    "description": "A simple json (de)serialization implementation for @result/result",
+    "description": "A simple json (de)serialization implementation for @rustresult/result",
     "exports": {
         ".": {
             "types": "./lib/index.d.ts",
@@ -40,7 +40,7 @@
         "typecheck": "tsc --project tsconfig.json --noEmit --incremental false"
     },
     "dependencies": {
-        "@result/result": "workspace:0.6.0-alpha"
+        "@rustresult/result": "workspace:0.6.0-alpha"
     },
     "devDependencies": {
         "@jest/globals": "^29.7.0",

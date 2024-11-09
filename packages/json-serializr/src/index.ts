@@ -1,5 +1,5 @@
-import type { Result, ResultJson } from '@result/result';
-import { Err, Ok, RustlikeResult } from '@result/result';
+import type { Result, ResultJson } from '@rustresult/result';
+import { Err, Ok, RustlikeResult } from '@rustresult/result';
 import { SKIP, alias, createModelSchema, custom, raw } from 'serializr';
 import type { AdditionalPropArgs, ModelSchema, PropDeserializer, PropSchema, PropSerializer } from 'serializr';
 

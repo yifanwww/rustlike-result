@@ -1,1 +1,1 @@
-# @result/typeorm
+# @rustresult/typeorm

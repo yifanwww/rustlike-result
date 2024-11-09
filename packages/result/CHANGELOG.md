@@ -1,16 +1,16 @@
 # CHANGELOG
-## @result/result v0.6.0 (Unreleased)
+## @rustresult/result v0.6.0 (Unreleased)
 ### Breaking Changes
 
-Change package name to `@result/result`.
+Change package name to `@rustresult/result`.
 
-The following functions are moved to `@result/json` package:
+The following functions are moved to `@rustresult/json` package:
 - `ResultJSON.serialize`
 - `ResultJSON.deserialize`
-The following functions are moved to `@result/json-serializr` package:
+The following functions are moved to `@rustresult/json-serializr` package:
 - `createResultModelSchema`
 - `resultPropSchema`
-The following functions are moved to `@result/typeorm` package:
+The following functions are moved to `@rustresult/typeorm` package:
 - `typeormTransaction`
 
 ## rustlike-result v0.5.1 (2024-10-28)

@@ -48,19 +48,19 @@
             "path": "."
         },
         {
-            "name": "@result/result",
+            "name": "@rustresult/result",
             "path": "packages/result"
         },
         {
-            "name": "@result/json",
+            "name": "@rustresult/json",
             "path": "packages/json"
         },
         {
-            "name": "@result/json-serializr",
+            "name": "@rustresult/json-serializr",
             "path": "packages/json-serializr"
         },
         {
-            "name": "@result/typeorm",
+            "name": "@rustresult/typeorm",
             "path": "packages/typeorm"
         }
     ]

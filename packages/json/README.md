@@ -1,1 +1,1 @@
-# @result/json
+# @rustresult/json

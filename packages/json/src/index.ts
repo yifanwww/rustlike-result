@@ -1,5 +1,5 @@
-import type { Result, ResultJson } from '@result/result';
-import { Err, Ok, RustlikeResult } from '@result/result';
+import type { Result, ResultJson } from '@rustresult/result';
+import { Err, Ok, RustlikeResult } from '@rustresult/result';
 
 /**
  * Converts a `Result` to a JSON object.

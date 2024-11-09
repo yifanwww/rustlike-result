@@ -16,7 +16,7 @@
     "packageManager": "pnpm@9.8.0+sha512.8e4c3550fb500e808dbc30bb0ce4dd1eb614e30b1c55245f211591ec2cdf9c611cabd34e1364b42f564bd54b3945ed0f49d61d1bbf2ec9bd74b866fcdc723276",
     "scripts": {
         "build": "pnpm run --recursive --stream build",
-        "build-result": "pnpm run --filter @result/result build",
+        "build-result": "pnpm run --filter @rustresult/result build",
         "clean": "pnpm run --recursive --no-sort clean",
         "format": "pnpm run format:root && pnpm run format:workspaces",
         "format:workspaces": "pnpm run --recursive --no-sort --stream format",

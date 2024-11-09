@@ -35,7 +35,7 @@ importers:
 
   packages/json:
     dependencies:
-      '@result/result':
+      '@rustresult/result':
         specifier: workspace:0.6.0-alpha
         version: link:../result
     devDependencies:
@@ -87,7 +87,7 @@ importers:
 
   packages/json-serializr:
     dependencies:
-      '@result/result':
+      '@rustresult/result':
         specifier: workspace:0.6.0-alpha
         version: link:../result
       serializr:
@@ -190,7 +190,7 @@ importers:
 
   packages/typeorm:
     dependencies:
-      '@result/result':
+      '@rustresult/result':
         specifier: workspace:0.6.0-alpha
         version: link:../result
       typeorm:

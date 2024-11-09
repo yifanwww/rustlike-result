@@ -19,7 +19,12 @@ function getNpmTag(prerelease) {
     }
 }
 
-const ALLOWED_PACKAGE_NAMES = ['@result/json', '@result/json-serializr', '@result/result', '@result/typeorm'];
+const ALLOWED_PACKAGE_NAMES = [
+    '@rustresult/json',
+    '@rustresult/json-serializr',
+    '@rustresult/result',
+    '@rustresult/typeorm',
+];
 
 function release() {
     // This environment variable is injected in Github Actions

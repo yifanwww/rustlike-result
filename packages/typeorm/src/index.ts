@@ -1,5 +1,5 @@
-import { Err, fromPromiseableResult } from '@result/result';
-import type { Result, ResultAsync } from '@result/result';
+import { Err, fromPromiseableResult } from '@rustresult/result';
+import type { Result, ResultAsync } from '@rustresult/result';
 import type { DataSource, EntityManager } from 'typeorm';
 import type { IsolationLevel } from 'typeorm/driver/types/IsolationLevel';
 
