@@ -7,9 +7,11 @@ Change package name to `@rustresult/result`.
 The following functions are moved to `@rustresult/json` package:
 - `ResultJSON.serialize`
 - `ResultJSON.deserialize`
+
 The following functions are moved to `@rustresult/json-serializr` package:
 - `createResultModelSchema`
 - `resultPropSchema`
+
 The following functions are moved to `@rustresult/typeorm` package:
 - `typeormTransaction`
 
