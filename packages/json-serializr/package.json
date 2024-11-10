@@ -1,6 +1,6 @@
 {
     "name": "@rustresult/json-serializr",
-    "version": "0.6.0-alpha",
+    "version": "0.6.0",
     "description": "A json (de)serialization implementation using serializr for @rustresult/result",
     "exports": {
         ".": {
@@ -40,7 +40,7 @@
         "typecheck": "tsc --project tsconfig.json --noEmit --incremental false"
     },
     "dependencies": {
-        "@rustresult/result": "workspace:0.6.0-alpha",
+        "@rustresult/result": "workspace:^0.6.0",
         "serializr": "^3.0.2"
     },
     "devDependencies": {

@@ -1,5 +1,5 @@
 # CHANGELOG
-## @rustresult/result v0.6.0 (Unreleased)
+## @rustresult/result v0.6.0 (2024-11-10)
 ### Breaking Changes
 
 Change package name to `@rustresult/result`.

@@ -1,7 +1,7 @@
 # CHANGELOG
-## @rustresult/json-serializr v0.6.0 (Unreleased)
+## @rustresult/json-serializr v0.6.0 (2024-11-10)
 ### Features
 
-Provides `serializr` helpers to support JSON (de)serialization of `@rustresult/result`:
+Add helpers to (de)serialize `Result` objects by `serializr`:
 - `createResultModelSchema`
 - `resultPropSchema`

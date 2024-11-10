@@ -36,7 +36,7 @@ importers:
   packages/json:
     dependencies:
       '@rustresult/result':
-        specifier: workspace:0.6.0-alpha
+        specifier: workspace:^0.6.0
         version: link:../result
     devDependencies:
       '@jest/globals':
@@ -88,7 +88,7 @@ importers:
   packages/json-serializr:
     dependencies:
       '@rustresult/result':
-        specifier: workspace:0.6.0-alpha
+        specifier: workspace:^0.6.0
         version: link:../result
       serializr:
         specifier: ^3.0.2
@@ -191,7 +191,7 @@ importers:
   packages/typeorm:
     dependencies:
       '@rustresult/result':
-        specifier: workspace:0.6.0-alpha
+        specifier: workspace:^0.6.0
         version: link:../result
       typeorm:
         specifier: ^0.3.0
