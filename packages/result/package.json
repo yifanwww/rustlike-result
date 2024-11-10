@@ -1,7 +1,7 @@
 {
     "name": "@rustresult/result",
     "version": "0.6.0-alpha",
-    "description": "Rust-like Result for Javascript",
+    "description": "Rust-like Result and ResultAsync for Javascript",
     "exports": {
         ".": {
             "types": "./lib/index.d.ts",
@@ -67,10 +67,14 @@
         "result",
         "rust-result",
         "rustlike-result",
-        "try-catch",
-        "error-handler",
-        "error-handing",
+        "typescript-result",
+        "ts-result",
         "catch",
-        "error"
+        "try-catch",
+        "throw",
+        "error",
+        "error-free",
+        "error-handler",
+        "error-handing"
     ]
 }
