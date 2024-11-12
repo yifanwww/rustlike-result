@@ -185,8 +185,8 @@ export class RustlikeResultAsync<T, E> implements ResultAsync<T, E> {
     }
 
     then<TResult1 = Result<T, E>, TResult2 = never>(
-        onfulfilled?: ((value: Result<T, E>) => TResult1 | PromiseLike<TResult1>) | null | undefined,
-        onrejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null | undefined,
+        onfulfilled?: ((value: Result<T, E>) => TResult1 | PromiseLike<TResult1>) | null,
+        onrejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null,
     ): PromiseLike<TResult1 | TResult2> {
         return this._promise.then(onfulfilled, onrejected);
     }

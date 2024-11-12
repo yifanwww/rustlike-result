@@ -247,8 +247,8 @@ module.exports = {
             },
         ],
 
-        // https://typescript-eslint.io/rules/no-empty-interface
-        '@typescript-eslint/no-empty-interface': ['error', { allowSingleExtends: true }],
+        // https://typescript-eslint.io/rules/no-empty-object-type
+        '@typescript-eslint/no-empty-object-type': ['error', { allowInterfaces: 'with-single-extends' }],
 
         // https://typescript-eslint.io/rules/no-loop-func
         '@typescript-eslint/no-loop-func': 'error',

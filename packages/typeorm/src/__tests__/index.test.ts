@@ -197,7 +197,7 @@ describe(`Test fn \`${typeormTransaction.name}\``, () => {
 
         {
             const result = await typeormTransaction(new MockedDataSource() as DataSource, () => {
-                // eslint-disable-next-line no-throw-literal
+                // eslint-disable-next-line @typescript-eslint/only-throw-error
                 throw 'error';
             });
             expect(result).toStrictEqual(Err(new Error('error')));
@@ -212,7 +212,7 @@ describe(`Test fn \`${typeormTransaction.name}\``, () => {
 
         {
             const result = await typeormTransaction(new MockedDataSource() as DataSource, () => {
-                // eslint-disable-next-line no-throw-literal
+                // eslint-disable-next-line @typescript-eslint/only-throw-error
                 throw false;
             });
             expect(result).toStrictEqual(Err(new Error('false')));

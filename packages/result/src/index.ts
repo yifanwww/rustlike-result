@@ -1,8 +1,8 @@
 export * from './factory';
 export * from './factoryAsync';
-export * from './Result';
-export * from './ResultAsync';
+export type * from './Result';
+export type * from './ResultAsync';
 export * from './resultify';
-export * from './ResultJson';
+export type * from './ResultJson';
 export * from './RustlikeResult';
 export type { ResultType } from './types.internal';
