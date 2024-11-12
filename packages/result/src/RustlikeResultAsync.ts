@@ -150,7 +150,7 @@ export class RustlikeResultAsync<T, E> implements ResultAsync<T, E> {
         );
     }
 
-    transpose(): Promise<Optional<Result<T & NonNullable<unknown>, E>>> {
+    transpose(): Promise<Optional<Result<T & {}, E>>> {
         return this._promise.then((result) => result.transpose());
     }
 

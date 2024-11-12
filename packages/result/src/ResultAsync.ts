@@ -583,7 +583,7 @@ export interface ResultAsync<T, E> extends PromiseLike<Result<T, E>> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.transpose
      */
-    transpose(): Promise<Optional<Result<T & NonNullable<unknown>, E>>>;
+    transpose(): Promise<Optional<Result<T & {}, E>>>;
 
     /**
      * Asynchronously returns `true` if `self` equals to `other`.

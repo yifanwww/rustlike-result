@@ -577,7 +577,7 @@ export interface Result<T, E> {
      *
      * ref: https://doc.rust-lang.org/std/result/enum.Result.html#method.transpose
      */
-    transpose(): Optional<Result<T & NonNullable<unknown>, E>>;
+    transpose(): Optional<Result<T & {}, E>>;
 
     /**
      * Returns `true` if `self` equals to `other`.

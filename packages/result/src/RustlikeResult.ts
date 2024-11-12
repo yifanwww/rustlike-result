@@ -151,7 +151,7 @@ export class RustlikeResult<T, E> implements Result<T, E> {
         return this.isOk() ? RustlikeResult.Ok(this._value!) : op(this._error!);
     }
 
-    transpose(): Optional<Result<T & NonNullable<unknown>, E>> {
+    transpose(): Optional<Result<T & {}, E>> {
         if (this.isOk()) {
             return this._value === undefined || this._value === null ? undefined : RustlikeResult.Ok(this._value);
         }
