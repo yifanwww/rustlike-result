@@ -52,6 +52,10 @@
             "path": "packages/result"
         },
         {
+            "name": "@rustresult/benchmark",
+            "path": "packages/benchmark"
+        },
+        {
             "name": "@rustresult/json",
             "path": "packages/json"
         },

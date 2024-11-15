@@ -3,7 +3,7 @@
     "compilerOptions": {
         "incremental": false,
         "noEmit": true,
-        "rootDir": "src"
+        "rootDir": "."
     },
     "include": ["src/**/*"],
     "exclude": []

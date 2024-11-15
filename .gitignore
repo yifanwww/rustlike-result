@@ -15,8 +15,7 @@ node_modules
 
 *.tsbuildinfo
 
-/lib
-/lib-commonjs
+/packages/*/dist
 /packages/*/lib
 /packages/*/lib-commonjs
 /rust/target

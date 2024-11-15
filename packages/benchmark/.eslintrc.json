@@ -1,0 +1,11 @@
+{
+    "root": true,
+    "extends": "../../configs/eslint/.eslintrc.basic.js",
+    "ignorePatterns": ["*.cjs", "*.js", "*.mjs", "/dist"],
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
+    "rules": {
+        "no-console": "off"
+    }
+}
