@@ -1,8 +1,12 @@
 {
     "extends": "../../configs/tsconfigs/tsconfig.base.json",
     "compilerOptions": {
+        "inlineSources": false,
+        "module": "Node16",
+        "moduleResolution": "node16",
         "outDir": "dist",
-        "rootDir": "src"
+        "rootDir": "src",
+        "sourceMap": false
     },
     "include": ["src/**/*"],
     "exclude": [

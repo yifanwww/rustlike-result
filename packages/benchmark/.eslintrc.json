@@ -6,6 +6,7 @@
         "project": "./tsconfig.json"
     },
     "rules": {
+        "max-len": "off",
         "no-console": "off"
     }
 }

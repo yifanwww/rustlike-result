@@ -2,8 +2,10 @@
     "extends": "../../configs/tsconfigs/tsconfig.base.json",
     "compilerOptions": {
         "incremental": false,
+        "module": "Node16",
+        "moduleResolution": "node16",
         "noEmit": true,
-        "rootDir": "."
+        "rootDir": "src"
     },
     "include": ["src/**/*"],
     "exclude": []

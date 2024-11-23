@@ -25,7 +25,10 @@
         "typecheck": "tsc --project tsconfig.json --noEmit --incremental false"
     },
     "dependencies": {
-        "@rustresult/result": "workspace:^"
+        "@rustresult/result": "workspace:^",
+        "effect": "^3.10.15",
+        "neverthrow": "^8.1.1",
+        "tinybench": "^3.0.6"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^8.14.0",
