@@ -3,6 +3,7 @@ import { Cause, Exit } from 'effect';
 import { err as ntErr, ok as ntOk } from 'neverthrow';
 import { Bench, hrtimeNow } from 'tinybench';
 
+import { formatTinybenchTask } from '../helpers/tinybench.js';
 import { formatNum, logTestCases } from '../utils.js';
 
 const N = 100_000;
@@ -15,35 +16,32 @@ const exitSucceed = Exit.succeed(1);
 const exitFail = Exit.fail('error message');
 
 logTestCases([
-    ['@rustresult/result Ok.err', resultOk.err()],
-    ['@rustresult/result Err.err', resultErr.err()],
+    ['rustresult Result.err', [resultOk.err(), resultErr.err()]],
     [
-        'neverthrow ok.err simulation',
-        ntResultOk.match(
-            () => undefined,
-            (err) => err,
-        ),
+        'neverthrow Result.err sim',
+        [
+            ntResultOk.match(
+                () => undefined,
+                (err) => err,
+            ),
+            ntResultErr.match(
+                () => undefined,
+                (err) => err,
+            ),
+        ],
     ],
     [
-        'neverthrow err.err simulation',
-        ntResultErr.match(
-            () => undefined,
-            (err) => err,
-        ),
-    ],
-    [
-        'effect Exit.succeed.err simulation',
-        Exit.match(exitSucceed, {
-            onSuccess: () => undefined,
-            onFailure: (cause) => (Cause.isFailType(cause) ? cause.error : undefined),
-        }),
-    ],
-    [
-        'effect Exit.fail.err simulation',
-        Exit.match(exitFail, {
-            onSuccess: () => undefined,
-            onFailure: (cause) => (Cause.isFailType(cause) ? cause.error : undefined),
-        }),
+        'effect Exit.err sim',
+        [
+            Exit.match(exitSucceed, {
+                onSuccess: () => undefined,
+                onFailure: (cause) => (Cause.isFailType(cause) ? cause.error : undefined),
+            }),
+            Exit.match(exitFail, {
+                onSuccess: () => undefined,
+                onFailure: (cause) => (Cause.isFailType(cause) ? cause.error : undefined),
+            }),
+        ],
     ],
 ]);
 
@@ -51,93 +49,63 @@ console.log('Loop N:', formatNum(N));
 
 const bench = new Bench({ now: hrtimeNow });
 bench
-    .add('@rustresult/result Ok.err', () => {
-        let result: undefined;
+    .add('rustresult Result.err', () => {
+        let ret: string | undefined;
         for (let i = 0; i < N; i++) {
-            result = resultOk.err();
+            ret = resultOk.err();
+            ret = resultErr.err();
         }
-        return result;
+        return ret;
     })
-    .add('@rustresult/result Err.err', () => {
-        let result: string | undefined;
+    .add('neverthrow Result.err sim', () => {
+        let ret: string | undefined;
         for (let i = 0; i < N; i++) {
-            result = resultErr.err();
-        }
-        return result;
-    })
-    .add('neverthrow ok.err simulation', () => {
-        let result: undefined;
-        for (let i = 0; i < N; i++) {
-            result = ntResultOk.match(
+            ret = ntResultOk.match(
+                () => undefined,
+                (err) => err,
+            );
+            ret = ntResultErr.match(
                 () => undefined,
                 (err) => err,
             );
         }
-        return result;
+        return ret;
     })
-    .add('neverthrow err.err simulation', () => {
-        let result: string | undefined;
+    .add('effect Exit.err sim', () => {
+        let ret: string | undefined;
         for (let i = 0; i < N; i++) {
-            result = ntResultErr.match(
-                () => undefined,
-                (err) => err,
-            );
-        }
-        return result;
-    })
-    .add('effect Exit.succeed.err simulation', () => {
-        let result: undefined;
-        for (let i = 0; i < N; i++) {
-            result = Exit.match(exitSucceed, {
+            ret = Exit.match(exitSucceed, {
+                onSuccess: () => undefined,
+                onFailure: (cause) => (Cause.isFailType(cause) ? cause.error : undefined),
+            });
+            ret = Exit.match(exitFail, {
                 onSuccess: () => undefined,
                 onFailure: (cause) => (Cause.isFailType(cause) ? cause.error : undefined),
             });
         }
-        return result;
-    })
-    .add('effect Exit.fail.err simulation', () => {
-        let result: string | undefined;
-        for (let i = 0; i < N; i++) {
-            result = Exit.match(exitFail, {
-                onSuccess: () => undefined,
-                onFailure: (cause) => (Cause.isFailType(cause) ? cause.error : undefined),
-            });
-        }
-        return result;
+        return ret;
     });
 await bench.run();
-console.table(bench.table());
+console.table(bench.table(formatTinybenchTask));
 
 /*
 
-> @rustresult/result Ok.err:
-undefined
+> rustresult Result.err:
+[ undefined, 'error message' ]
 
-> @rustresult/result Err.err:
-error message
+> neverthrow Result.err sim:
+[ undefined, 'error message' ]
 
-> neverthrow ok.err simulation:
-undefined
-
-> neverthrow err.err simulation:
-error message
-
-> effect Exit.succeed.err simulation:
-undefined
-
-> effect Exit.fail.err simulation:
-error message
+> effect Exit.err sim:
+[ undefined, 'error message' ]
 
 Loop N: 100,000
-┌─────────┬──────────────────────────────────────┬──────────────────────┬─────────────────────┬────────────────────────────┬───────────────────────────┬─────────┐
-│ (index) │ Task name                            │ Latency average (ns) │ Latency median (ns) │ Throughput average (ops/s) │ Throughput median (ops/s) │ Samples │
-├─────────┼──────────────────────────────────────┼──────────────────────┼─────────────────────┼────────────────────────────┼───────────────────────────┼─────────┤
-│ 0       │ '@rustresult/result Ok.err'          │ '24345.79 ± 0.03%'   │ '24299.98'          │ '41102 ± 0.02%'            │ '41152'                   │ 41075   │
-│ 1       │ '@rustresult/result Err.err'         │ '24398.85 ± 0.06%'   │ '24299.98'          │ '41063 ± 0.03%'            │ '41152'                   │ 40986   │
-│ 2       │ 'neverthrow ok.err simulation'       │ '73268.34 ± 0.03%'   │ '72999.95'          │ '13653 ± 0.03%'            │ '13699'                   │ 13649   │
-│ 3       │ 'neverthrow err.err simulation'      │ '73663.74 ± 0.03%'   │ '73400.02'          │ '13579 ± 0.02%'            │ '13624'                   │ 13576   │
-│ 4       │ 'effect Exit.succeed.err simulation' │ '965309.84 ± 0.43%'  │ '967200.04'         │ '1041 ± 0.41%'             │ '1034'                    │ 1037    │
-│ 5       │ 'effect Exit.fail.err simulation'    │ '1028719.63 ± 0.40%' │ '1032399.89'        │ '976 ± 0.39%'              │ '969'                     │ 973     │
-└─────────┴──────────────────────────────────────┴──────────────────────┴─────────────────────┴────────────────────────────┴───────────────────────────┴─────────┘
+┌─────────┬─────────────────────────────┬──────────────────────┬──────────────┬─────────────────┬───────────────┬─────────┐
+│ (index) │ task                        │ mean (ns)            │ median (ns)  │ mean (op/s)     │ median (op/s) │ samples │
+├─────────┼─────────────────────────────┼──────────────────────┼──────────────┼─────────────────┼───────────────┼─────────┤
+│ 0       │ 'rustresult Result.err'     │ '24487.67 ± 0.07%'   │ '24400.00'   │ '40886 ± 0.02%' │ '40984'       │ 40837   │
+│ 1       │ 'neverthrow Result.err sim' │ '73595.85 ± 0.04%'   │ '73400.02'   │ '13593 ± 0.03%' │ '13624'       │ 13588   │
+│ 2       │ 'effect Exit.err sim'       │ '1890170.00 ± 0.58%' │ '1862400.00' │ '531 ± 0.54%'   │ '537'         │ 530     │
+└─────────┴─────────────────────────────┴──────────────────────┴──────────────┴─────────────────┴───────────────┴─────────┘
 
 */

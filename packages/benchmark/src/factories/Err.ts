@@ -5,12 +5,13 @@ import type { Err as NTErr } from 'neverthrow';
 import { err as ntErr } from 'neverthrow';
 import { Bench, hrtimeNow } from 'tinybench';
 
+import { formatTinybenchTask } from '../helpers/tinybench.js';
 import { formatNum, logTestCases } from '../utils.js';
 
 const N = 100_000;
 
 logTestCases([
-    ['@rustresult/result Err', Err('error message')],
+    ['rustresult Err', Err('error message')],
     ['neverthrow err', ntErr('error message')],
     ['effect Effect.fail', Effect.fail('error message')],
     ['effect Exit.fail', Exit.fail('error message')],
@@ -20,40 +21,40 @@ console.log('Loop N:', formatNum(N));
 
 const bench = new Bench({ now: hrtimeNow });
 bench
-    .add('@rustresult/result Err', () => {
-        let result: Result<never, string>;
+    .add('rustresult Err', () => {
+        let ret: Result<never, string>;
         for (let i = 0; i < N; i++) {
-            result = Err('error message');
+            ret = Err('error message');
         }
-        return result!;
+        return ret!;
     })
     .add('neverthrow err', () => {
-        let result: NTErr<never, string>;
+        let ret: NTErr<never, string>;
         for (let i = 0; i < N; i++) {
-            result = ntErr('error message');
+            ret = ntErr('error message');
         }
-        return result!;
+        return ret!;
     })
     .add('effect Effect.fail', () => {
-        let effect: Effect.Effect<never, string>;
+        let ret: Effect.Effect<never, string>;
         for (let i = 0; i < N; i++) {
-            effect = Effect.fail('error message');
+            ret = Effect.fail('error message');
         }
-        return effect!;
+        return ret!;
     })
     .add('effect Exit.fail', () => {
-        let effect: Exit.Exit<never, string>;
+        let ret: Exit.Exit<never, string>;
         for (let i = 0; i < N; i++) {
-            effect = Exit.fail('error message');
+            ret = Exit.fail('error message');
         }
-        return effect!;
+        return ret!;
     });
 await bench.run();
-console.table(bench.table());
+console.table(bench.table(formatTinybenchTask));
 
 /*
 
-> @rustresult/result Err:
+> rustresult Err:
 RustlikeResult {
   _type: 'err',
   _value: undefined,
@@ -78,13 +79,13 @@ Err { error: 'error message' }
 }
 
 Loop N: 100,000
-┌─────────┬──────────────────────────┬──────────────────────┬─────────────────────┬────────────────────────────┬───────────────────────────┬─────────┐
-│ (index) │ Task name                │ Latency average (ns) │ Latency median (ns) │ Throughput average (ops/s) │ Throughput median (ops/s) │ Samples │
-├─────────┼──────────────────────────┼──────────────────────┼─────────────────────┼────────────────────────────┼───────────────────────────┼─────────┤
-│ 0       │ '@rustresult/result Err' │ '388064.42 ± 0.55%'  │ '362199.90'         │ '2622 ± 0.48%'             │ '2761'                    │ 2577    │
-│ 1       │ 'neverthrow err'         │ '259314.39 ± 0.48%'  │ '239699.96'         │ '3934 ± 0.41%'             │ '4172'                    │ 3857    │
-│ 2       │ 'effect Effect.fail'     │ '1115973.58 ± 0.39%' │ '1110100.03'        │ '899 ± 0.36%'              │ '901'                     │ 897     │
-│ 3       │ 'effect Exit.fail'       │ '1088751.47 ± 0.37%' │ '1082700.01'        │ '921 ± 0.35%'              │ '924'                     │ 919     │
-└─────────┴──────────────────────────┴──────────────────────┴─────────────────────┴────────────────────────────┴───────────────────────────┴─────────┘
+┌─────────┬──────────────────────┬──────────────────────┬──────────────┬────────────────┬───────────────┬─────────┐
+│ (index) │ task                 │ mean (ns)            │ median (ns)  │ mean (op/s)    │ median (op/s) │ samples │
+├─────────┼──────────────────────┼──────────────────────┼──────────────┼────────────────┼───────────────┼─────────┤
+│ 0       │ 'rustresult Err'     │ '393274.20 ± 0.53%'  │ '371400.00'  │ '2585 ± 0.48%' │ '2693'        │ 2543    │
+│ 1       │ 'neverthrow err'     │ '272867.02 ± 0.89%'  │ '248600.01'  │ '3781 ± 0.49%' │ '4023'        │ 3666    │
+│ 2       │ 'effect Effect.fail' │ '1162188.39 ± 0.46%' │ '1148000.00' │ '864 ± 0.44%'  │ '871'         │ 861     │
+│ 3       │ 'effect Exit.fail'   │ '1127193.58 ± 0.47%' │ '1110300.00' │ '891 ± 0.44%'  │ '901'         │ 888     │
+└─────────┴──────────────────────┴──────────────────────┴──────────────┴────────────────┴───────────────┴─────────┘
 
 */

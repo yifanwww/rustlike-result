@@ -1,18 +1,19 @@
 import { Ok } from '@rustresult/result';
 import { Bench, hrtimeNow } from 'tinybench';
 
+import { formatTinybenchTask } from '../helpers/tinybench.js';
 import { formatNum, logTestCases } from '../utils.js';
 
 const N = 100_000;
 
 const resultOk = Ok<number, number>(200);
 
-logTestCases([['@rustresult/result Ok.expect', resultOk.expect('error message')]]);
+logTestCases([['rustresult Result.expect', resultOk.expect('error message')]]);
 
 console.log('Loop N:', formatNum(N));
 
 const bench = new Bench({ now: hrtimeNow });
-bench.add('@rustresult/result Ok.expect', () => {
+bench.add('rustresult Result.expect', () => {
     let result: number;
     for (let i = 0; i < N; i++) {
         try {
@@ -24,18 +25,18 @@ bench.add('@rustresult/result Ok.expect', () => {
     return result!;
 });
 await bench.run();
-console.table(bench.table());
+console.table(bench.table(formatTinybenchTask));
 
 /*
 
-> @rustresult/result Ok.expect:
+> rustresult Result.expect:
 200
 
 Loop N: 100,000
-┌─────────┬────────────────────────────────┬──────────────────────┬─────────────────────┬────────────────────────────┬───────────────────────────┬─────────┐
-│ (index) │ Task name                      │ Latency average (ns) │ Latency median (ns) │ Throughput average (ops/s) │ Throughput median (ops/s) │ Samples │
-├─────────┼────────────────────────────────┼──────────────────────┼─────────────────────┼────────────────────────────┼───────────────────────────┼─────────┤
-│ 0       │ '@rustresult/result Ok.expect' │ '147902.06 ± 0.03%'  │ '147600.05'         │ '6762 ± 0.03%'             │ '6775'                    │ 6762    │
-└─────────┴────────────────────────────────┴──────────────────────┴─────────────────────┴────────────────────────────┴───────────────────────────┴─────────┘
+┌─────────┬────────────────────────────┬─────────────────────┬─────────────┬────────────────┬───────────────┬─────────┐
+│ (index) │ task                       │ mean (ns)           │ median (ns) │ mean (op/s)    │ median (op/s) │ samples │
+├─────────┼────────────────────────────┼─────────────────────┼─────────────┼────────────────┼───────────────┼─────────┤
+│ 0       │ 'rustresult Result.expect' │ '148517.45 ± 0.05%' │ '148399.95' │ '6735 ± 0.04%' │ '6739'        │ 6734    │
+└─────────┴────────────────────────────┴─────────────────────┴─────────────┴────────────────┴───────────────┴─────────┘
 
 */

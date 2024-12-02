@@ -3,6 +3,7 @@ import { Exit } from 'effect';
 import { err as ntErr, ok as ntOk } from 'neverthrow';
 import { Bench, hrtimeNow } from 'tinybench';
 
+import { formatTinybenchTask } from '../helpers/tinybench.js';
 import { formatNum, logTestCases } from '../utils.js';
 
 const N = 100_000;
@@ -15,93 +16,60 @@ const exitSucceed = Exit.succeed(1);
 const exitFail = Exit.fail('error message');
 
 logTestCases([
-    ['@rustresult/result Ok.isOk', resultOk.isOk()],
-    ['@rustresult/result Err.isOk', resultErr.isOk()],
-    ['neverthrow ok.isOk', ntResultOk.isOk()],
-    ['neverthrow err.isOk', ntResultErr.isOk()],
-    ['effect Exit.succeed.isSuccess', Exit.isSuccess(exitSucceed)],
-    ['effect Exit.fail.isSuccess', Exit.isSuccess(exitFail)],
+    ['rustresult Result.isOk', [resultOk.isOk(), resultErr.isOk()]],
+    ['neverthrow Result.isOk', [ntResultOk.isOk(), ntResultErr.isOk()]],
+    ['effect Exit.isSuccess', [Exit.isSuccess(exitSucceed), Exit.isSuccess(exitFail)]],
 ]);
 
 console.log('Loop N:', formatNum(N));
 
 const bench = new Bench({ now: hrtimeNow });
 bench
-    .add('@rustresult/result Ok.isOk', () => {
-        let result: boolean;
+    .add('rustresult Result.isOk', () => {
+        let ret: boolean;
         for (let i = 0; i < N; i++) {
-            result = resultOk.isOk();
+            ret = resultOk.isOk();
+            ret = resultErr.isOk();
         }
-        return result!;
+        return ret!;
     })
-    .add('@rustresult/result Err.isOk', () => {
-        let result: boolean;
+    .add('neverthrow Result.isOk', () => {
+        let ret: boolean;
         for (let i = 0; i < N; i++) {
-            result = resultErr.isOk();
+            ret = ntResultOk.isOk();
+            ret = ntResultErr.isOk();
         }
-        return result!;
+        return ret!;
     })
-    .add('neverthrow ok.isOk', () => {
-        let result: boolean;
+    .add('effect Exit.isSuccess', () => {
+        let ret: boolean;
         for (let i = 0; i < N; i++) {
-            result = ntResultOk.isOk();
+            ret = Exit.isSuccess(exitSucceed);
+            ret = Exit.isSuccess(exitFail);
         }
-        return result!;
-    })
-    .add('neverthrow err.isOk', () => {
-        let result: boolean;
-        for (let i = 0; i < N; i++) {
-            result = ntResultErr.isOk();
-        }
-        return result!;
-    })
-    .add('effect Exit.succeed.isSuccess', () => {
-        let result: boolean;
-        for (let i = 0; i < N; i++) {
-            result = Exit.isSuccess(exitSucceed);
-        }
-        return result!;
-    })
-    .add('effect Exit.fail.isSuccess', () => {
-        let result: boolean;
-        for (let i = 0; i < N; i++) {
-            result = Exit.isSuccess(exitFail);
-        }
-        return result!;
+        return ret!;
     });
 await bench.run();
-console.table(bench.table());
+console.table(bench.table(formatTinybenchTask));
 
 /*
 
-> @rustresult/result Ok.isOk:
-true
+> rustresult Result.isOk:
+[ true, false ]
 
-> @rustresult/result Err.isOk:
-false
+> neverthrow Result.isOk:
+[ true, false ]
 
-> neverthrow ok.isOk:
-true
-
-> neverthrow err.isOk:
-false
-
-> effect Exit.succeed.isOk simulation:
-true
-
-> effect Exit.fail.isOk simulation:
-false
+> effect Exit.isSuccess:
+[ true, false ]
 
 Loop N: 100,000
-┌─────────┬─────────────────────────────────┬──────────────────────┬─────────────────────┬────────────────────────────┬───────────────────────────┬─────────┐
-│ (index) │ Task name                       │ Latency average (ns) │ Latency median (ns) │ Throughput average (ops/s) │ Throughput median (ops/s) │ Samples │
-├─────────┼─────────────────────────────────┼──────────────────────┼─────────────────────┼────────────────────────────┼───────────────────────────┼─────────┤
-│ 0       │ '@rustresult/result Ok.isOk'    │ '24516.61 ± 0.07%'   │ '24400.00'          │ '40832 ± 0.02%'            │ '40984'                   │ 40789   │
-│ 1       │ '@rustresult/result Err.isOk'   │ '24442.44 ± 0.06%'   │ '24299.98'          │ '40988 ± 0.03%'            │ '41152'                   │ 40913   │
-│ 2       │ 'neverthrow ok.isOk'            │ '24690.79 ± 0.09%'   │ '24400.00'          │ '40677 ± 0.05%'            │ '40984'                   │ 40501   │
-│ 3       │ 'neverthrow err.isOk'           │ '24362.80 ± 0.03%'   │ '24299.98'          │ '41078 ± 0.02%'            │ '41152'                   │ 41047   │
-│ 4       │ 'effect Exit.succeed.isSuccess' │ '74020.39 ± 0.04%'   │ '73799.97'          │ '13514 ± 0.03%'            │ '13550'                   │ 13510   │
-│ 5       │ 'effect Exit.fail.isSuccess'    │ '73999.38 ± 0.03%'   │ '73799.97'          │ '13518 ± 0.03%'            │ '13550'                   │ 13514   │
-└─────────┴─────────────────────────────────┴──────────────────────┴─────────────────────┴────────────────────────────┴───────────────────────────┴─────────┘
+┌─────────┬──────────────────────────┬────────────────────┬─────────────┬─────────────────┬───────────────┬─────────┐
+│ (index) │ task                     │ mean (ns)          │ median (ns) │ mean (op/s)     │ median (op/s) │ samples │
+├─────────┼──────────────────────────┼────────────────────┼─────────────┼─────────────────┼───────────────┼─────────┤
+│ 0       │ 'rustresult Result.isOk' │ '24618.63 ± 0.25%' │ '24500.01'  │ '40710 ± 0.02%' │ '40816'       │ 40620   │
+│ 1       │ 'neverthrow Result.isOk' │ '24764.41 ± 0.12%' │ '24500.01'  │ '40591 ± 0.05%' │ '40816'       │ 40381   │
+│ 2       │ 'effect Exit.isSuccess'  │ '74430.41 ± 0.29%' │ '74299.99'  │ '13458 ± 0.03%' │ '13459'       │ 13436   │
+└─────────┴──────────────────────────┴────────────────────┴─────────────┴─────────────────┴───────────────┴─────────┘
 
 */

@@ -1,6 +1,7 @@
 import { Err } from '@rustresult/result';
 import { Bench, hrtimeNow } from 'tinybench';
 
+import { formatTinybenchTask } from '../helpers/tinybench.js';
 import { formatNum, logTestCases } from '../utils.js';
 
 const N = 100_000;
@@ -8,15 +9,15 @@ const N = 100_000;
 const resultErr = Err<number, number>(404);
 
 logTestCases([
-    ['@rustresult/result Err.unwrapErr', resultErr.unwrapErr()],
-    ['@rustresult/result Err.unwrapErrUnchecked', resultErr.unwrapErrUnchecked()],
+    ['rustresult Err.unwrapErr', resultErr.unwrapErr()],
+    ['rustresult Err.unwrapErrUnchecked', resultErr.unwrapErrUnchecked()],
 ]);
 
 console.log('Loop N:', formatNum(N));
 
 const bench = new Bench({ now: hrtimeNow });
 bench
-    .add('@rustresult/result Err.unwrapErr', () => {
+    .add('rustresult Err.unwrapErr', () => {
         let result: number;
         for (let i = 0; i < N; i++) {
             try {
@@ -27,7 +28,7 @@ bench
         }
         return result!;
     })
-    .add('@rustresult/result Err.unwrapErrUnchecked', () => {
+    .add('rustresult Err.unwrapErrUnchecked', () => {
         let result: number;
         for (let i = 0; i < N; i++) {
             result = resultErr.unwrapErrUnchecked();
@@ -35,22 +36,22 @@ bench
         return result!;
     });
 await bench.run();
-console.table(bench.table());
+console.table(bench.table(formatTinybenchTask));
 
 /*
 
-> @rustresult/result Err.unwrapErr:
+> rustresult Err.unwrapErr:
 404
 
-> @rustresult/result Err.unwrapErrUnchecked:
+> rustresult Err.unwrapErrUnchecked:
 404
 
 Loop N: 100,000
-┌─────────┬─────────────────────────────────────────────┬──────────────────────┬─────────────────────┬────────────────────────────┬───────────────────────────┬─────────┐
-│ (index) │ Task name                                   │ Latency average (ns) │ Latency median (ns) │ Throughput average (ops/s) │ Throughput median (ops/s) │ Samples │
-├─────────┼─────────────────────────────────────────────┼──────────────────────┼─────────────────────┼────────────────────────────┼───────────────────────────┼─────────┤
-│ 0       │ '@rustresult/result Err.unwrapErr'          │ '173451.25 ± 0.03%'  │ '173200.01'         │ '5766 ± 0.02%'             │ '5774'                    │ 5766    │
-│ 1       │ '@rustresult/result Err.unwrapErrUnchecked' │ '24729.69 ± 0.18%'   │ '24400.00'          │ '40718 ± 0.05%'            │ '40984'                   │ 40438   │
-└─────────┴─────────────────────────────────────────────┴──────────────────────┴─────────────────────┴────────────────────────────┴───────────────────────────┴─────────┘
+┌─────────┬─────────────────────────────────────┬─────────────────────┬─────────────┬─────────────────┬───────────────┬─────────┐
+│ (index) │ task                                │ mean (ns)           │ median (ns) │ mean (op/s)     │ median (op/s) │ samples │
+├─────────┼─────────────────────────────────────┼─────────────────────┼─────────────┼─────────────────┼───────────────┼─────────┤
+│ 0       │ 'rustresult Err.unwrapErr'          │ '174067.69 ± 0.04%' │ '173300.03' │ '5746 ± 0.03%'  │ '5770'        │ 5745    │
+│ 1       │ 'rustresult Err.unwrapErrUnchecked' │ '24846.18 ± 0.10%'  │ '24500.01'  │ '40490 ± 0.06%' │ '40816'       │ 40248   │
+└─────────┴─────────────────────────────────────┴─────────────────────┴─────────────┴─────────────────┴───────────────┴─────────┘
 
 */

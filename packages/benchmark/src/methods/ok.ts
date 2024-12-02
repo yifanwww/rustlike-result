@@ -3,6 +3,7 @@ import { Exit } from 'effect';
 import { err as ntErr, ok as ntOk } from 'neverthrow';
 import { Bench, hrtimeNow } from 'tinybench';
 
+import { formatTinybenchTask } from '../helpers/tinybench.js';
 import { formatNum, logTestCases } from '../utils.js';
 
 const N = 100_000;
@@ -15,93 +16,60 @@ const exitSucceed = Exit.succeed(1);
 const exitFail = Exit.fail('error message');
 
 logTestCases([
-    ['@rustresult/result Ok.ok', resultOk.ok()],
-    ['@rustresult/result Err.ok', resultErr.ok()],
-    ['neverthrow ok.ok simulation', ntResultOk.unwrapOr(undefined)],
-    ['neverthrow err.ok simulation', ntResultErr.unwrapOr(undefined)],
-    ['effect Exit.succeed.ok simulation', Exit.getOrElse(exitSucceed, () => undefined)],
-    ['effect Exit.fail.ok simulation', Exit.getOrElse(exitFail, () => undefined)],
+    ['rustresult Result.ok', [resultOk.ok(), resultErr.ok()]],
+    ['neverthrow Result.ok sim', [ntResultOk.unwrapOr(undefined), ntResultErr.unwrapOr(undefined)]],
+    ['effect Exit.ok sim', [Exit.getOrElse(exitSucceed, () => undefined), Exit.getOrElse(exitFail, () => undefined)]],
 ]);
 
 console.log('Loop N:', formatNum(N));
 
 const bench = new Bench({ now: hrtimeNow });
 bench
-    .add('@rustresult/result Ok.ok', () => {
-        let result: number | undefined;
+    .add('rustresult Result.ok', () => {
+        let ret: number | undefined;
         for (let i = 0; i < N; i++) {
-            result = resultOk.ok();
+            ret = resultOk.ok();
+            ret = resultErr.ok();
         }
-        return result;
+        return ret;
     })
-    .add('@rustresult/result Err.ok', () => {
-        let result: undefined;
+    .add('neverthrow Result.ok sim', () => {
+        let ret: number | undefined;
         for (let i = 0; i < N; i++) {
-            result = resultErr.ok();
+            ret = ntResultOk.unwrapOr(undefined);
+            ret = ntResultErr.unwrapOr(undefined);
         }
-        return result;
+        return ret;
     })
-    .add('neverthrow ok.ok simulation', () => {
-        let result: number | undefined;
+    .add('effect Exit.ok sim', () => {
+        let ret: number | undefined;
         for (let i = 0; i < N; i++) {
-            result = ntResultOk.unwrapOr(undefined);
+            ret = Exit.getOrElse(exitSucceed, () => undefined);
+            ret = Exit.getOrElse(exitFail, () => undefined);
         }
-        return result;
-    })
-    .add('neverthrow err.ok simulation', () => {
-        let result: undefined;
-        for (let i = 0; i < N; i++) {
-            result = ntResultErr.unwrapOr(undefined);
-        }
-        return result;
-    })
-    .add('effect Exit.succeed.ok simulation', () => {
-        let result: number | undefined;
-        for (let i = 0; i < N; i++) {
-            result = Exit.getOrElse(exitSucceed, () => undefined);
-        }
-        return result;
-    })
-    .add('effect Exit.fail.ok simulation', () => {
-        let result: undefined;
-        for (let i = 0; i < N; i++) {
-            result = Exit.getOrElse(exitFail, () => undefined);
-        }
-        return result;
+        return ret;
     });
 await bench.run();
-console.table(bench.table());
+console.table(bench.table(formatTinybenchTask));
 
 /*
 
-> @rustresult/result Ok.ok:
-1
+> rustresult Result.ok:
+[ 1, undefined ]
 
-> @rustresult/result Err.ok:
-undefined
+> neverthrow Result.ok sim:
+[ 1, undefined ]
 
-> neverthrow ok.ok simulation:
-1
-
-> neverthrow err.ok simulation:
-undefined
-
-> effect Exit.succeed.ok simulation:
-1
-
-> effect Exit.fail.ok simulation:
-undefined
+> effect Exit.ok sim:
+[ 1, undefined ]
 
 Loop N: 100,000
-┌─────────┬─────────────────────────────────────┬──────────────────────┬─────────────────────┬────────────────────────────┬───────────────────────────┬─────────┐
-│ (index) │ Task name                           │ Latency average (ns) │ Latency median (ns) │ Throughput average (ops/s) │ Throughput median (ops/s) │ Samples │
-├─────────┼─────────────────────────────────────┼──────────────────────┼─────────────────────┼────────────────────────────┼───────────────────────────┼─────────┤
-│ 0       │ '@rustresult/result Ok.ok'          │ '24372.27 ± 0.04%'   │ '24299.98'          │ '41071 ± 0.02%'            │ '41152'                   │ 41031   │
-│ 1       │ '@rustresult/result Err.ok'         │ '24431.75 ± 0.06%'   │ '24299.98'          │ '41020 ± 0.03%'            │ '41152'                   │ 40931   │
-│ 2       │ 'neverthrow ok.ok simulation'       │ '24398.62 ± 0.05%'   │ '24299.98'          │ '41043 ± 0.03%'            │ '41152'                   │ 40986   │
-│ 3       │ 'neverthrow err.ok simulation'      │ '24374.68 ± 0.05%'   │ '24200.08'          │ '41087 ± 0.03%'            │ '41322'                   │ 41027   │
-│ 4       │ 'effect Exit.succeed.ok simulation' │ '529423.77 ± 0.43%'  │ '501700.04'         │ '1905 ± 0.40%'             │ '1993'                    │ 1889    │
-│ 5       │ 'effect Exit.fail.ok simulation'    │ '246393.35 ± 0.04%'  │ '245900.03'         │ '4059 ± 0.03%'             │ '4067'                    │ 4059    │
-└─────────┴─────────────────────────────────────┴──────────────────────┴─────────────────────┴────────────────────────────┴───────────────────────────┴─────────┘
+┌─────────┬────────────────────────────┬─────────────────────┬─────────────────────┬─────────────────┬───────────────┬─────────┐
+│ (index) │ task                       │ mean (ns)           │ median (ns)         │ mean (op/s)     │ median (op/s) │ samples │
+├─────────┼────────────────────────────┼─────────────────────┼─────────────────────┼─────────────────┼───────────────┼─────────┤
+│ 0       │ 'rustresult Result.ok'     │ '24510.99 ± 0.07%'  │ '24400.00'          │ '40901 ± 0.04%' │ '40984'       │ 40799   │
+│ 1       │ 'neverthrow Result.ok sim' │ '24511.67 ± 0.05%'  │ '24400.00'          │ '40859 ± 0.03%' │ '40984'       │ 40797   │
+│ 2       │ 'effect Exit.ok sim'       │ '697350.56 ± 0.38%' │ '668450.03 ± 49.98' │ '1441 ± 0.36%'  │ '1496'        │ 1434    │
+└─────────┴────────────────────────────┴─────────────────────┴─────────────────────┴─────────────────┴───────────────┴─────────┘
 
 */

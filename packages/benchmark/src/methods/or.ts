@@ -4,79 +4,63 @@ import type { Result as NTResult } from 'neverthrow';
 import { err as ntErr, ok as ntOk } from 'neverthrow';
 import { Bench, hrtimeNow } from 'tinybench';
 
+import { formatTinybenchTask } from '../helpers/tinybench.js';
 import { formatNum, logTestCases } from '../utils.js';
 
 const N = 100_000;
 
 const resultOk = Ok<number, string>(1);
 const resultErr = Err<number, string>('error message');
+const resultRhs = Ok(100);
 const ntResultOk = ntOk<number, string>(1);
 const ntResultErr = ntErr<number, string>('error message');
+const ntResultRhs = ntOk(100);
 
 logTestCases([
-    ['@rustresult/result Ok.or', resultOk.or(Ok(100))],
-    ['@rustresult/result Err.or', resultErr.or(Ok(100))],
-    ['neverthrow ok.or simulation', ntResultOk.orElse(() => ntOk(100))],
-    ['neverthrow err.or simulation', ntResultErr.orElse(() => ntOk(100))],
+    ['rustresult Result.or', [resultOk.or(resultRhs), resultErr.or(resultRhs)]],
+    ['neverthrow Result.or simulation', [ntResultOk.orElse(() => ntResultRhs), ntResultErr.orElse(() => ntResultRhs)]],
 ]);
 
 console.log('Loop N:', formatNum(N));
 
 const bench = new Bench({ now: hrtimeNow });
 bench
-    .add('@rustresult/result Ok.or', () => {
-        let result: Result<number, string>;
+    .add('rustresult Result.or', () => {
+        let ret: Result<number, string>;
         for (let i = 0; i < N; i++) {
-            result = resultOk.or(Ok(100));
+            ret = resultOk.or(resultRhs);
+            ret = resultErr.or(resultRhs);
         }
-        return result!;
+        return ret!;
     })
-    .add('@rustresult/result Err.or', () => {
-        let result: Result<number, string>;
+    .add('neverthrow Result.or sim', () => {
+        let ret: NTResult<number, string>;
         for (let i = 0; i < N; i++) {
-            result = resultErr.or(Ok(100));
+            ret = ntResultOk.orElse(() => ntResultRhs);
+            ret = ntResultErr.orElse(() => ntResultRhs);
         }
-        return result!;
-    })
-    .add('neverthrow ok.or simulation', () => {
-        let result: NTResult<number, string>;
-        for (let i = 0; i < N; i++) {
-            result = ntResultOk.orElse(() => ntOk(100));
-        }
-        return result!;
-    })
-    .add('neverthrow err.or simulation', () => {
-        let result: NTResult<number, string>;
-        for (let i = 0; i < N; i++) {
-            result = ntResultErr.orElse(() => ntOk(100));
-        }
-        return result!;
+        return ret!;
     });
 await bench.run();
-console.table(bench.table());
+console.table(bench.table(formatTinybenchTask));
 
 /*
 
-> @rustresult/result Ok.or:
-RustlikeResult { _type: 'ok', _value: 1, _error: undefined }
+> rustresult Result.or:
+[
+  RustlikeResult { _type: 'ok', _value: 1, _error: undefined },
+  RustlikeResult { _type: 'ok', _value: 100, _error: undefined }
+]
 
-> @rustresult/result Err.or:
-RustlikeResult { _type: 'ok', _value: 100, _error: undefined }
-
-> neverthrow ok.or simulation:
-Ok { value: 1 }
-
-> neverthrow err.or simulation:
-Ok { value: 100 }
+> neverthrow Result.or simulation:
+[ Ok { value: 1 }, Ok { value: 100 } ]
 
 Loop N: 100,000
-┌─────────┬────────────────────────────────┬──────────────────────┬─────────────────────┬────────────────────────────┬───────────────────────────┬─────────┐
-│ (index) │ Task name                      │ Latency average (ns) │ Latency median (ns) │ Throughput average (ops/s) │ Throughput median (ops/s) │ Samples │
-├─────────┼────────────────────────────────┼──────────────────────┼─────────────────────┼────────────────────────────┼───────────────────────────┼─────────┤
-│ 0       │ '@rustresult/result Ok.or'     │ '351682.70 ± 0.96%'  │ '331900.00'         │ '2892 ± 0.34%'             │ '3013'                    │ 2844    │
-│ 1       │ '@rustresult/result Err.or'    │ '341476.61 ± 0.23%'  │ '330600.02'         │ '2939 ± 0.21%'             │ '3025'                    │ 2929    │
-│ 2       │ 'neverthrow ok.or simulation'  │ '191653.45 ± 0.57%'  │ '181199.91'         │ '5402 ± 0.49%'             │ '5519'                    │ 5218    │
-│ 3       │ 'neverthrow err.or simulation' │ '590790.55 ± 0.54%'  │ '568499.92'         │ '1711 ± 0.46%'             │ '1759'                    │ 1693    │
-└─────────┴────────────────────────────────┴──────────────────────┴─────────────────────┴────────────────────────────┴───────────────────────────┴─────────┘
+┌─────────┬────────────────────────────┬─────────────────────┬─────────────┬─────────────────┬───────────────┬─────────┐
+│ (index) │ task                       │ mean (ns)           │ median (ns) │ mean (op/s)     │ median (op/s) │ samples │
+├─────────┼────────────────────────────┼─────────────────────┼─────────────┼─────────────────┼───────────────┼─────────┤
+│ 0       │ 'rustresult Result.or'     │ '125168.57 ± 0.80%' │ '123000.03' │ '8057 ± 0.11%'  │ '8130'        │ 7990    │
+│ 1       │ 'neverthrow Result.or sim' │ '73858.29 ± 0.05%'  │ '73799.97'  │ '13546 ± 0.03%' │ '13550'       │ 13540   │
+└─────────┴────────────────────────────┴─────────────────────┴─────────────┴─────────────────┴───────────────┴─────────┘
 
 */

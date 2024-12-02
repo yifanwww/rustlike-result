@@ -3,6 +3,7 @@ import { Exit } from 'effect';
 import { err as ntErr, ok as ntOk } from 'neverthrow';
 import { Bench, hrtimeNow } from 'tinybench';
 
+import { formatTinybenchTask } from '../helpers/tinybench.js';
 import { formatNum, logTestCases } from '../utils.js';
 
 const N = 100_000;
@@ -15,93 +16,85 @@ const exitSucceed = Exit.succeed(1);
 const exitFail = Exit.fail('error message');
 
 logTestCases([
-    ['@rustresult/result Ok.isOkAnd', resultOk.isOkAnd((value) => value === 1)],
-    ['@rustresult/result Err.isOkAnd', resultErr.isOkAnd((value) => value === 1)],
-    ['neverthrow ok.isOkAnd simulation', ntResultOk.isOk() && ntResultOk.value === 1],
-    ['neverthrow err.isOkAnd simulation', ntResultErr.isOk() && ntResultErr.value === 1],
-    ['effect Exit.succeed.isOkAnd simulation', Exit.isSuccess(exitSucceed) && exitSucceed.value === 1],
-    ['effect Exit.fail.isOkAnd simulation', Exit.isSuccess(exitFail) && exitFail.value === 1],
+    [
+        'rustresult Result.isOkAnd',
+        [resultOk.isOkAnd((value) => value === 1), resultErr.isOkAnd((value) => value === 1)],
+    ],
+    [
+        'rustresult Result.isOkAnd sim',
+        [resultOk.isOk() && resultOk.unwrapUnchecked() === 1, resultErr.isOk() && resultErr.unwrapUnchecked() === 1],
+    ],
+    [
+        'neverthrow Result.isOkAnd sim',
+        [ntResultOk.isOk() && ntResultOk.value === 1, ntResultErr.isOk() && ntResultErr.value === 1],
+    ],
+    [
+        'effect Exit.isOkAnd sim',
+        [Exit.isSuccess(exitSucceed) && exitSucceed.value === 1, Exit.isSuccess(exitFail) && exitFail.value === 1],
+    ],
 ]);
 
 console.log('Loop N:', formatNum(N));
 
 const bench = new Bench({ now: hrtimeNow });
 bench
-    .add('@rustresult/result Ok.isOkAnd', () => {
-        let result: boolean;
+    .add('rustresult Result.isOkAnd', () => {
+        let ret: boolean;
         for (let i = 0; i < N; i++) {
-            result = resultOk.isOkAnd((value) => value === 1);
+            ret = resultOk.isOkAnd((value) => value === 1);
+            ret = resultErr.isOkAnd((value) => value === 1);
         }
-        return result!;
+        return ret!;
     })
-    .add('@rustresult/result Err.isOkAnd', () => {
-        let result: boolean;
+    .add('rustresult Result.isOkAnd sim', () => {
+        let ret: boolean;
         for (let i = 0; i < N; i++) {
-            result = resultErr.isOkAnd((value) => value === 1);
+            ret = resultOk.isOk() && resultOk.unwrapUnchecked() === 1;
+            ret = resultErr.isOk() && resultErr.unwrapUnchecked() === 1;
         }
-        return result!;
+        return ret!;
     })
-    .add('neverthrow ok.isOkAnd simulation', () => {
-        let result: boolean;
+    .add('neverthrow Result.isOkAnd sim', () => {
+        let ret: boolean;
         for (let i = 0; i < N; i++) {
-            result = ntResultOk.isOk() && ntResultOk.value === 1;
+            ret = ntResultOk.isOk() && ntResultOk.value === 1;
+            ret = ntResultErr.isOk() && ntResultErr.value === 1;
         }
-        return result!;
+        return ret!;
     })
-    .add('neverthrow err.isOkAnd simulation', () => {
-        let result: boolean;
+    .add('effect Exit.isOkAnd sim', () => {
+        let ret: boolean;
         for (let i = 0; i < N; i++) {
-            result = ntResultErr.isOk() && ntResultErr.value === 1;
+            ret = Exit.isSuccess(exitSucceed) && exitSucceed.value === 1;
+            ret = Exit.isSuccess(exitFail) && exitFail.value === 1;
         }
-        return result!;
-    })
-    .add('effect Exit.succeed.isOkAnd simulation', () => {
-        let result: boolean;
-        for (let i = 0; i < N; i++) {
-            result = Exit.isSuccess(exitSucceed) && exitSucceed.value === 1;
-        }
-        return result!;
-    })
-    .add('effect Exit.fail.isOkAnd simulation', () => {
-        let result: boolean;
-        for (let i = 0; i < N; i++) {
-            result = Exit.isSuccess(exitFail) && exitFail.value === 1;
-        }
-        return result!;
+        return ret!;
     });
 await bench.run();
-console.table(bench.table());
+console.table(bench.table(formatTinybenchTask));
 
 /*
 
-> @rustresult/result Ok.isOkAnd:
-true
+> rustresult Result.isOkAnd:
+[ true, false ]
 
-> @rustresult/result Err.isOkAnd:
-false
+> rustresult Result.isOkAnd sim:
+[ true, false ]
 
-> neverthrow ok.isOkAnd simulation:
-true
+> neverthrow Result.isOkAnd sim:
+[ true, false ]
 
-> neverthrow err.isOkAnd simulation:
-false
-
-> effect Exit.succeed.isOkAnd simulation:
-true
-
-> effect Exit.fail.isOkAnd simulation:
-false
+> effect Exit.isOkAnd sim:
+[ true, false ]
 
 Loop N: 100,000
-┌─────────┬──────────────────────────────────────────┬──────────────────────┬─────────────────────┬────────────────────────────┬───────────────────────────┬─────────┐
-│ (index) │ Task name                                │ Latency average (ns) │ Latency median (ns) │ Throughput average (ops/s) │ Throughput median (ops/s) │ Samples │
-├─────────┼──────────────────────────────────────────┼──────────────────────┼─────────────────────┼────────────────────────────┼───────────────────────────┼─────────┤
-│ 0       │ '@rustresult/result Ok.isOkAnd'          │ '73508.31 ± 0.09%'   │ '73300.00'          │ '13623 ± 0.05%'            │ '13643'                   │ 13604   │
-│ 1       │ '@rustresult/result Err.isOkAnd'         │ '73518.32 ± 0.06%'   │ '73399.90'          │ '13612 ± 0.04%'            │ '13624'                   │ 13603   │
-│ 2       │ 'neverthrow ok.isOkAnd simulation'       │ '24379.53 ± 0.03%'   │ '24299.98'          │ '41049 ± 0.02%'            │ '41152'                   │ 41019   │
-│ 3       │ 'neverthrow err.isOkAnd simulation'      │ '24334.25 ± 0.02%'   │ '24299.98'          │ '41110 ± 0.02%'            │ '41152'                   │ 41095   │
-│ 4       │ 'effect Exit.succeed.isOkAnd simulation' │ '98565.97 ± 0.03%'   │ '98400.00'          │ '10147 ± 0.02%'            │ '10163'                   │ 10146   │
-│ 5       │ 'effect Exit.fail.isOkAnd simulation'    │ '74019.54 ± 0.03%'   │ '73800.09'          │ '13513 ± 0.02%'            │ '13550'                   │ 13510   │
-└─────────┴──────────────────────────────────────────┴──────────────────────┴─────────────────────┴────────────────────────────┴───────────────────────────┴─────────┘
+┌─────────┬─────────────────────────────────┬────────────────────┬─────────────┬─────────────────┬───────────────┬─────────┐
+│ (index) │ task                            │ mean (ns)          │ median (ns) │ mean (op/s)     │ median (op/s) │ samples │
+├─────────┼─────────────────────────────────┼────────────────────┼─────────────┼─────────────────┼───────────────┼─────────┤
+│ 0       │ 'rustresult Result.isOkAnd'     │ '74387.88 ± 0.17%' │ '73400.02'  │ '13506 ± 0.08%' │ '13624'       │ 13444   │
+│ 1       │ 'rustresult Result.isOkAnd sim' │ '24589.37 ± 0.06%' │ '24499.95'  │ '40765 ± 0.04%' │ '40816'       │ 40668   │
+│ 2       │ 'neverthrow Result.isOkAnd sim' │ '24658.56 ± 0.08%' │ '24500.01'  │ '40700 ± 0.04%' │ '40816'       │ 40554   │
+│ 3       │ 'effect Exit.isOkAnd sim'       │ '86558.06 ± 0.04%' │ '86100.04'  │ '11558 ± 0.03%' │ '11614'       │ 11553   │
+└─────────┴─────────────────────────────────┴────────────────────┴─────────────┴─────────────────┴───────────────┴─────────┘
 
 */

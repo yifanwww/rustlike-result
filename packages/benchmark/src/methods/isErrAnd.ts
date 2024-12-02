@@ -3,6 +3,7 @@ import { Cause, Exit } from 'effect';
 import { err as ntErr, ok as ntOk } from 'neverthrow';
 import { Bench, hrtimeNow } from 'tinybench';
 
+import { formatTinybenchTask } from '../helpers/tinybench.js';
 import { formatNum, logTestCases } from '../utils.js';
 
 const N = 100_000;
@@ -15,17 +16,24 @@ const exitSucceed = Exit.succeed(200);
 const exitFail = Exit.fail(404);
 
 logTestCases([
-    ['@rustresult/result Ok.isErrAnd', resultOk.isErrAnd((err) => err === 404)],
-    ['@rustresult/result Err.isErrAnd', resultErr.isErrAnd((err) => err === 404)],
-    ['neverthrow ok.isErrAnd simulation', ntResultOk.isErr() && ntResultOk.error === 404],
-    ['neverthrow err.isErrAnd simulation', ntResultErr.isErr() && ntResultErr.error === 404],
+    ['rustresult Result.isErrAnd', [resultOk.isErrAnd((err) => err === 404), resultErr.isErrAnd((err) => err === 404)]],
     [
-        'effect Exit.succeed.isErrAnd simulation',
-        Exit.isFailure(exitSucceed) && Cause.isFailType(exitSucceed.cause) && exitSucceed.cause.error === 404,
+        'rustresult Result.isErrAnd sim',
+        [
+            resultOk.isErr() && resultOk.unwrapErrUnchecked() === 404,
+            resultErr.isErr() && resultErr.unwrapErrUnchecked() === 404,
+        ],
     ],
     [
-        'effect Exit.fail.isErrAnd simulation',
-        Exit.isFailure(exitFail) && Cause.isFailType(exitFail.cause) && exitFail.cause.error === 404,
+        'neverthrow Result.isErrAnd sim',
+        [ntResultOk.isErr() && ntResultOk.error === 404, ntResultErr.isErr() && ntResultErr.error === 404],
+    ],
+    [
+        'effect Exit.isErrAnd sim',
+        [
+            Exit.isFailure(exitSucceed) && Cause.isFailType(exitSucceed.cause) && exitSucceed.cause.error === 404,
+            Exit.isFailure(exitFail) && Cause.isFailType(exitFail.cause) && exitFail.cause.error === 404,
+        ],
     ],
 ]);
 
@@ -33,82 +41,63 @@ console.log('Loop N:', formatNum(N));
 
 const bench = new Bench({ now: hrtimeNow });
 bench
-    .add('@rustresult/result Ok.isErrAnd', () => {
-        let result: boolean;
+    .add('rustresult Result.isErrAnd', () => {
+        let ret: boolean;
         for (let i = 0; i < N; i++) {
-            result = resultOk.isErrAnd((err) => err === 400);
+            ret = resultOk.isErrAnd((err) => err === 404);
+            ret = resultErr.isErrAnd((err) => err === 404);
         }
-        return result!;
+        return ret!;
     })
-    .add('@rustresult/result Err.isErrAnd', () => {
-        let result: boolean;
+    .add('rustresult Result.isErrAnd sim', () => {
+        let ret: boolean;
         for (let i = 0; i < N; i++) {
-            result = resultErr.isErrAnd((err) => err === 400);
+            ret = resultOk.isErr() && resultOk.unwrapErrUnchecked() === 404;
+            ret = resultErr.isErr() && resultErr.unwrapErrUnchecked() === 404;
         }
-        return result!;
+        return ret!;
     })
-    .add('neverthrow ok.isErrAnd simulation', () => {
-        let result: boolean;
+    .add('neverthrow Result.isErrAnd sim', () => {
+        let ret: boolean;
         for (let i = 0; i < N; i++) {
-            result = ntResultOk.isErr() && ntResultOk.error === 404;
+            ret = ntResultOk.isErr() && ntResultOk.error === 404;
+            ret = ntResultErr.isErr() && ntResultErr.error === 404;
         }
-        return result!;
+        return ret!;
     })
-    .add('neverthrow err.isErrAnd simulation', () => {
-        let result: boolean;
+    .add('effect Exit.isErrAnd sim', () => {
+        let ret: boolean;
         for (let i = 0; i < N; i++) {
-            result = ntResultErr.isErr() && ntResultErr.error === 404;
+            ret = Exit.isFailure(exitSucceed) && Cause.isFailType(exitSucceed.cause) && exitSucceed.cause.error === 404;
+            ret = Exit.isFailure(exitFail) && Cause.isFailType(exitFail.cause) && exitFail.cause.error === 404;
         }
-        return result!;
-    })
-    .add('effect Exit.succeed.isErrAnd simulation', () => {
-        let result: boolean;
-        for (let i = 0; i < N; i++) {
-            result =
-                Exit.isFailure(exitSucceed) && Cause.isFailType(exitSucceed.cause) && exitSucceed.cause.error === 404;
-        }
-        return result!;
-    })
-    .add('effect Exit.fail.isErrAnd simulation', () => {
-        let result: boolean;
-        for (let i = 0; i < N; i++) {
-            result = Exit.isFailure(exitFail) && Cause.isFailType(exitFail.cause) && exitFail.cause.error === 404;
-        }
-        return result!;
+        return ret!;
     });
 await bench.run();
-console.table(bench.table());
+console.table(bench.table(formatTinybenchTask));
 
 /*
 
-> @rustresult/result Ok.isErrAnd:
-false
+> rustresult Result.isErrAnd:
+[ false, true ]
 
-> @rustresult/result Err.isErrAnd:
-true
+> rustresult Result.isErrAnd sim:
+[ false, true ]
 
-> neverthrow ok.isErrAnd simulation:
-false
+> neverthrow Result.isErrAnd sim:
+[ false, true ]
 
-> neverthrow err.isErrAnd simulation:
-true
-
-> effect Exit.succeed.isErrAnd simulation:
-false
-
-> effect Exit.fail.isErrAnd simulation:
-true
+> effect Exit.isErrAnd sim:
+[ false, true ]
 
 Loop N: 100,000
-┌─────────┬───────────────────────────────────────────┬──────────────────────┬─────────────────────┬────────────────────────────┬───────────────────────────┬─────────┐
-│ (index) │ Task name                                 │ Latency average (ns) │ Latency median (ns) │ Throughput average (ops/s) │ Throughput median (ops/s) │ Samples │
-├─────────┼───────────────────────────────────────────┼──────────────────────┼─────────────────────┼────────────────────────────┼───────────────────────────┼─────────┤
-│ 0       │ '@rustresult/result Ok.isErrAnd'          │ '73563.46 ± 0.04%'   │ '73400.02'          │ '13599 ± 0.03%'            │ '13624'                   │ 13594   │
-│ 1       │ '@rustresult/result Err.isErrAnd'         │ '73657.58 ± 0.08%'   │ '73400.02'          │ '13586 ± 0.03%'            │ '13624'                   │ 13577   │
-│ 2       │ 'neverthrow ok.isErrAnd simulation'       │ '24365.86 ± 0.09%'   │ '24200.08'          │ '41104 ± 0.03%'            │ '41322'                   │ 41042   │
-│ 3       │ 'neverthrow err.isErrAnd simulation'      │ '24335.75 ± 0.04%'   │ '24299.98'          │ '41123 ± 0.02%'            │ '41152'                   │ 41092   │
-│ 4       │ 'effect Exit.succeed.isErrAnd simulation' │ '73925.21 ± 0.03%'   │ '73799.97'          │ '13530 ± 0.02%'            │ '13550'                   │ 13528   │
-│ 5       │ 'effect Exit.fail.isErrAnd simulation'    │ '271823.40 ± 0.04%'  │ '270799.99'         │ '3679 ± 0.03%'             │ '3693'                    │ 3679    │
-└─────────┴───────────────────────────────────────────┴──────────────────────┴─────────────────────┴────────────────────────────┴───────────────────────────┴─────────┘
+┌─────────┬──────────────────────────────────┬─────────────────────┬─────────────┬─────────────────┬───────────────┬─────────┐
+│ (index) │ task                             │ mean (ns)           │ median (ns) │ mean (op/s)     │ median (op/s) │ samples │
+├─────────┼──────────────────────────────────┼─────────────────────┼─────────────┼─────────────────┼───────────────┼─────────┤
+│ 0       │ 'rustresult Result.isErrAnd'     │ '73866.61 ± 0.04%'  │ '73600.05'  │ '13543 ± 0.03%' │ '13587'       │ 13538   │
+│ 1       │ 'rustresult Result.isErrAnd sim' │ '24503.15 ± 0.03%'  │ '24500.01'  │ '40836 ± 0.02%' │ '40816'       │ 40812   │
+│ 2       │ 'neverthrow Result.isErrAnd sim' │ '24521.30 ± 0.03%'  │ '24500.01'  │ '40806 ± 0.02%' │ '40816'       │ 40781   │
+│ 3       │ 'effect Exit.isErrAnd sim'       │ '276035.05 ± 0.54%' │ '272099.97' │ '3650 ± 0.19%'  │ '3675'        │ 3623    │
+└─────────┴──────────────────────────────────┴─────────────────────┴─────────────┴─────────────────┴───────────────┴─────────┘
 
 */

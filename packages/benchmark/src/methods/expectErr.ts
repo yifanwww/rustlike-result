@@ -1,18 +1,19 @@
 import { Err } from '@rustresult/result';
 import { Bench, hrtimeNow } from 'tinybench';
 
+import { formatTinybenchTask } from '../helpers/tinybench.js';
 import { formatNum, logTestCases } from '../utils.js';
 
 const N = 100_000;
 
 const resultErr = Err<number, number>(404);
 
-logTestCases([['@rustresult/result Err.expectErr', resultErr.expectErr('error message')]]);
+logTestCases([['rustresult Result.expectErr', resultErr.expectErr('error message')]]);
 
 console.log('Loop N:', formatNum(N));
 
 const bench = new Bench({ now: hrtimeNow });
-bench.add('@rustresult/result Err.expectErr', () => {
+bench.add('rustresult Result.expectErr', () => {
     let result: number;
     for (let i = 0; i < N; i++) {
         try {
@@ -24,18 +25,18 @@ bench.add('@rustresult/result Err.expectErr', () => {
     return result!;
 });
 await bench.run();
-console.table(bench.table());
+console.table(bench.table(formatTinybenchTask));
 
 /*
 
-> @rustresult/result Err.expectErr:
+> rustresult Result.expectErr:
 404
 
 Loop N: 100,000
-┌─────────┬────────────────────────────────────┬──────────────────────┬─────────────────────┬────────────────────────────┬───────────────────────────┬─────────┐
-│ (index) │ Task name                          │ Latency average (ns) │ Latency median (ns) │ Throughput average (ops/s) │ Throughput median (ops/s) │ Samples │
-├─────────┼────────────────────────────────────┼──────────────────────┼─────────────────────┼────────────────────────────┼───────────────────────────┼─────────┤
-│ 0       │ '@rustresult/result Err.expectErr' │ '147638.71 ± 0.04%'  │ '147599.94'         │ '6775 ± 0.03%'             │ '6775'                    │ 6774    │
-└─────────┴────────────────────────────────────┴──────────────────────┴─────────────────────┴────────────────────────────┴───────────────────────────┴─────────┘
+┌─────────┬───────────────────────────────┬─────────────────────┬─────────────┬────────────────┬───────────────┬─────────┐
+│ (index) │ task                          │ mean (ns)           │ median (ns) │ mean (op/s)    │ median (op/s) │ samples │
+├─────────┼───────────────────────────────┼─────────────────────┼─────────────┼────────────────┼───────────────┼─────────┤
+│ 0       │ 'rustresult Result.expectErr' │ '148056.27 ± 0.04%' │ '147600.00' │ '6756 ± 0.03%' │ '6775'        │ 6755    │
+└─────────┴───────────────────────────────┴─────────────────────┴─────────────┴────────────────┴───────────────┴─────────┘
 
 */

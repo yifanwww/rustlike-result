@@ -3,6 +3,7 @@ import { Exit } from 'effect';
 import { err as ntErr, ok as ntOk } from 'neverthrow';
 import { Bench, hrtimeNow } from 'tinybench';
 
+import { formatTinybenchTask } from '../helpers/tinybench.js';
 import { formatNum, logTestCases } from '../utils.js';
 
 const N = 100_000;
@@ -15,23 +16,20 @@ const exitSucceed: Exit.Exit<number, string> = Exit.succeed(1);
 const exitFail: Exit.Exit<number, string> = Exit.fail('foo');
 
 logTestCases([
-    ['@rustresult/result Ok.unwrapOr', resultOk.unwrapOr(100)],
-    ['@rustresult/result Err.unwrapOr', resultErr.unwrapOr(100)],
-    ['neverthrow ok.unwrapOr', ntResultOk.unwrapOr(100)],
-    ['neverthrow err.unwrapOr', ntResultErr.unwrapOr(100)],
+    ['rustresult Result.unwrapOr', [resultOk.unwrapOr(100), resultErr.unwrapOr(100)]],
+    ['neverthrow Result.unwrapOr', [ntResultOk.unwrapOr(100), ntResultErr.unwrapOr(100)]],
     [
-        'effect Exit.succeed.unwrapOr simulation',
-        Exit.match(exitSucceed, {
-            onSuccess: (value) => value,
-            onFailure: () => 100,
-        }),
-    ],
-    [
-        'effect Exit.fail.unwrapOr simulation',
-        Exit.match(exitFail, {
-            onSuccess: (value) => value,
-            onFailure: () => 100,
-        }),
+        'effect Exit.unwrapOr sim',
+        [
+            Exit.match(exitSucceed, {
+                onSuccess: (value) => value,
+                onFailure: () => 100,
+            }),
+            Exit.match(exitFail, {
+                onSuccess: (value) => value,
+                onFailure: () => 100,
+            }),
+        ],
     ],
 ]);
 
@@ -39,47 +37,29 @@ console.log('Loop N:', formatNum(N));
 
 const bench = new Bench({ now: hrtimeNow });
 bench
-    .add('@rustresult/result Ok.unwrapOr', () => {
+    .add('rustresult Result.unwrapOr', () => {
         let result: number;
         for (let i = 0; i < N; i++) {
             result = resultOk.unwrapOr(100);
-        }
-        return result!;
-    })
-    .add('@rustresult/result Err.unwrapOr', () => {
-        let result: number;
-        for (let i = 0; i < N; i++) {
             result = resultErr.unwrapOr(100);
         }
         return result!;
     })
-    .add('neverthrow ok.unwrapOr', () => {
+    .add('neverthrow Result.unwrapOr', () => {
         let result: number;
         for (let i = 0; i < N; i++) {
             result = ntResultOk.unwrapOr(100);
-        }
-        return result!;
-    })
-    .add('neverthrow err.unwrapOr', () => {
-        let result: number;
-        for (let i = 0; i < N; i++) {
             result = ntResultErr.unwrapOr(100);
         }
         return result!;
     })
-    .add('effect Exit.succeed.unwrapOr simulation', () => {
+    .add('effect Exit.unwrapOr sim', () => {
         let result: number;
         for (let i = 0; i < N; i++) {
             result = Exit.match(exitSucceed, {
                 onSuccess: (value) => value,
                 onFailure: () => 100,
             });
-        }
-        return result!;
-    })
-    .add('effect Exit.fail.unwrapOr simulation', () => {
-        let result: number;
-        for (let i = 0; i < N; i++) {
             result = Exit.match(exitFail, {
                 onSuccess: (value) => value,
                 onFailure: () => 100,
@@ -88,38 +68,26 @@ bench
         return result!;
     });
 await bench.run();
-console.table(bench.table());
+console.table(bench.table(formatTinybenchTask));
 
 /*
 
-> @rustresult/result Ok.unwrapOr:
-1
+> rustresult Result.unwrapOr:
+[ 1, 100 ]
 
-> @rustresult/result Err.unwrapOr:
-100
+> neverthrow Result.unwrapOr:
+[ 1, 100 ]
 
-> neverthrow ok.unwrapOr:
-1
-
-> neverthrow err.unwrapOr:
-100
-
-> effect Exit.succeed.unwrapOr simulation:
-1
-
-> effect Exit.fail.unwrapOr simulation:
-100
+> effect Exit.unwrapOr sim:
+[ 1, 100 ]
 
 Loop N: 100,000
-┌─────────┬───────────────────────────────────────────┬──────────────────────┬─────────────────────┬────────────────────────────┬───────────────────────────┬─────────┐
-│ (index) │ Task name                                 │ Latency average (ns) │ Latency median (ns) │ Throughput average (ops/s) │ Throughput median (ops/s) │ Samples │
-├─────────┼───────────────────────────────────────────┼──────────────────────┼─────────────────────┼────────────────────────────┼───────────────────────────┼─────────┤
-│ 0       │ '@rustresult/result Ok.unwrapOr'          │ '24461.13 ± 0.07%'   │ '24299.98'          │ '40983 ± 0.04%'            │ '41152'                   │ 40882   │
-│ 1       │ '@rustresult/result Err.unwrapOr'         │ '24442.34 ± 0.06%'   │ '24299.98'          │ '40998 ± 0.03%'            │ '41152'                   │ 40913   │
-│ 2       │ 'neverthrow ok.unwrapOr'                  │ '24417.62 ± 0.06%'   │ '24299.98'          │ '41039 ± 0.03%'            │ '41152'                   │ 40955   │
-│ 3       │ 'neverthrow err.unwrapOr'                 │ '24373.09 ± 0.07%'   │ '24299.98'          │ '41070 ± 0.02%'            │ '41152'                   │ 41029   │
-│ 4       │ 'effect Exit.succeed.unwrapOr simulation' │ '908891.10 ± 0.41%'  │ '911300.06'         │ '1105 ± 0.40%'             │ '1097'                    │ 1101    │
-│ 5       │ 'effect Exit.fail.unwrapOr simulation'    │ '878940.77 ± 0.40%'  │ '883349.96 ± 50.01' │ '1143 ± 0.39%'             │ '1132'                    │ 1138    │
-└─────────┴───────────────────────────────────────────┴──────────────────────┴─────────────────────┴────────────────────────────┴───────────────────────────┴─────────┘
+┌─────────┬──────────────────────────────┬──────────────────────┬───────────────────────┬─────────────────┬───────────────┬─────────┐
+│ (index) │ task                         │ mean (ns)            │ median (ns)           │ mean (op/s)     │ median (op/s) │ samples │
+├─────────┼──────────────────────────────┼──────────────────────┼───────────────────────┼─────────────────┼───────────────┼─────────┤
+│ 0       │ 'rustresult Result.unwrapOr' │ '24530.68 ± 0.05%'   │ '24400.00'            │ '40824 ± 0.03%' │ '40984'       │ 40766   │
+│ 1       │ 'neverthrow Result.unwrapOr' │ '24478.08 ± 0.03%'   │ '24400.00'            │ '40886 ± 0.02%' │ '40984'       │ 40853   │
+│ 2       │ 'effect Exit.unwrapOr sim'   │ '1788351.43 ± 0.68%' │ '1750499.99 ± 399.98' │ '563 ± 0.62%'   │ '571'         │ 560     │
+└─────────┴──────────────────────────────┴──────────────────────┴───────────────────────┴─────────────────┴───────────────┴─────────┘
 
 */
