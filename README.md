@@ -2,7 +2,7 @@
 
 Rust-like `Result` and `ResultAsync` for JavaScript.
 
-`Result` is a type that represents either success (`Ok`) or `failure` (`Err`), `ResultAsync` is the asynchronous version of `Result`.
+`Result` is a type that represents either success (`Ok`) or failure (`Err`), `ResultAsync` is the asynchronous version of `Result`.
 
 ## Table Of Contents
 
@@ -64,7 +64,7 @@ Check out [`@rustresult/result`] for the core of Rust-like `Result`
 
 ### Third-Party Library Helpers
 
-`Result` is not a built-in feature in JavaScript world. You will definitely feel that it's hard to make `Result` work with third-party libraries. There are also some helpers for you.
+`Result` is not a built-in feature in JavaScript. You will definitely feel that it's hard to make `Result` work with third-party libraries. There are also some helpers for you.
 
 - Check out [`@rustresult/typeorm`] for helpers that can help you use the `typeorm` library
 
