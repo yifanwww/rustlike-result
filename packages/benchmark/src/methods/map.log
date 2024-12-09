@@ -1,0 +1,31 @@
+> rustresult Result.map:
+[
+  RustlikeResult { _type: 'ok', _value: 2, _error: undefined },
+  RustlikeResult {
+    _type: 'err',
+    _value: undefined,
+    _error: 'error message'
+  }
+]
+
+> neverthrow Result.map:
+[ Ok { value: 2 }, Err { error: 'error message' } ]
+
+> effect Exit.map:
+[
+  { _id: 'Exit', _tag: 'Success', value: 2 },
+  {
+    _id: 'Exit',
+    _tag: 'Failure',
+    cause: { _id: 'Cause', _tag: 'Fail', failure: 'error message' }
+  }
+]
+
+Loop N: 100,000
+┌─────────┬─────────────────────────┬──────────────────────┬──────────────┬────────────────┬───────────────┬─────────┐
+│ (index) │ task                    │ mean (ns)            │ median (ns)  │ mean (op/s)    │ median (op/s) │ samples │
+├─────────┼─────────────────────────┼──────────────────────┼──────────────┼────────────────┼───────────────┼─────────┤
+│ 0       │ 'rustresult Result.map' │ '428085.91 ± 0.51%'  │ '403200.15'  │ '2370 ± 0.46%' │ '2480'        │ 2336    │
+│ 1       │ 'neverthrow Result.map' │ '260789.83 ± 0.54%'  │ '238499.88'  │ '3929 ± 0.45%' │ '4193'        │ 3835    │
+│ 2       │ 'effect Exit.map'       │ '1929968.59 ± 1.57%' │ '1869100.09' │ '526 ± 0.81%'  │ '535'         │ 519     │
+└─────────┴─────────────────────────┴──────────────────────┴──────────────┴────────────────┴───────────────┴─────────┘

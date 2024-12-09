@@ -87,25 +87,3 @@ bench
     });
 await bench.run();
 console.table(bench.table(formatTinybenchTask));
-
-/*
-
-> rustresult Result.err:
-[ undefined, 'error message' ]
-
-> neverthrow Result.err sim:
-[ undefined, 'error message' ]
-
-> effect Exit.err sim:
-[ undefined, 'error message' ]
-
-Loop N: 100,000
-┌─────────┬─────────────────────────────┬──────────────────────┬──────────────┬─────────────────┬───────────────┬─────────┐
-│ (index) │ task                        │ mean (ns)            │ median (ns)  │ mean (op/s)     │ median (op/s) │ samples │
-├─────────┼─────────────────────────────┼──────────────────────┼──────────────┼─────────────────┼───────────────┼─────────┤
-│ 0       │ 'rustresult Result.err'     │ '24487.67 ± 0.07%'   │ '24400.00'   │ '40886 ± 0.02%' │ '40984'       │ 40837   │
-│ 1       │ 'neverthrow Result.err sim' │ '73595.85 ± 0.04%'   │ '73400.02'   │ '13593 ± 0.03%' │ '13624'       │ 13588   │
-│ 2       │ 'effect Exit.err sim'       │ '1890170.00 ± 0.58%' │ '1862400.00' │ '531 ± 0.54%'   │ '537'         │ 530     │
-└─────────┴─────────────────────────────┴──────────────────────┴──────────────┴─────────────────┴───────────────┴─────────┘
-
-*/

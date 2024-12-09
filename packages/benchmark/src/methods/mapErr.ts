@@ -65,39 +65,3 @@ bench
     });
 await bench.run();
 console.table(bench.table(formatTinybenchTask));
-
-/*
-
-> rustresult Result.mapErr:
-[
-  RustlikeResult { _type: 'ok', _value: 200, _error: undefined },
-  RustlikeResult {
-    _type: 'err',
-    _value: undefined,
-    _error: 'error code: 400'
-  }
-]
-
-> neverthrow Result.mapErr:
-[ Ok { value: 200 }, Err { error: 'error code: 400' } ]
-
-> effect Exit.mapError:
-[
-  { _id: 'Exit', _tag: 'Success', value: 200 },
-  {
-    _id: 'Exit',
-    _tag: 'Failure',
-    cause: { _id: 'Cause', _tag: 'Fail', failure: 'error code: 400' }
-  }
-]
-
-Loop N: 100,000
-┌─────────┬────────────────────────────┬───────────────────────┬─────────────────────────┬────────────────┬───────────────┬─────────┐
-│ (index) │ task                       │ mean (ns)             │ median (ns)             │ mean (op/s)    │ median (op/s) │ samples │
-├─────────┼────────────────────────────┼───────────────────────┼─────────────────────────┼────────────────┼───────────────┼─────────┤
-│ 0       │ 'rustresult Result.mapErr' │ '418859.51 ± 0.49%'   │ '396900.00'             │ '2421 ± 0.45%' │ '2520'        │ 2388    │
-│ 1       │ 'neverthrow Result.mapErr' │ '254431.80 ± 0.51%'   │ '232900.02'             │ '4021 ± 0.43%' │ '4294'        │ 3931    │
-│ 2       │ 'effect Exit.mapError'     │ '16207970.31 ± 0.55%' │ '16209450.01 ± 1850.01' │ '62 ± 0.54%'   │ '62'          │ 64      │
-└─────────┴────────────────────────────┴───────────────────────┴─────────────────────────┴────────────────┴───────────────┴─────────┘
-
-*/

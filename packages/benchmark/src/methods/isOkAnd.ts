@@ -72,29 +72,3 @@ bench
     });
 await bench.run();
 console.table(bench.table(formatTinybenchTask));
-
-/*
-
-> rustresult Result.isOkAnd:
-[ true, false ]
-
-> rustresult Result.isOkAnd sim:
-[ true, false ]
-
-> neverthrow Result.isOkAnd sim:
-[ true, false ]
-
-> effect Exit.isOkAnd sim:
-[ true, false ]
-
-Loop N: 100,000
-┌─────────┬─────────────────────────────────┬────────────────────┬─────────────┬─────────────────┬───────────────┬─────────┐
-│ (index) │ task                            │ mean (ns)          │ median (ns) │ mean (op/s)     │ median (op/s) │ samples │
-├─────────┼─────────────────────────────────┼────────────────────┼─────────────┼─────────────────┼───────────────┼─────────┤
-│ 0       │ 'rustresult Result.isOkAnd'     │ '74387.88 ± 0.17%' │ '73400.02'  │ '13506 ± 0.08%' │ '13624'       │ 13444   │
-│ 1       │ 'rustresult Result.isOkAnd sim' │ '24589.37 ± 0.06%' │ '24499.95'  │ '40765 ± 0.04%' │ '40816'       │ 40668   │
-│ 2       │ 'neverthrow Result.isOkAnd sim' │ '24658.56 ± 0.08%' │ '24500.01'  │ '40700 ± 0.04%' │ '40816'       │ 40554   │
-│ 3       │ 'effect Exit.isOkAnd sim'       │ '86558.06 ± 0.04%' │ '86100.04'  │ '11558 ± 0.03%' │ '11614'       │ 11553   │
-└─────────┴─────────────────────────────────┴────────────────────┴─────────────┴─────────────────┴───────────────┴─────────┘
-
-*/

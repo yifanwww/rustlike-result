@@ -1,0 +1,31 @@
+> rustresult Result.mapErr:
+[
+  RustlikeResult { _type: 'ok', _value: 200, _error: undefined },
+  RustlikeResult {
+    _type: 'err',
+    _value: undefined,
+    _error: 'error code: 400'
+  }
+]
+
+> neverthrow Result.mapErr:
+[ Ok { value: 200 }, Err { error: 'error code: 400' } ]
+
+> effect Exit.mapError:
+[
+  { _id: 'Exit', _tag: 'Success', value: 200 },
+  {
+    _id: 'Exit',
+    _tag: 'Failure',
+    cause: { _id: 'Cause', _tag: 'Fail', failure: 'error code: 400' }
+  }
+]
+
+Loop N: 100,000
+┌─────────┬────────────────────────────┬───────────────────────┬─────────────────────────┬────────────────┬───────────────┬─────────┐
+│ (index) │ task                       │ mean (ns)             │ median (ns)             │ mean (op/s)    │ median (op/s) │ samples │
+├─────────┼────────────────────────────┼───────────────────────┼─────────────────────────┼────────────────┼───────────────┼─────────┤
+│ 0       │ 'rustresult Result.mapErr' │ '420016.63 ± 0.51%'   │ '394299.98'             │ '2416 ± 0.46%' │ '2536'        │ 2381    │
+│ 1       │ 'neverthrow Result.mapErr' │ '259376.76 ± 0.54%'   │ '237200.02'             │ '3951 ± 0.45%' │ '4216'        │ 3856    │
+│ 2       │ 'effect Exit.mapError'     │ '16362601.58 ± 0.80%' │ '16219249.96 ± 4549.98' │ '61 ± 0.77%'   │ '62'          │ 64      │
+└─────────┴────────────────────────────┴───────────────────────┴─────────────────────────┴────────────────┴───────────────┴─────────┘

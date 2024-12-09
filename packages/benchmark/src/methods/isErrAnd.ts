@@ -75,29 +75,3 @@ bench
     });
 await bench.run();
 console.table(bench.table(formatTinybenchTask));
-
-/*
-
-> rustresult Result.isErrAnd:
-[ false, true ]
-
-> rustresult Result.isErrAnd sim:
-[ false, true ]
-
-> neverthrow Result.isErrAnd sim:
-[ false, true ]
-
-> effect Exit.isErrAnd sim:
-[ false, true ]
-
-Loop N: 100,000
-┌─────────┬──────────────────────────────────┬─────────────────────┬─────────────┬─────────────────┬───────────────┬─────────┐
-│ (index) │ task                             │ mean (ns)           │ median (ns) │ mean (op/s)     │ median (op/s) │ samples │
-├─────────┼──────────────────────────────────┼─────────────────────┼─────────────┼─────────────────┼───────────────┼─────────┤
-│ 0       │ 'rustresult Result.isErrAnd'     │ '73866.61 ± 0.04%'  │ '73600.05'  │ '13543 ± 0.03%' │ '13587'       │ 13538   │
-│ 1       │ 'rustresult Result.isErrAnd sim' │ '24503.15 ± 0.03%'  │ '24500.01'  │ '40836 ± 0.02%' │ '40816'       │ 40812   │
-│ 2       │ 'neverthrow Result.isErrAnd sim' │ '24521.30 ± 0.03%'  │ '24500.01'  │ '40806 ± 0.02%' │ '40816'       │ 40781   │
-│ 3       │ 'effect Exit.isErrAnd sim'       │ '276035.05 ± 0.54%' │ '272099.97' │ '3650 ± 0.19%'  │ '3675'        │ 3623    │
-└─────────┴──────────────────────────────────┴─────────────────────┴─────────────┴─────────────────┴───────────────┴─────────┘
-
-*/

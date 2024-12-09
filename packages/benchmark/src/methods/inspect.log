@@ -1,0 +1,20 @@
+> rustresult Result.inspect:
+[
+  RustlikeResult { _type: 'ok', _value: 1, _error: undefined },
+  RustlikeResult {
+    _type: 'err',
+    _value: undefined,
+    _error: 'error message'
+  }
+]
+
+> neverthrow Result.inspect sim:
+[ Ok { value: 1 }, Err { error: 'error message' } ]
+
+Loop N: 100,000
+┌─────────┬─────────────────────────────────┬─────────────────────┬─────────────┬────────────────┬───────────────┬─────────┐
+│ (index) │ task                            │ mean (ns)           │ median (ns) │ mean (op/s)    │ median (op/s) │ samples │
+├─────────┼─────────────────────────────────┼─────────────────────┼─────────────┼────────────────┼───────────────┼─────────┤
+│ 0       │ 'rustresult Result.inspect'     │ '448032.06 ± 0.32%' │ '462300.06' │ '2243 ± 0.28%' │ '2163'        │ 2233    │
+│ 1       │ 'neverthrow Result.inspect sim' │ '505858.47 ± 0.20%' │ '497699.98' │ '1980 ± 0.17%' │ '2009'        │ 1977    │
+└─────────┴─────────────────────────────────┴─────────────────────┴─────────────┴────────────────┴───────────────┴─────────┘

@@ -43,28 +43,3 @@ bench
     });
 await bench.run();
 console.table(bench.table(formatTinybenchTask));
-
-/*
-
-> rustresult Result.and:
-[
-  RustlikeResult { _type: 'ok', _value: 100, _error: undefined },
-  RustlikeResult {
-    _type: 'err',
-    _value: undefined,
-    _error: 'error message'
-  }
-]
-
-> neverthrow Result.and sim:
-[ Ok { value: 100 }, Err { error: 'error message' } ]
-
-Loop N: 100,000
-┌─────────┬─────────────────────────────┬─────────────────────┬─────────────┬────────────────┬───────────────┬─────────┐
-│ (index) │ task                        │ mean (ns)           │ median (ns) │ mean (op/s)    │ median (op/s) │ samples │
-├─────────┼─────────────────────────────┼─────────────────────┼─────────────┼────────────────┼───────────────┼─────────┤
-│ 0       │ 'rustresult Result.and'     │ '288184.39 ± 0.34%' │ '273200.04' │ '3499 ± 0.29%' │ '3660'        │ 3471    │
-│ 1       │ 'neverthrow Result.and sim' │ '192495.82 ± 0.31%' │ '199799.95' │ '5268 ± 0.34%' │ '5005'        │ 5195    │
-└─────────┴─────────────────────────────┴─────────────────────┴─────────────┴────────────────┴───────────────┴─────────┘
-
-*/
