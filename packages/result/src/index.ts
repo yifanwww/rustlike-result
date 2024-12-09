@@ -1,5 +1,6 @@
 export * from './factory';
 export * from './factoryAsync';
+export * from './is';
 export type * from './Result';
 export type * from './ResultAsync';
 export * from './resultify';

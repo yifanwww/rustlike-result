@@ -1,7 +1,17 @@
 > rustresult Result.or:
 [
-  RustlikeResult { _type: 'ok', _value: 1, _error: undefined },
-  RustlikeResult { _type: 'ok', _value: 100, _error: undefined }
+  RustlikeResult {
+    _type: 'ok',
+    _value: 1,
+    _error: undefined,
+    _symbol: Symbol(rust_result)
+  },
+  RustlikeResult {
+    _type: 'ok',
+    _value: 100,
+    _error: undefined,
+    _symbol: Symbol(rust_result)
+  }
 ]
 
 > neverthrow Result.or simulation:
@@ -11,6 +21,6 @@ Loop N: 100,000
 ┌─────────┬────────────────────────────┬─────────────────────┬─────────────┬─────────────────┬───────────────┬─────────┐
 │ (index) │ task                       │ mean (ns)           │ median (ns) │ mean (op/s)     │ median (op/s) │ samples │
 ├─────────┼────────────────────────────┼─────────────────────┼─────────────┼─────────────────┼───────────────┼─────────┤
-│ 0       │ 'rustresult Result.or'     │ '123230.96 ± 0.05%' │ '122999.91' │ '8117 ± 0.03%'  │ '8130'        │ 8115    │
-│ 1       │ 'neverthrow Result.or sim' │ '73671.24 ± 0.05%'  │ '73400.02'  │ '13580 ± 0.03%' │ '13624'       │ 13574   │
+│ 0       │ 'rustresult Result.or'     │ '123387.34 ± 0.05%' │ '122999.91' │ '8108 ± 0.04%'  │ '8130'        │ 8105    │
+│ 1       │ 'neverthrow Result.or sim' │ '73839.09 ± 0.04%'  │ '73799.85'  │ '13549 ± 0.03%' │ '13550'       │ 13543   │
 └─────────┴────────────────────────────┴─────────────────────┴─────────────┴─────────────────┴───────────────┴─────────┘

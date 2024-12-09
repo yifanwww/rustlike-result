@@ -16,3 +16,8 @@ export type ResultType = 'ok' | 'err';
  * People just simply write `T | undefined`.
  */
 export type Optional<T> = T | undefined;
+
+export interface InternalResult {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    _symbol: symbol;
+}

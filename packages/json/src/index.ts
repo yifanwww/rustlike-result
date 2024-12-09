@@ -1,11 +1,11 @@
 import type { Result, ResultJson } from '@rustresult/result';
-import { Err, Ok, RustlikeResult } from '@rustresult/result';
+import { Err, Ok, isResult } from '@rustresult/result';
 
 /**
  * Converts a `Result` to a JSON object.
  */
 function toJSON(result: unknown): unknown {
-    if (result instanceof RustlikeResult) {
+    if (isResult(result)) {
         return result.isOk()
             ? { type: 'ok', value: toJSON(result.unwrapUnchecked()) }
             : { type: 'err', value: toJSON(result.unwrapErrUnchecked()) };

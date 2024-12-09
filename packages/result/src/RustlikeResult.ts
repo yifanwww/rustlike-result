@@ -1,7 +1,9 @@
+import { isResult } from './is';
 import type { Result } from './Result';
 import type { ResultAsync } from './ResultAsync';
 // eslint-disable-next-line import/no-cycle
 import { RustlikeResultAsync } from './RustlikeResultAsync';
+import { RESULT_SYMBOL } from './symbols';
 import type { Optional, ResultType } from './types.internal';
 
 /**
@@ -11,6 +13,7 @@ export class RustlikeResult<T, E> implements Result<T, E> {
     private readonly _type: ResultType;
     private readonly _value?: T;
     private readonly _error?: E;
+    private readonly _symbol: symbol;
 
     constructor(type: 'ok', value: T);
     constructor(type: 'err', error: E);
@@ -23,6 +26,7 @@ export class RustlikeResult<T, E> implements Result<T, E> {
             this._value = undefined;
             this._error = value as E;
         }
+        this._symbol = RESULT_SYMBOL;
     }
 
     /**
@@ -159,18 +163,15 @@ export class RustlikeResult<T, E> implements Result<T, E> {
     }
 
     private static _equal(self: unknown, other: unknown): boolean {
-        const isSelfResult = self instanceof RustlikeResult;
-        const isOtherResult = other instanceof RustlikeResult;
+        const isSelfResult = isResult(self);
+        const isOtherResult = isResult(other);
 
         if (isSelfResult && isOtherResult) {
-            const _self: Result<unknown, unknown> = self;
-            const _other: Result<unknown, unknown> = other;
-
-            const isOk = _self.isOk();
-            if (isOk !== _other.isOk()) return false;
+            const isOk = self.isOk();
+            if (isOk !== other.isOk()) return false;
             return isOk
-                ? RustlikeResult._equal(_self.unwrapUnchecked(), _other.unwrapUnchecked())
-                : RustlikeResult._equal(_self.unwrapErrUnchecked(), _other.unwrapErrUnchecked());
+                ? RustlikeResult._equal(self.unwrapUnchecked(), other.unwrapUnchecked())
+                : RustlikeResult._equal(self.unwrapErrUnchecked(), other.unwrapErrUnchecked());
         }
 
         return self === other || (Number.isNaN(self) && Number.isNaN(other));
