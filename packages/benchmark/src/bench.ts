@@ -9,7 +9,7 @@ const packageDirectory = path.resolve(_dirname, '..');
 const distDirectory = path.join(packageDirectory, 'dist');
 const srcDirectory = path.join(packageDirectory, 'src');
 
-const benchTaskFolders = ['factories', 'methods'];
+const benchTaskFolders = ['extra-methods', 'factories', 'methods'];
 
 const taskPaths = benchTaskFolders
     .map((folder) =>
