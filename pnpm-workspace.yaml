@@ -1,7 +1,7 @@
 packages:
-  - 'packages/*'
-
-workspaceConcurrency: 0
-
+  - packages/*
+onlyBuiltDependencies:
+  - '@swc/core'
 publicHoistPattern:
-- "*eslint*"
+  - '*eslint*'
+workspaceConcurrency: 0
