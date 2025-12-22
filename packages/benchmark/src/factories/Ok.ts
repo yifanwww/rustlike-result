@@ -6,7 +6,9 @@ import { ok as ntOk } from 'neverthrow';
 import { Bench, hrtimeNow } from 'tinybench';
 
 import { formatTinybenchTask } from '../helpers/tinybench.js';
-import { formatNum, logTestCases } from '../utils.js';
+import { formatNum, logEnvironment, logTestCases } from '../utils.js';
+
+logEnvironment();
 
 const N = 100_000;
 
