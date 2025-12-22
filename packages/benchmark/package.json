@@ -17,6 +17,7 @@
     },
     "packageManager": "pnpm@9.8.0+sha512.8e4c3550fb500e808dbc30bb0ce4dd1eb614e30b1c55245f211591ec2cdf9c611cabd34e1364b42f564bd54b3945ed0f49d61d1bbf2ec9bd74b866fcdc723276",
     "scripts": {
+        "bench": "node dist/bench.js",
         "build": "tsc --project tsconfig.build.json",
         "clean": "rimraf --glob dist *.tsbuildinfo",
         "format": "prettier --write \"**/*.{cjs,js,mjs,json,ts,yaml,yml}\"",
@@ -31,6 +32,7 @@
         "tinybench": "^3.0.6"
     },
     "devDependencies": {
+        "@types/prompts": "^2.4.9",
         "@typescript-eslint/eslint-plugin": "^8.14.0",
         "@typescript-eslint/parser": "^8.14.0",
         "eslint": "^8.57.0",
@@ -40,6 +42,7 @@
         "eslint-plugin-jest": "^28.9.0",
         "eslint-plugin-prettier": "^5.2.1",
         "prettier": "3.3.3",
+        "prompts": "^2.4.2",
         "rimraf": "^5.0.6",
         "typescript": "5.4.5"
     }

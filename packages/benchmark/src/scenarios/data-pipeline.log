@@ -1,0 +1,152 @@
+> rustresult Result (success):
+RustlikeResult {
+  _type: 'ok',
+  _value: {
+    id: 'user_johndoe_1766413959449',
+    email: 'user@example.com',
+    age: 25,
+    username: 'johndoe',
+    isAdult: true,
+    timestamp: 1766413959449,
+    saved: true
+  },
+  _error: undefined,
+  _symbol: Symbol(rust_result)
+}
+
+> neverthrow Result (success):
+Ok {
+  value: {
+    id: 'user_johndoe_1766413959449',
+    email: 'user@example.com',
+    age: 25,
+    username: 'johndoe',
+    isAdult: true,
+    timestamp: 1766413959449,
+    saved: true
+  }
+}
+
+> effect Exit (success):
+{
+  _id: 'Exit',
+  _tag: 'Success',
+  value: {
+    id: 'user_johndoe_1766413959449',
+    email: 'user@example.com',
+    age: 25,
+    username: 'johndoe',
+    isAdult: true,
+    timestamp: 1766413959449,
+    saved: true
+  }
+}
+
+> Nullable (success):
+{
+  id: 'user_johndoe_1766413959449',
+  email: 'user@example.com',
+  age: 25,
+  username: 'johndoe',
+  isAdult: true,
+  timestamp: 1766413959449,
+  saved: true
+}
+
+> Try-catch (success):
+{
+  id: 'user_johndoe_1766413959449',
+  email: 'user@example.com',
+  age: 25,
+  username: 'johndoe',
+  isAdult: true,
+  timestamp: 1766413959449,
+  saved: true
+}
+
+> rustresult Result (parse error):
+RustlikeResult {
+  _type: 'err',
+  _value: undefined,
+  _error: { type: 'PARSE_ERROR', message: 'Invalid age format' },
+  _symbol: Symbol(rust_result)
+}
+
+> neverthrow Result (parse error):
+Err { error: { type: 'PARSE_ERROR', message: 'Invalid age format' } }
+
+> effect Exit (parse error):
+{
+  _id: 'Exit',
+  _tag: 'Failure',
+  cause: {
+    _id: 'Cause',
+    _tag: 'Fail',
+    failure: { type: 'PARSE_ERROR', message: 'Invalid age format' }
+  }
+}
+
+> Nullable (parse error):
+null
+
+> Try-catch (parse error):
+null
+
+> rustresult Result (validation error):
+RustlikeResult {
+  _type: 'err',
+  _value: undefined,
+  _error: { type: 'VALIDATION_ERROR', message: 'Invalid email format' },
+  _symbol: Symbol(rust_result)
+}
+
+> neverthrow Result (validation error):
+Err {
+  error: { type: 'VALIDATION_ERROR', message: 'Invalid email format' }
+}
+
+> effect Exit (validation error):
+{
+  _id: 'Exit',
+  _tag: 'Failure',
+  cause: {
+    _id: 'Cause',
+    _tag: 'Fail',
+    failure: { type: 'VALIDATION_ERROR', message: 'Invalid email format' }
+  }
+}
+
+> Nullable (validation error):
+null
+
+> Try-catch (validation error):
+null
+
+Loop N: 100,000
+┌─────────┬────────────────────────────────────┬───────────────────────┬──────────────────────────┬──────────────┬───────────────┬─────────┐
+│ (index) │ task                               │ mean (ns)             │ median (ns)              │ mean (op/s)  │ median (op/s) │ samples │
+├─────────┼────────────────────────────────────┼───────────────────────┼──────────────────────────┼──────────────┼───────────────┼─────────┤
+│ 0       │ 'rustresult Result (success path)' │ '35955726.56 ± 0.87%' │ '35582850.01 ± 19150.00' │ '28 ± 0.79%' │ '28'          │ 64      │
+│ 1       │ 'neverthrow Result (success path)' │ '34021776.56 ± 0.54%' │ '33904500.00 ± 3700.00'  │ '29 ± 0.50%' │ '29'          │ 64      │
+│ 2       │ 'effect Exit (success path)'       │ '35952251.56 ± 0.32%' │ '35930400.00 ± 900.00'   │ '28 ± 0.32%' │ '28'          │ 64      │
+│ 3       │ 'Nullable (success path)'          │ '33995084.37 ± 3.53%' │ '31866600.00 ± 4900.00'  │ '30 ± 2.76%' │ '31'          │ 64      │
+│ 4       │ 'Try-catch (success path)'         │ '32200201.56 ± 2.02%' │ '31362850.00 ± 3950.01'  │ '31 ± 1.59%' │ '32'          │ 64      │
+└─────────┴────────────────────────────────────┴───────────────────────┴──────────────────────────┴──────────────┴───────────────┴─────────┘
+┌─────────┬─────────────────────────────────────┬────────────────────────┬───────────────────────────┬─────────────────┬───────────────┬─────────┐
+│ (index) │ task                                │ mean (ns)              │ median (ns)               │ mean (op/s)     │ median (op/s) │ samples │
+├─────────┼─────────────────────────────────────┼────────────────────────┼───────────────────────────┼─────────────────┼───────────────┼─────────┤
+│ 0       │ 'rustresult Result (early failure)' │ '4235126.58 ± 0.38%'   │ '4205200.00'              │ '236 ± 0.37%'   │ '238'         │ 237     │
+│ 1       │ 'neverthrow Result (early failure)' │ '3724210.78 ± 0.34%'   │ '3707400.01'              │ '269 ± 0.32%'   │ '270'         │ 269     │
+│ 2       │ 'effect Exit (early failure)'       │ '6910895.17 ± 0.50%'   │ '6878700.00'              │ '145 ± 0.49%'   │ '145'         │ 145     │
+│ 3       │ 'Nullable (early failure)'          │ '24798.06 ± 0.06%'     │ '24700.00'                │ '40424 ± 0.04%' │ '40486'       │ 40326   │
+│ 4       │ 'Try-catch (early failure)'         │ '766903729.69 ± 1.03%' │ '756738300.00 ± 48700.00' │ '1 ± 0.93%'     │ '1'           │ 64      │
+└─────────┴─────────────────────────────────────┴────────────────────────┴───────────────────────────┴─────────────────┴───────────────┴─────────┘
+┌─────────┬───────────────────────────────────┬────────────────────────┬───────────────────────────┬───────────────┬───────────────┬─────────┐
+│ (index) │ task                              │ mean (ns)              │ median (ns)               │ mean (op/s)   │ median (op/s) │ samples │
+├─────────┼───────────────────────────────────┼────────────────────────┼───────────────────────────┼───────────────┼───────────────┼─────────┤
+│ 0       │ 'rustresult Result (mid failure)' │ '5625714.04 ± 0.57%'   │ '5630750.01 ± 750.00'     │ '178 ± 0.57%' │ '178'         │ 178     │
+│ 1       │ 'neverthrow Result (mid failure)' │ '5026003.02 ± 1.38%'   │ '4941000.00'              │ '200 ± 0.91%' │ '202'         │ 199     │
+│ 2       │ 'effect Exit (mid failure)'       │ '7558387.22 ± 1.29%'   │ '7470200.00'              │ '133 ± 0.98%' │ '134'         │ 133     │
+│ 3       │ 'Nullable (mid failure)'          │ '3924083.53 ± 0.47%'   │ '3898200.01'              │ '255 ± 0.45%' │ '257'         │ 255     │
+│ 4       │ 'Try-catch (mid failure)'         │ '759288493.75 ± 0.81%' │ '754197850.00 ± 18549.99' │ '1 ± 0.67%'   │ '1'           │ 64      │
+└─────────┴───────────────────────────────────┴────────────────────────┴───────────────────────────┴───────────────┴───────────────┴─────────┘

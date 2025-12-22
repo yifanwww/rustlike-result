@@ -13,7 +13,7 @@
         "type": "git",
         "url": "git+https://github.com/yifanwww/rustlike-result.git"
     },
-    "packageManager": "pnpm@10.11.0+sha512.6540583f41cc5f628eb3d9773ecee802f4f9ef9923cc45b69890fb47991d4b092964694ec3a4f738a420c918a333062c8b925d312f42e4f0c263eb603551f977",
+    "packageManager": "pnpm@10.26.1+sha512.664074abc367d2c9324fdc18037097ce0a8f126034160f709928e9e9f95d98714347044e5c3164d65bd5da6c59c6be362b107546292a8eecb7999196e5ce58fa",
     "scripts": {
         "build": "pnpm run --recursive --stream build",
         "build-result": "pnpm run --filter @rustresult/result build",
