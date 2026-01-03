@@ -66,6 +66,10 @@
         {
             "name": "@rustresult/typeorm",
             "path": "packages/typeorm"
+        },
+        {
+            "name": "rust",
+            "path": "rust"
         }
     ]
 }
