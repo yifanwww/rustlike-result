@@ -322,7 +322,7 @@ module.exports = {
                     caseInsensitive: true,
                     order: 'asc',
                 },
-                                'newlines-between': 'always',
+                'newlines-between': 'always',
             },
         ],
 

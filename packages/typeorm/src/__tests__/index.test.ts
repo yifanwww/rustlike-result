@@ -7,13 +7,10 @@ import { typeormTransaction } from '../index';
 
 class MockedEntityManager {}
 
-class MockedQueryRunner
-    implements
-        Pick<
-            QueryRunner,
-            'manager' | 'connect' | 'startTransaction' | 'commitTransaction' | 'rollbackTransaction' | 'release'
-        >
-{
+class MockedQueryRunner implements Pick<
+    QueryRunner,
+    'manager' | 'connect' | 'startTransaction' | 'commitTransaction' | 'rollbackTransaction' | 'release'
+> {
     manager: EntityManager = new MockedEntityManager() as EntityManager;
 
     connect(): Promise<void> {

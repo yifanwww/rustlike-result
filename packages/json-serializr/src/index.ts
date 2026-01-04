@@ -128,7 +128,7 @@ export function createResultModelSchema<T, E>(schemas?: ResultPropSchemas): Mode
     );
 
     const valuePropSchema = custom(
-        (value, key, result: Result<T, E>): ResultJson<unknown, unknown> | undefined => {
+        (value, key, result: Result<T, E>): ResultJson<unknown, unknown> | undefined | typeof SKIP => {
             return result.isOk() ? okPropSchema.serializer(value, key, result) : SKIP;
         },
 
@@ -138,7 +138,7 @@ export function createResultModelSchema<T, E>(schemas?: ResultPropSchemas): Mode
     );
 
     const errorPropSchema = custom(
-        (value, key, result: Result<T, E>): ResultJson<unknown, unknown> | undefined => {
+        (value, key, result: Result<T, E>): ResultJson<unknown, unknown> | undefined | typeof SKIP => {
             return result.isErr() ? errPropSchema.serializer(value, key, result) : SKIP;
         },
 

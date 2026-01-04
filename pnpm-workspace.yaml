@@ -1,7 +1,13 @@
 packages:
   - packages/*
+
+ignoredBuiltDependencies:
+  - unrs-resolver
+
 onlyBuiltDependencies:
   - '@swc/core'
+
 publicHoistPattern:
   - '*eslint*'
+
 workspaceConcurrency: 0
