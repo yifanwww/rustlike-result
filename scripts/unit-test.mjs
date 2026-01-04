@@ -1,14 +1,13 @@
 import chalk from 'chalk';
 import child from 'node:child_process';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import url from 'node:url';
 
-const _dirname = path.dirname(fileURLToPath(import.meta.url));
+const resolve = (p) => url.fileURLToPath(import.meta.resolve(p));
 
 function main() {
     const argv = process.argv.slice(2);
 
-    const command = ['jest', '--config', path.join(_dirname, '../configs/jest/jest.config.js'), ...argv].join(' ');
+    const command = ['jest', '--config', resolve('../configs/jest/jest.config.js'), ...argv].join(' ');
 
     const env = {
         ...process.env,

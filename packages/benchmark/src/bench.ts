@@ -3,9 +3,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import prompts from 'prompts';
 
-const packageRoot = path.resolve(import.meta.dirname, '..');
-const dist = path.join(packageRoot, 'dist');
-const src = path.join(packageRoot, 'src');
+const pkgRoot = path.join(import.meta.dirname, '..');
+const dist = path.join(pkgRoot, 'dist');
+const src = path.join(pkgRoot, 'src');
 
 const BENCH_GROUPS = ['extra-methods', 'factories', 'methods', 'scenarios'];
 
