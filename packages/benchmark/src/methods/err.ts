@@ -3,10 +3,10 @@ import { Cause, Exit } from 'effect';
 import { err as ntErr, ok as ntOk } from 'neverthrow';
 import { Bench, hrtimeNow } from 'tinybench';
 
-import { formatTinybenchTask } from '../helpers/tinybench.js';
+import { formatTinybenchTask } from '../tinybench.js';
 import { formatNum, logEnvironment, logTestCases } from '../utils.js';
 
-logEnvironment();
+await logEnvironment();
 
 const N = 100_000;
 

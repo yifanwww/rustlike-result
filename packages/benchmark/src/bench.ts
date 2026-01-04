@@ -1,5 +1,5 @@
 import child from 'node:child_process';
-import fs from 'node:fs';
+import fs from 'node:fs/promises';
 import path from 'node:path';
 import prompts from 'prompts';
 
@@ -7,67 +7,55 @@ const pkgRoot = path.join(import.meta.dirname, '..');
 const dist = path.join(pkgRoot, 'dist');
 const src = path.join(pkgRoot, 'src');
 
-const BENCH_GROUPS = ['extra-methods', 'factories', 'methods', 'scenarios'];
-
 async function main() {
-    const groupResp = await prompts({
+    const taskGroups = await fs
+        .readdir(dist, { withFileTypes: true })
+        .then((entries) => entries.filter((entry) => entry.isDirectory()).map((entry) => entry.name));
+
+    const groupResult = await prompts({
         type: 'select',
         name: 'value',
         message: 'Pick a benchmark group',
-        choices: [{ title: 'all', value: 'all' }, ...BENCH_GROUPS.map((item) => ({ title: item, value: item }))],
+        choices: [{ title: 'all', value: 'all' }, ...taskGroups.map((item) => ({ title: item, value: item }))],
     });
-    const selectedGroup = groupResp.value as string;
+    const selectedGroup = groupResult.value as string;
     if (selectedGroup === 'all') {
-        runBenchmarks(BENCH_GROUPS);
+        await runBenchmarks(taskGroups);
         return;
     }
 
-    const entries = fs
-        .readdirSync(path.join(dist, selectedGroup), { withFileTypes: true })
-        .filter((entry) => entry.isFile())
-        .map((entry) => path.join(selectedGroup, entry.name));
-    const entryResp = await prompts({
+    const tasks = await readGroupTasks(selectedGroup);
+    const taskResult = await prompts({
         type: 'select',
         name: 'value',
         message: 'Pick a benchmark task',
-        choices: [{ title: 'all', value: 'all' }, ...entries.map((item) => ({ title: item, value: item }))],
+        choices: [{ title: 'all', value: 'all' }, ...tasks.map((item) => ({ title: item, value: item }))],
     });
-    const selectedEntry = entryResp.value as string;
-    if (selectedEntry === 'all') {
-        runBenchmarks([selectedGroup]);
+    const selectedTask = taskResult.value as string;
+    if (selectedTask === 'all') {
+        await runBenchmarks([selectedGroup]);
     } else {
-        run(selectedEntry);
+        run(selectedTask);
     }
 }
 
 void main();
 
-function runBenchmarks(groups: string[]) {
-    const entries = groups
-        .map((group) =>
-            fs
-                .readdirSync(path.join(dist, group), { withFileTypes: true })
-                .filter((entry) => entry.isFile())
-                .map((entry) => path.join(group, entry.name)),
-        )
-        .flat();
+async function runBenchmarks(groups: string[]) {
+    const tasks = await Promise.all(groups.map((group) => readGroupTasks(group))).then((result) => result.flat());
 
-    console.log(`Found ${entries.length} bench tasks`);
-    for (const entry of entries) {
-        console.log(`- ${entry}`);
-    }
-
-    for (const entry of entries) {
-        run(entry);
+    console.log(`Found ${tasks.length} bench tasks`);
+    for (const task of tasks) {
+        run(task);
     }
 }
 
-function run(entry: string) {
-    const file = path.join(dist, entry);
+function run(task: string) {
+    const file = path.join(dist, task);
     const log = path.join(
         src,
         path.format({
-            ...path.parse(entry),
+            ...path.parse(task),
             base: undefined,
             ext: '.log',
         }),
@@ -75,4 +63,10 @@ function run(entry: string) {
 
     console.log(`node ${file} > ${log}`);
     child.execSync(`node ${file} > ${log}`);
+}
+
+async function readGroupTasks(group: string): Promise<string[]> {
+    return fs
+        .readdir(path.join(dist, group), { withFileTypes: true })
+        .then((entries) => entries.filter((entry) => entry.isFile()).map((entry) => path.join(group, entry.name)));
 }

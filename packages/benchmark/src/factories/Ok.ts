@@ -5,10 +5,10 @@ import type { Ok as NTOk } from 'neverthrow';
 import { ok as ntOk } from 'neverthrow';
 import { Bench, hrtimeNow } from 'tinybench';
 
-import { formatTinybenchTask } from '../helpers/tinybench.js';
+import { formatTinybenchTask } from '../tinybench.js';
 import { formatNum, logEnvironment, logTestCases } from '../utils.js';
 
-logEnvironment();
+await logEnvironment();
 
 const N = 100_000;
 

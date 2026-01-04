@@ -1,6 +1,6 @@
 {
     "settings": {
-        // --------------------------------------------------------------------------------- Visual Studio Code Settings
+        // --------------------------------------------------- Built-in Settings
 
         "editor.insertSpaces": true,
         "editor.rulers": [120],
@@ -40,7 +40,11 @@
             "editor.defaultFormatter": "esbenp.prettier-vscode",
             "editor.insertSpaces": true,
             "editor.tabSize": 2
-        }
+        },
+
+        // -------------------------------------------------- Extension Settings
+
+        "eslint.useFlatConfig": false
     },
     "folders": [
         {

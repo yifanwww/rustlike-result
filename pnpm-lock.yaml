@@ -39,17 +39,17 @@ importers:
         specifier: workspace:^
         version: link:../result
       effect:
-        specifier: ^3.10.15
+        specifier: ^3.19.14
         version: 3.19.14
       neverthrow:
-        specifier: ^8.1.1
+        specifier: ^8.2.0
         version: 8.2.0
       prompts:
         specifier: ^2.4.2
         version: 2.4.2
       tinybench:
-        specifier: ^3.0.6
-        version: 3.1.1
+        specifier: ^6.0.0
+        version: 6.0.0
     devDependencies:
       '@types/prompts':
         specifier: ^2.4.9
@@ -2584,9 +2584,9 @@ packages:
     resolution: {integrity: sha512-cAGWPIyOHU6zlmg88jwm7VRyXnMN7iV68OGAbYDk/Mh/xC/pzVPlQtY6ngoIH/5/tciuhGfvESU8GrHrcxD56w==}
     engines: {node: '>=8'}
 
-  tinybench@3.1.1:
-    resolution: {integrity: sha512-74pmf47HY/bHqamcCMGris+1AtGGsqTZ3Hc/UK4QvSmRuf/9PIF9753+c8XBh7JfX2r9KeZtVjOYjd6vFpc0qQ==}
-    engines: {node: '>=18.0.0'}
+  tinybench@6.0.0:
+    resolution: {integrity: sha512-BWlWpVbbZXaYjRV0twGLNQO00Zj4HA/sjLOQP2IvzQqGwRGp+2kh7UU3ijyJ3ywFRogYDRbiHDMrUOfaMnN56g==}
+    engines: {node: '>=20.0.0'}
 
   tinyglobby@0.2.15:
     resolution: {integrity: sha512-j2Zq4NyQYG5XMST4cbs02Ak8iJUdxRM0XI5QyxXuZOzKOINmWurp3smXu3y5wDcJrptwpSjgXHzIQxR0omXljQ==}
@@ -5484,7 +5484,7 @@ snapshots:
       glob: 7.2.3
       minimatch: 3.1.2
 
-  tinybench@3.1.1: {}
+  tinybench@6.0.0: {}
 
   tinyglobby@0.2.15:
     dependencies:
