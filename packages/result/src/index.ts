@@ -1,9 +1,8 @@
 export * from './factory';
 export * from './factoryAsync';
-export * from './is';
 export type * from './Result';
 export type * from './ResultAsync';
 export * from './resultify';
 export type * from './ResultJson';
 export * from './RustlikeResult';
-export type { ResultType } from './types.internal';
+export * from './symbols';

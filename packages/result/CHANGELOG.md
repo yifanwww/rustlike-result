@@ -1,4 +1,17 @@
 # CHANGELOG
+## @rustresult/result v0.7.0 (Unreleased)
+### Breaking Changes
+
+No longer exports `isResult` and `isResultAsync`.
+
+No longer exports type `ResultType`.
+
+Now `Result` must have a `symbol` property that is equal to `RESULT_SYMBOL` in order to be considered a `Result` instance in the `equal` and `equalAsync` methods.
+
+### Features
+
+Exports `RESULT_SYMBOL`.
+
 ## @rustresult/result v0.6.0 (2024-11-10)
 ### Breaking Changes
 

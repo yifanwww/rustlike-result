@@ -14,27 +14,26 @@ effect: 3.19.14
 RustlikeResult {
   _type: 'ok',
   _value: {
-    id: 'user_johndoe_1767529947074',
+    id: 'user_johndoe_1768050428044',
     email: 'user@example.com',
     age: 25,
     username: 'johndoe',
     isAdult: true,
-    timestamp: 1767529947074,
+    timestamp: 1768050428044,
     saved: true
   },
-  _error: undefined,
-  _symbol: Symbol(rust_result)
+  _error: undefined
 }
 
 > neverthrow Result (success):
 Ok {
   value: {
-    id: 'user_johndoe_1767529947074',
+    id: 'user_johndoe_1768050428044',
     email: 'user@example.com',
     age: 25,
     username: 'johndoe',
     isAdult: true,
-    timestamp: 1767529947074,
+    timestamp: 1768050428044,
     saved: true
   }
 }
@@ -44,35 +43,35 @@ Ok {
   _id: 'Exit',
   _tag: 'Success',
   value: {
-    id: 'user_johndoe_1767529947074',
+    id: 'user_johndoe_1768050428044',
     email: 'user@example.com',
     age: 25,
     username: 'johndoe',
     isAdult: true,
-    timestamp: 1767529947074,
+    timestamp: 1768050428044,
     saved: true
   }
 }
 
 > Nullable (success):
 {
-  id: 'user_johndoe_1767529947074',
+  id: 'user_johndoe_1768050428045',
   email: 'user@example.com',
   age: 25,
   username: 'johndoe',
   isAdult: true,
-  timestamp: 1767529947074,
+  timestamp: 1768050428045,
   saved: true
 }
 
 > Try-catch (success):
 {
-  id: 'user_johndoe_1767529947074',
+  id: 'user_johndoe_1768050428045',
   email: 'user@example.com',
   age: 25,
   username: 'johndoe',
   isAdult: true,
-  timestamp: 1767529947074,
+  timestamp: 1768050428045,
   saved: true
 }
 
@@ -80,8 +79,7 @@ Ok {
 RustlikeResult {
   _type: 'err',
   _value: undefined,
-  _error: { type: 'PARSE_ERROR', message: 'Invalid age format' },
-  _symbol: Symbol(rust_result)
+  _error: { type: 'PARSE_ERROR', message: 'Invalid age format' }
 }
 
 > neverthrow Result (parse error):
@@ -108,8 +106,7 @@ null
 RustlikeResult {
   _type: 'err',
   _value: undefined,
-  _error: { type: 'VALIDATION_ERROR', message: 'Invalid email format' },
-  _symbol: Symbol(rust_result)
+  _error: { type: 'VALIDATION_ERROR', message: 'Invalid email format' }
 }
 
 > neverthrow Result (validation error):
@@ -138,27 +135,27 @@ Loop N: 100,000
 ┌─────────┬────────────────────────────────────┬───────────────────────┬───────────────────────────┬──────────────┬───────────────┐
 │ (index) │ task                               │ mean (ns)             │ median (ns)               │ mean (op/s)  │ median (op/s) │
 ├─────────┼────────────────────────────────────┼───────────────────────┼───────────────────────────┼──────────────┼───────────────┤
-│ 0       │ 'rustresult Result (success path)' │ '35518260.93 ± 0.48%' │ '35380650.04 ± 378100.04' │ '28 ± 0.47%' │ '28'          │
-│ 1       │ 'neverthrow Result (success path)' │ '34544601.57 ± 1.06%' │ '34094299.91 ± 619249.94' │ '29 ± 0.97%' │ '29 ± 1'      │
-│ 2       │ 'effect Exit (success path)'       │ '36778932.80 ± 0.52%' │ '36589200.02 ± 444200.04' │ '27 ± 0.51%' │ '27'          │
-│ 3       │ 'Nullable (success path)'          │ '31334487.53 ± 0.47%' │ '31243350.03 ± 431100.01' │ '32 ± 0.46%' │ '32'          │
-│ 4       │ 'Try-catch (success path)'         │ '31656128.11 ± 0.58%' │ '31452550.05 ± 374200.11' │ '32 ± 0.55%' │ '32'          │
+│ 0       │ 'rustresult Result (success path)' │ '36051032.82 ± 0.48%' │ '35958400.01 ± 199049.83' │ '28 ± 0.44%' │ '28'          │
+│ 1       │ 'neverthrow Result (success path)' │ '35195459.38 ± 0.58%' │ '35036200.05 ± 399600.03' │ '28 ± 0.55%' │ '29'          │
+│ 2       │ 'effect Exit (success path)'       │ '37612931.24 ± 0.31%' │ '37510249.97 ± 273299.93' │ '27 ± 0.30%' │ '27'          │
+│ 3       │ 'Nullable (success path)'          │ '33182881.24 ± 1.05%' │ '32991600.04 ± 185199.98' │ '30 ± 0.82%' │ '30'          │
+│ 4       │ 'Try-catch (success path)'         │ '33428495.33 ± 0.46%' │ '33316700.10 ± 241099.95' │ '30 ± 0.43%' │ '30'          │
 └─────────┴────────────────────────────────────┴───────────────────────┴───────────────────────────┴──────────────┴───────────────┘
 ┌─────────┬─────────────────────────────────────┬────────────────────────┬─────────────────────────────┬─────────────────┬───────────────┐
 │ (index) │ task                                │ mean (ns)              │ median (ns)                 │ mean (op/s)     │ median (op/s) │
 ├─────────┼─────────────────────────────────────┼────────────────────────┼─────────────────────────────┼─────────────────┼───────────────┤
-│ 0       │ 'rustresult Result (early failure)' │ '4377068.56 ± 1.00%'   │ '4326299.91 ± 110599.99'    │ '229 ± 0.76%'   │ '231 ± 6'     │
-│ 1       │ 'neverthrow Result (early failure)' │ '3723350.18 ± 0.80%'   │ '3708199.98 ± 66900.01'     │ '269 ± 0.53%'   │ '270 ± 5'     │
-│ 2       │ 'effect Exit (early failure)'       │ '6842131.29 ± 0.72%'   │ '6825900.08 ± 148700.00'    │ '146 ± 0.68%'   │ '147 ± 3'     │
-│ 3       │ 'Nullable (early failure)'          │ '24199.32 ± 0.09%'     │ '23500.20 ± 200.03'         │ '41504 ± 0.05%' │ '42553 ± 365' │
-│ 4       │ 'Try-catch (early failure)'         │ '873895692.18 ± 1.13%' │ '857665599.94 ± 3954749.94' │ '1 ± 1.03%'     │ '1'           │
+│ 0       │ 'rustresult Result (early failure)' │ '4124520.99 ± 0.68%'   │ '4078000.07 ± 84500.07'     │ '243 ± 0.58%'   │ '245 ± 5'     │
+│ 1       │ 'neverthrow Result (early failure)' │ '3717748.88 ± 0.49%'   │ '3685249.92 ± 59399.84'     │ '269 ± 0.45%'   │ '271 ± 4'     │
+│ 2       │ 'effect Exit (early failure)'       │ '6879465.76 ± 0.59%'   │ '6846549.99 ± 115249.99'    │ '146 ± 0.55%'   │ '146 ± 3'     │
+│ 3       │ 'Nullable (early failure)'          │ '24786.29 ± 0.07%'     │ '24700.16 ± 100.14'         │ '40467 ± 0.05%' │ '40486 ± 165' │
+│ 4       │ 'Try-catch (early failure)'         │ '875949851.55 ± 0.76%' │ '870509299.99 ± 6016449.81' │ '1 ± 0.66%'     │ '1'           │
 └─────────┴─────────────────────────────────────┴────────────────────────┴─────────────────────────────┴─────────────────┴───────────────┘
 ┌─────────┬───────────────────────────────────┬────────────────────────┬─────────────────────────────┬───────────────┬───────────────┐
 │ (index) │ task                              │ mean (ns)              │ median (ns)                 │ mean (op/s)   │ median (op/s) │
 ├─────────┼───────────────────────────────────┼────────────────────────┼─────────────────────────────┼───────────────┼───────────────┤
-│ 0       │ 'rustresult Result (mid failure)' │ '5511870.87 ± 0.69%'   │ '5473050.00 ± 170250.06'    │ '182 ± 0.66%' │ '183 ± 6'     │
-│ 1       │ 'neverthrow Result (mid failure)' │ '5032259.31 ± 1.48%'   │ '4967400.07 ± 105000.02'    │ '200 ± 0.96%' │ '201 ± 4'     │
-│ 2       │ 'effect Exit (mid failure)'       │ '7655209.92 ± 1.48%'   │ '7527300.12 ± 224099.87'    │ '131 ± 1.15%' │ '133 ± 4'     │
-│ 3       │ 'Nullable (mid failure)'          │ '3664168.50 ± 1.77%'   │ '3578500.03 ± 81200.12'     │ '276 ± 0.95%' │ '279 ± 6'     │
-│ 4       │ 'Try-catch (mid failure)'         │ '883461576.57 ± 1.39%' │ '873723650.10 ± 4057300.09' │ '1 ± 1.09%'   │ '1'           │
+│ 0       │ 'rustresult Result (mid failure)' │ '5511503.30 ± 1.16%'   │ '5442699.91 ± 96749.90'     │ '182 ± 0.74%' │ '184 ± 3'     │
+│ 1       │ 'neverthrow Result (mid failure)' │ '5092679.71 ± 1.18%'   │ '5009000.06 ± 99900.01'     │ '197 ± 0.82%' │ '200 ± 4'     │
+│ 2       │ 'effect Exit (mid failure)'       │ '7561318.80 ± 0.68%'   │ '7481699.94 ± 184599.88'    │ '132 ± 0.65%' │ '134 ± 3'     │
+│ 3       │ 'Nullable (mid failure)'          │ '4030893.58 ± 0.81%'   │ '3991899.97 ± 75000.05'     │ '249 ± 0.62%' │ '251 ± 5'     │
+│ 4       │ 'Try-catch (mid failure)'         │ '897846856.25 ± 1.86%' │ '884801100.02 ± 6125349.88' │ '1 ± 1.32%'   │ '1'           │
 └─────────┴───────────────────────────────────┴────────────────────────┴─────────────────────────────┴───────────────┴───────────────┘

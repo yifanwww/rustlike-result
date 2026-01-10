@@ -8,6 +8,7 @@ import { RustlikeResult } from '../RustlikeResult';
 import { RustlikeResultAsync } from '../RustlikeResultAsync';
 
 import { expectResult, expectResultAsync } from './_helpers';
+import { ErrFork, OkFork } from './fork';
 
 function panicFn1(): never {
     throw new Error('error');
@@ -860,54 +861,78 @@ describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.protot
 
 describe(`Test method \`${RustlikeResult.name}.prototype.${RustlikeResult.prototype.equal.name}\``, () => {
     it('should check if itself equals to another result', () => {
-        // simple true
+        // flat
 
         expect(Ok(1).equal(Ok(1))).toBe(true);
-        expect(Ok(NaN).equal(Ok(NaN))).toBe(true);
         expect(Err('err').equal(Err('err'))).toBe(true);
 
-        // simple false
-
         expect(Ok(1).equal(Ok(2))).toBe(false);
-        expect(Ok(1).equal(Ok('hello world'))).toBe(false);
-        expect(Ok(1).equal(Err('err'))).toBe(false);
         expect(Err('err 1').equal(Err('err 2'))).toBe(false);
-        expect(Err('err 1').equal(Err(-1))).toBe(false);
-        expect(Err('error').equal(Ok(1))).toBe(false);
+        expect(Ok(1).equal(Err('err'))).toBe(false);
+        expect(Err('err').equal(Ok(1))).toBe(false);
 
-        // nested true
+        expect(Ok(undefined).equal(Ok(undefined))).toBe(true);
+        expect(Ok(null).equal(Ok(null))).toBe(true);
+        expect(Ok(undefined).equal(Ok(null))).toBe(false);
+        expect(Ok(null).equal(Ok(undefined))).toBe(false);
+        expect(Ok(NaN).equal(Ok(NaN))).toBe(false);
+
+        // nested
 
         expect(Ok(Ok(1)).equal(Ok(Ok(1)))).toBe(true);
         expect(Ok(Err('err')).equal(Ok(Err('err')))).toBe(true);
         expect(Err(Err('err')).equal(Err(Err('err')))).toBe(true);
         expect(Err(Ok(1)).equal(Err(Ok(1)))).toBe(true);
 
-        // nested false
-
         expect(Ok(Ok(1)).equal(Ok(Ok(2)))).toBe(false);
+        expect(Ok(Err('err 1')).equal(Ok(Err('err 2')))).toBe(false);
+        expect(Err(Ok(1)).equal(Err(Ok(2)))).toBe(false);
+        expect(Err(Err('err 1')).equal(Err(Err('err 2')))).toBe(false);
+
         expect(Ok(Ok(1)).equal(Ok(Err('err')))).toBe(false);
         expect(Ok(Err('err')).equal(Ok(Ok(1)))).toBe(false);
         expect(Err(Err('err')).equal(Err(Ok(1)))).toBe(false);
         expect(Err(Ok(1)).equal(Err(Err('err')))).toBe(false);
 
+        expect(Ok(Ok(Ok(1))).equal(Ok(Ok(1)))).toBe(false);
+        expect(Ok(Ok(1)).equal(Ok(Ok(Ok(1))))).toBe(false);
+
         // object equality
 
         expect(Ok([1]).equal(Ok([1]))).toBe(false);
         expect(Ok({ foo: 1 }).equal(Ok({ foo: 1 }))).toBe(false);
-        expect(Err({ message: 'err' }).equal(Err({ message: 'err' }))).toBe(false);
+        expect(Err({ msg: 'err' }).equal(Err({ msg: 'err' }))).toBe(false);
         expect(Ok(Ok([1])).equal(Ok(Ok([1])))).toBe(false);
         expect(Ok(Ok({ foo: 1 })).equal(Ok(Ok({ foo: 1 })))).toBe(false);
-        expect(Err(Err({ message: 'err' })).equal(Err(Err({ message: 'err' })))).toBe(false);
+        expect(Err(Err({ msg: 'err' })).equal(Err(Err({ msg: 'err' })))).toBe(false);
+    });
+
+    it('should check if itself equals to another result-like instance', () => {
+        expect(Ok(Ok(1)).equal(Ok(OkFork(1)))).toBe(true);
+        expect(Ok(Err('err')).equal(Ok(ErrFork('err')))).toBe(true);
+
+        expect(Ok(OkFork(1)).equal(Ok(Ok(1)))).toBe(true);
+        expect(Ok(ErrFork('err')).equal(Ok(Err('err')))).toBe(true);
+
+        expect(Ok(Ok(1)).equal(Ok(OkFork(2)))).toBe(false);
+        expect(Ok(Err('err 1')).equal(Ok(ErrFork('err 2')))).toBe(false);
+
+        expect(Ok(OkFork(2)).equal(Ok(Ok(1)))).toBe(false);
+        expect(Ok(ErrFork('err 2')).equal(Ok(Err('err 1')))).toBe(false);
     });
 
     it('should have correct examples doc', () => {
         function examples() {
             assert(Ok(1).equal(Ok(1)));
-            assert(Ok(NaN).equal(Ok(NaN)));
             assert(Err('err').equal(Err('err')));
+            assert(Ok(undefined).equal(Ok(undefined)));
+            assert(Ok(null).equal(Ok(null)));
 
             assert(Ok(1).equal(Ok(2)) === false);
-            assert(Err('err 1').equal(Err(-1)) === false);
+            assert(Ok(1).equal(Err(1)) === false);
+            assert(Ok(undefined).equal(Ok(null)) === false);
+            assert(Ok(null).equal(Ok(undefined)) === false);
+            assert(Ok(NaN).equal(Ok(NaN)) === false);
 
             assert(Ok(Ok(1)).equal(Ok(Ok(1))));
             assert(Ok(Err('err')).equal(Ok(Err('err'))));

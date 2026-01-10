@@ -12,17 +12,11 @@ effect: 3.19.14
 
 > rustresult Result.inspect:
 [
-  RustlikeResult {
-    _type: 'ok',
-    _value: 1,
-    _error: undefined,
-    _symbol: Symbol(rust_result)
-  },
+  RustlikeResult { _type: 'ok', _value: 1, _error: undefined },
   RustlikeResult {
     _type: 'err',
     _value: undefined,
-    _error: 'error message',
-    _symbol: Symbol(rust_result)
+    _error: 'error message'
   }
 ]
 
@@ -33,6 +27,6 @@ Loop N: 100,000
 ┌─────────┬─────────────────────────────────┬─────────────────────┬────────────────────────┬────────────────┬───────────────┐
 │ (index) │ task                            │ mean (ns)           │ median (ns)            │ mean (op/s)    │ median (op/s) │
 ├─────────┼─────────────────────────────────┼─────────────────────┼────────────────────────┼────────────────┼───────────────┤
-│ 0       │ 'rustresult Result.inspect'     │ '546775.94 ± 2.59%' │ '466500.04 ± 20499.94' │ '2064 ± 0.96%' │ '2144 ± 97'   │
-│ 1       │ 'neverthrow Result.inspect sim' │ '547959.31 ± 1.70%' │ '488700.15 ± 20000.22' │ '1941 ± 0.78%' │ '2046 ± 86'   │
+│ 0       │ 'rustresult Result.inspect'     │ '559927.83 ± 2.67%' │ '470300.08 ± 20999.79' │ '2023 ± 0.98%' │ '2126 ± 96'   │
+│ 1       │ 'neverthrow Result.inspect sim' │ '605055.53 ± 1.73%' │ '533200.03 ± 23599.86' │ '1762 ± 0.87%' │ '1875 ± 85'   │
 └─────────┴─────────────────────────────────┴─────────────────────┴────────────────────────┴────────────────┴───────────────┘

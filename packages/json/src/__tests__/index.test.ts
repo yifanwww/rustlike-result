@@ -23,6 +23,12 @@ describe(`Test fn \`${ResultJSON.serialize.name}\``, () => {
         expect(ResultJSON.serialize(Ok(Err(1)))).toStrictEqual({ type: 'ok', value: { type: 'err', value: 1 } });
         expect(ResultJSON.serialize(Err(Ok(1)))).toStrictEqual({ type: 'err', value: { type: 'ok', value: 1 } });
         expect(ResultJSON.serialize(Err(Err(1)))).toStrictEqual({ type: 'err', value: { type: 'err', value: 1 } });
+
+        expect(ResultJSON.serialize(Ok(Ok(undefined)))).toStrictEqual({
+            type: 'ok',
+            value: { type: 'ok', value: undefined },
+        });
+        expect(ResultJSON.serialize(Ok(Ok(null)))).toStrictEqual({ type: 'ok', value: { type: 'ok', value: null } });
     });
 });
 

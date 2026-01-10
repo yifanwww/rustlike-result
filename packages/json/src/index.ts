@@ -1,15 +1,22 @@
 import type { Result, ResultJson } from '@rustresult/result';
-import { Err, Ok, isResult } from '@rustresult/result';
+import { Err, Ok, RESULT_SYMBOL } from '@rustresult/result';
+
+function isResult(value: Exclude<unknown, null | undefined>): value is Result<unknown, unknown> {
+    return (value as Result<unknown, unknown>).symbol === RESULT_SYMBOL;
+}
 
 /**
  * Converts a `Result` to a JSON object.
  */
 function toJSON(result: unknown): unknown {
+    if (result === undefined || result === null) return result;
+
     if (isResult(result)) {
         return result.isOk()
             ? { type: 'ok', value: toJSON(result.unwrapUnchecked()) }
             : { type: 'err', value: toJSON(result.unwrapErrUnchecked()) };
     }
+
     return result;
 }
 

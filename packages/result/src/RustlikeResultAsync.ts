@@ -1,18 +1,15 @@
 // eslint-disable-next-line import/no-cycle
 import { Err, Ok } from './factory';
-import { isResult, isResultAsync } from './is';
 import type { Result } from './Result';
 import type { ResultAsync } from './ResultAsync';
-import { RESULT_ASYNC_SYMBOL } from './symbols';
 import type { Optional } from './types.internal';
+import { equalResultAsync } from './utils';
 
 export class RustlikeResultAsync<T, E> implements ResultAsync<T, E> {
     private readonly _promise: Promise<Result<T, E>>;
-    private readonly _symbol: symbol;
 
     constructor(promise: Result<T, E> | Promise<Result<T, E>> | ResultAsync<T, E>) {
         this._promise = Promise.resolve(promise);
-        this._symbol = RESULT_ASYNC_SYMBOL;
     }
 
     // async type predicate issue: https://github.com/microsoft/TypeScript/issues/37681
@@ -157,24 +154,6 @@ export class RustlikeResultAsync<T, E> implements ResultAsync<T, E> {
         return this._promise.then((result) => result.transpose());
     }
 
-    private static async _equal(self: unknown, other: unknown): Promise<boolean> {
-        const isSelfResult = isResult(self) || isResultAsync(self);
-        const isOtherResult = isResult(other) || isResultAsync(other);
-
-        if (isSelfResult && isOtherResult) {
-            const _self = await self;
-            const _other = await other;
-
-            const isOk = _self.isOk();
-            if (isOk !== _other.isOk()) return false;
-            return isOk
-                ? RustlikeResultAsync._equal(_self.unwrapUnchecked(), _other.unwrapUnchecked())
-                : RustlikeResultAsync._equal(_self.unwrapErrUnchecked(), _other.unwrapErrUnchecked());
-        }
-
-        return self === other || (Number.isNaN(self) && Number.isNaN(other));
-    }
-
     async equal(
         other: Result<unknown, unknown> | Promise<Result<unknown, unknown>> | ResultAsync<unknown, unknown>,
     ): Promise<boolean> {
@@ -183,8 +162,8 @@ export class RustlikeResultAsync<T, E> implements ResultAsync<T, E> {
         const isOk = _self.isOk();
         if (isOk !== _other.isOk()) return false;
         return isOk
-            ? RustlikeResultAsync._equal(_self.unwrapUnchecked(), _other.unwrapUnchecked())
-            : RustlikeResultAsync._equal(_self.unwrapErrUnchecked(), _other.unwrapErrUnchecked());
+            ? equalResultAsync(_self.unwrapUnchecked(), _other.unwrapUnchecked())
+            : equalResultAsync(_self.unwrapErrUnchecked(), _other.unwrapErrUnchecked());
     }
 
     then<TResult1 = Result<T, E>, TResult2 = never>(

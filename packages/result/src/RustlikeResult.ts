@@ -1,10 +1,10 @@
-import { isResult } from './is';
 import type { Result } from './Result';
 import type { ResultAsync } from './ResultAsync';
 // eslint-disable-next-line import/no-cycle
 import { RustlikeResultAsync } from './RustlikeResultAsync';
 import { RESULT_SYMBOL } from './symbols';
 import type { Optional, ResultType } from './types.internal';
+import { equalResult } from './utils';
 
 /**
  * DO NOT USE THIS CLASS. This is for internal use.
@@ -13,7 +13,6 @@ export class RustlikeResult<T, E> implements Result<T, E> {
     private readonly _type: ResultType;
     private readonly _value?: T;
     private readonly _error?: E;
-    private readonly _symbol: symbol;
 
     constructor(type: 'ok', value: T);
     constructor(type: 'err', error: E);
@@ -26,7 +25,10 @@ export class RustlikeResult<T, E> implements Result<T, E> {
             this._value = undefined;
             this._error = value as E;
         }
-        this._symbol = RESULT_SYMBOL;
+    }
+
+    get symbol(): typeof RESULT_SYMBOL {
+        return RESULT_SYMBOL;
     }
 
     /**
@@ -162,27 +164,12 @@ export class RustlikeResult<T, E> implements Result<T, E> {
         return RustlikeResult.Err(this._error!);
     }
 
-    private static _equal(self: unknown, other: unknown): boolean {
-        const isSelfResult = isResult(self);
-        const isOtherResult = isResult(other);
-
-        if (isSelfResult && isOtherResult) {
-            const isOk = self.isOk();
-            if (isOk !== other.isOk()) return false;
-            return isOk
-                ? RustlikeResult._equal(self.unwrapUnchecked(), other.unwrapUnchecked())
-                : RustlikeResult._equal(self.unwrapErrUnchecked(), other.unwrapErrUnchecked());
-        }
-
-        return self === other || (Number.isNaN(self) && Number.isNaN(other));
-    }
-
     equal(other: Result<unknown, unknown>): boolean {
         const isOk = this.isOk();
         if (isOk !== other.isOk()) return false;
         return isOk
-            ? RustlikeResult._equal(this._value, other.unwrapUnchecked())
-            : RustlikeResult._equal(this._error, other.unwrapErrUnchecked());
+            ? equalResult(this._value, other.unwrapUnchecked())
+            : equalResult(this._error, other.unwrapErrUnchecked());
     }
 
     async(): ResultAsync<T, E> {

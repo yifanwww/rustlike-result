@@ -1,4 +1,5 @@
 import type { ResultAsync } from './ResultAsync';
+import type { RESULT_SYMBOL } from './symbols';
 import type { Optional } from './types.internal';
 
 /**
@@ -12,6 +13,11 @@ import type { Optional } from './types.internal';
  * - https://doc.rust-lang.org/std/result/enum.Result.html
  */
 export interface Result<T, E> {
+    /**
+     * A unique symbol to identify this as a `Result` instance.
+     */
+    readonly symbol: typeof RESULT_SYMBOL;
+
     /**
      * Returns `true` if the result is `Ok`.
      *
@@ -588,11 +594,15 @@ export interface Result<T, E> {
      * import { Err, Ok } from 'rustlike-result';
      *
      * assert(Ok(1).equal(Ok(1)));
-     * assert(Ok(NaN).equal(Ok(NaN)));
      * assert(Err('err').equal(Err('err')));
+     * assert(Ok(undefined).equal(Ok(undefined)));
+     * assert(Ok(null).equal(Ok(null)));
      *
      * assert(Ok(1).equal(Ok(2)) === false);
-     * assert(Err('err 1').equal(Err(-1)) === false);
+     * assert(Ok(1).equal(Err(1)) === false);
+     * assert(Ok(undefined).equal(Ok(null)) === false);
+     * assert(Ok(null).equal(Ok(undefined)) === false);
+     * assert(Ok(NaN).equal(Ok(NaN)) === false);
      *
      * assert(Ok(Ok(1)).equal(Ok(Ok(1))));
      * assert(Ok(Err('err')).equal(Ok(Err('err'))));

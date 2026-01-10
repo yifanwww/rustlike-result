@@ -2,7 +2,7 @@ import { Err, Ok } from '@rustresult/result';
 import { Bench, hrtimeNow } from 'tinybench';
 
 import { formatTinybenchTask } from '../tinybench.js';
-import { formatNum, logEnvironment, logTestCases } from '../utils.js';
+import { formatNum, logEnvironment } from '../utils.js';
 
 await logEnvironment();
 
@@ -21,8 +21,6 @@ const resultOk6 = Ok(Ok('hello world'));
 const resultErr4 = Err(Ok(200));
 const resultErr5 = Err(Ok(100));
 const resultErr6 = Err(Err('error message'));
-
-logTestCases([['rustresult Result.equal', [resultOk1.equal(resultOk2), resultOk1.equal(resultOk3)]]]);
 
 console.log('Loop N:', formatNum(N));
 

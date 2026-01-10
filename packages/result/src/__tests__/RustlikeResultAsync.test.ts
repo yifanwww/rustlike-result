@@ -7,6 +7,8 @@ import type { Result } from '../Result';
 import type { ResultAsync } from '../ResultAsync';
 import { RustlikeResultAsync } from '../RustlikeResultAsync';
 
+import { ErrFork, OkFork } from './fork';
+
 function panicFn1(): never {
     throw new Error('error');
 }
@@ -1011,387 +1013,132 @@ describe(`Test method \`${RustlikeResultAsync.name}.prototype.${RustlikeResultAs
 
 describe(`Test method \`${RustlikeResultAsync.name}.prototype.${RustlikeResultAsync.prototype.equal.name}\``, () => {
     it('should check if itself equals to another result', async () => {
-        // simple true
+        // flat
 
         await expect(OkAsync(1).equal(Ok(1))).resolves.toBe(true);
         await expect(OkAsync(1).equal(Promise.resolve(Ok(1)))).resolves.toBe(true);
         await expect(OkAsync(1).equal(OkAsync(1))).resolves.toBe(true);
 
-        await expect(OkAsync(NaN).equal(Ok(NaN))).resolves.toBe(true);
-        await expect(OkAsync(NaN).equal(Promise.resolve(Ok(NaN)))).resolves.toBe(true);
-        await expect(OkAsync(NaN).equal(OkAsync(NaN))).resolves.toBe(true);
-
         await expect(ErrAsync('err').equal(Err('err'))).resolves.toBe(true);
         await expect(ErrAsync('err').equal(Promise.resolve(Err('err')))).resolves.toBe(true);
         await expect(ErrAsync('err').equal(ErrAsync('err'))).resolves.toBe(true);
-
-        // simple false
 
         await expect(OkAsync(1).equal(Ok(2))).resolves.toBe(false);
         await expect(OkAsync(1).equal(Promise.resolve(Ok(2)))).resolves.toBe(false);
         await expect(OkAsync(1).equal(OkAsync(2))).resolves.toBe(false);
 
-        await expect(OkAsync(1).equal(Ok('hello world'))).resolves.toBe(false);
-        await expect(OkAsync(1).equal(Promise.resolve(Ok('hello world')))).resolves.toBe(false);
-        await expect(OkAsync(1).equal(OkAsync('hello world'))).resolves.toBe(false);
+        await expect(ErrAsync('err 1').equal(Err('err 2'))).resolves.toBe(false);
+        await expect(ErrAsync('err 1').equal(Promise.resolve(Err('err 2')))).resolves.toBe(false);
+        await expect(ErrAsync('err 1').equal(ErrAsync('err 2'))).resolves.toBe(false);
 
         await expect(OkAsync(1).equal(Err('err'))).resolves.toBe(false);
         await expect(OkAsync(1).equal(Promise.resolve(Err('err')))).resolves.toBe(false);
         await expect(OkAsync(1).equal(ErrAsync('err'))).resolves.toBe(false);
 
-        await expect(ErrAsync('err 1').equal(Err('err 2'))).resolves.toBe(false);
-        await expect(ErrAsync('err 1').equal(Promise.resolve(Err('err 2')))).resolves.toBe(false);
-        await expect(ErrAsync('err 1').equal(ErrAsync('err 2'))).resolves.toBe(false);
+        await expect(ErrAsync('err').equal(Ok(1))).resolves.toBe(false);
+        await expect(ErrAsync('err').equal(Promise.resolve(Ok(1)))).resolves.toBe(false);
+        await expect(ErrAsync('err').equal(OkAsync(1))).resolves.toBe(false);
 
-        await expect(ErrAsync('err 1').equal(Err(-1))).resolves.toBe(false);
-        await expect(ErrAsync('err 1').equal(Err(-1))).resolves.toBe(false);
-        await expect(ErrAsync('err 1').equal(ErrAsync(-1))).resolves.toBe(false);
+        await expect(OkAsync(undefined).equal(OkAsync(undefined))).resolves.toBe(true);
+        await expect(OkAsync(null).equal(OkAsync(null))).resolves.toBe(true);
+        await expect(OkAsync(undefined).equal(OkAsync(null))).resolves.toBe(false);
+        await expect(OkAsync(null).equal(OkAsync(undefined))).resolves.toBe(false);
+        await expect(OkAsync(NaN).equal(OkAsync(NaN))).resolves.toBe(false);
 
-        await expect(ErrAsync('error').equal(Ok(1))).resolves.toBe(false);
-        await expect(ErrAsync('error').equal(Promise.resolve(Ok(1)))).resolves.toBe(false);
-        await expect(ErrAsync('error').equal(OkAsync(1))).resolves.toBe(false);
+        // nested
 
-        // nested true
-
-        await expect(OkAsync(Ok(1)).equal(Ok(Ok(1)))).resolves.toBe(true);
-        await expect(OkAsync(Ok(1)).equal(Ok(OkAsync(1)))).resolves.toBe(true);
-        await expect(OkAsync(Ok(1)).equal(Promise.resolve(Ok(Ok(1))))).resolves.toBe(true);
-        await expect(OkAsync(Ok(1)).equal(Promise.resolve(Ok(OkAsync(1))))).resolves.toBe(true);
-        await expect(OkAsync(Ok(1)).equal(OkAsync(Ok(1)))).resolves.toBe(true);
-        await expect(OkAsync(Ok(1)).equal(OkAsync(Promise.resolve(Ok(1))))).resolves.toBe(true);
-        await expect(OkAsync(Ok(1)).equal(OkAsync(OkAsync(1)))).resolves.toBe(true);
-        await expect(OkAsync(Promise.resolve(Ok(1))).equal(Ok(Ok(1)))).resolves.toBe(true);
-        await expect(OkAsync(Promise.resolve(Ok(1))).equal(Ok(OkAsync(1)))).resolves.toBe(true);
-        await expect(OkAsync(Promise.resolve(Ok(1))).equal(Promise.resolve(Ok(Ok(1))))).resolves.toBe(true);
-        await expect(OkAsync(Promise.resolve(Ok(1))).equal(Promise.resolve(Ok(OkAsync(1))))).resolves.toBe(true);
-        await expect(OkAsync(Promise.resolve(Ok(1))).equal(OkAsync(Ok(1)))).resolves.toBe(true);
-        await expect(OkAsync(Promise.resolve(Ok(1))).equal(OkAsync(Promise.resolve(Ok(1))))).resolves.toBe(true);
-        await expect(OkAsync(Promise.resolve(Ok(1))).equal(OkAsync(OkAsync(1)))).resolves.toBe(true);
         await expect(OkAsync(OkAsync(1)).equal(Ok(Ok(1)))).resolves.toBe(true);
         await expect(OkAsync(OkAsync(1)).equal(Ok(OkAsync(1)))).resolves.toBe(true);
-        await expect(OkAsync(OkAsync(1)).equal(Promise.resolve(Ok(Ok(1))))).resolves.toBe(true);
-        await expect(OkAsync(OkAsync(1)).equal(Promise.resolve(Ok(OkAsync(1))))).resolves.toBe(true);
         await expect(OkAsync(OkAsync(1)).equal(OkAsync(Ok(1)))).resolves.toBe(true);
-        await expect(OkAsync(OkAsync(1)).equal(OkAsync(Promise.resolve(Ok(1))))).resolves.toBe(true);
-        await expect(OkAsync(OkAsync(1)).equal(OkAsync(OkAsync(1)))).resolves.toBe(true);
 
-        await expect(OkAsync(Err('err')).equal(Ok(Err('err')))).resolves.toBe(true);
-        await expect(OkAsync(Err('err')).equal(Ok(ErrAsync('err')))).resolves.toBe(true);
-        await expect(OkAsync(Err('err')).equal(Promise.resolve(Ok(Err('err'))))).resolves.toBe(true);
-        await expect(OkAsync(Err('err')).equal(Promise.resolve(Ok(ErrAsync('err'))))).resolves.toBe(true);
-        await expect(OkAsync(Err('err')).equal(OkAsync(Err('err')))).resolves.toBe(true);
-        await expect(OkAsync(Err('err')).equal(OkAsync(Promise.resolve(Err('err'))))).resolves.toBe(true);
-        await expect(OkAsync(Err('err')).equal(OkAsync(ErrAsync('err')))).resolves.toBe(true);
-        await expect(OkAsync(Promise.resolve(Err('err'))).equal(Ok(Err('err')))).resolves.toBe(true);
-        await expect(OkAsync(Promise.resolve(Err('err'))).equal(Ok(ErrAsync('err')))).resolves.toBe(true);
-        await expect(OkAsync(Promise.resolve(Err('err'))).equal(Promise.resolve(Ok(Err('err'))))).resolves.toBe(true);
-        await expect(OkAsync(Promise.resolve(Err('err'))).equal(Promise.resolve(Ok(ErrAsync('err'))))).resolves.toBe(
-            true,
-        );
-        await expect(OkAsync(Promise.resolve(Err('err'))).equal(OkAsync(Err('err')))).resolves.toBe(true);
-        await expect(OkAsync(Promise.resolve(Err('err'))).equal(OkAsync(Promise.resolve(Err('err'))))).resolves.toBe(
-            true,
-        );
-        await expect(OkAsync(Promise.resolve(Err('err'))).equal(OkAsync(ErrAsync('err')))).resolves.toBe(true);
         await expect(OkAsync(ErrAsync('err')).equal(Ok(Err('err')))).resolves.toBe(true);
         await expect(OkAsync(ErrAsync('err')).equal(Ok(ErrAsync('err')))).resolves.toBe(true);
-        await expect(OkAsync(ErrAsync('err')).equal(Promise.resolve(Ok(Err('err'))))).resolves.toBe(true);
-        await expect(OkAsync(ErrAsync('err')).equal(Promise.resolve(Ok(ErrAsync('err'))))).resolves.toBe(true);
         await expect(OkAsync(ErrAsync('err')).equal(OkAsync(Err('err')))).resolves.toBe(true);
-        await expect(OkAsync(ErrAsync('err')).equal(OkAsync(Promise.resolve(Err('err'))))).resolves.toBe(true);
-        await expect(OkAsync(ErrAsync('err')).equal(OkAsync(ErrAsync('err')))).resolves.toBe(true);
 
-        await expect(ErrAsync(Err('err')).equal(Err(Err('err')))).resolves.toBe(true);
-        await expect(ErrAsync(Err('err')).equal(Err(ErrAsync('err')))).resolves.toBe(true);
-        await expect(ErrAsync(Err('err')).equal(Promise.resolve(Err(Err('err'))))).resolves.toBe(true);
-        await expect(ErrAsync(Err('err')).equal(Promise.resolve(Err(ErrAsync('err'))))).resolves.toBe(true);
-        await expect(ErrAsync(Err('err')).equal(ErrAsync(Err('err')))).resolves.toBe(true);
-        await expect(ErrAsync(Err('err')).equal(ErrAsync(Promise.resolve(Err('err'))))).resolves.toBe(true);
-        await expect(ErrAsync(Err('err')).equal(ErrAsync(ErrAsync('err')))).resolves.toBe(true);
-        await expect(ErrAsync(Promise.resolve(Err('err'))).equal(Err(Err('err')))).resolves.toBe(true);
-        await expect(ErrAsync(Promise.resolve(Err('err'))).equal(Err(ErrAsync('err')))).resolves.toBe(true);
-        await expect(ErrAsync(Promise.resolve(Err('err'))).equal(Promise.resolve(Err(Err('err'))))).resolves.toBe(true);
-        await expect(ErrAsync(Promise.resolve(Err('err'))).equal(Promise.resolve(Err(ErrAsync('err'))))).resolves.toBe(
-            true,
-        );
-        await expect(ErrAsync(Promise.resolve(Err('err'))).equal(ErrAsync(Err('err')))).resolves.toBe(true);
-        await expect(ErrAsync(Promise.resolve(Err('err'))).equal(ErrAsync(Promise.resolve(Err('err'))))).resolves.toBe(
-            true,
-        );
-        await expect(ErrAsync(Promise.resolve(Err('err'))).equal(ErrAsync(ErrAsync('err')))).resolves.toBe(true);
         await expect(ErrAsync(ErrAsync('err')).equal(Err(Err('err')))).resolves.toBe(true);
         await expect(ErrAsync(ErrAsync('err')).equal(Err(ErrAsync('err')))).resolves.toBe(true);
-        await expect(ErrAsync(ErrAsync('err')).equal(Promise.resolve(Err(Err('err'))))).resolves.toBe(true);
-        await expect(ErrAsync(ErrAsync('err')).equal(Promise.resolve(Err(ErrAsync('err'))))).resolves.toBe(true);
         await expect(ErrAsync(ErrAsync('err')).equal(ErrAsync(Err('err')))).resolves.toBe(true);
-        await expect(ErrAsync(ErrAsync('err')).equal(ErrAsync(Promise.resolve(Err('err'))))).resolves.toBe(true);
-        await expect(ErrAsync(ErrAsync('err')).equal(ErrAsync(ErrAsync('err')))).resolves.toBe(true);
 
-        await expect(ErrAsync(Ok(1)).equal(Err(Ok(1)))).resolves.toBe(true);
-        await expect(ErrAsync(Ok(1)).equal(Err(OkAsync(1)))).resolves.toBe(true);
-        await expect(ErrAsync(Ok(1)).equal(Promise.resolve(Err(Ok(1))))).resolves.toBe(true);
-        await expect(ErrAsync(Ok(1)).equal(Promise.resolve(Err(OkAsync(1))))).resolves.toBe(true);
-        await expect(ErrAsync(Ok(1)).equal(ErrAsync(Ok(1)))).resolves.toBe(true);
-        await expect(ErrAsync(Ok(1)).equal(ErrAsync(Promise.resolve(Ok(1))))).resolves.toBe(true);
-        await expect(ErrAsync(Ok(1)).equal(ErrAsync(OkAsync(1)))).resolves.toBe(true);
-        await expect(ErrAsync(Promise.resolve(Ok(1))).equal(Err(Ok(1)))).resolves.toBe(true);
-        await expect(ErrAsync(Promise.resolve(Ok(1))).equal(Err(OkAsync(1)))).resolves.toBe(true);
-        await expect(ErrAsync(Promise.resolve(Ok(1))).equal(Promise.resolve(Err(Ok(1))))).resolves.toBe(true);
-        await expect(ErrAsync(Promise.resolve(Ok(1))).equal(Promise.resolve(Err(OkAsync(1))))).resolves.toBe(true);
-        await expect(ErrAsync(Promise.resolve(Ok(1))).equal(ErrAsync(Ok(1)))).resolves.toBe(true);
-        await expect(ErrAsync(Promise.resolve(Ok(1))).equal(ErrAsync(Promise.resolve(Ok(1))))).resolves.toBe(true);
-        await expect(ErrAsync(Promise.resolve(Ok(1))).equal(ErrAsync(OkAsync(1)))).resolves.toBe(true);
         await expect(ErrAsync(OkAsync(1)).equal(Err(Ok(1)))).resolves.toBe(true);
         await expect(ErrAsync(OkAsync(1)).equal(Err(OkAsync(1)))).resolves.toBe(true);
-        await expect(ErrAsync(OkAsync(1)).equal(Promise.resolve(Err(Ok(1))))).resolves.toBe(true);
-        await expect(ErrAsync(OkAsync(1)).equal(Promise.resolve(Err(OkAsync(1))))).resolves.toBe(true);
         await expect(ErrAsync(OkAsync(1)).equal(ErrAsync(Ok(1)))).resolves.toBe(true);
-        await expect(ErrAsync(OkAsync(1)).equal(ErrAsync(Promise.resolve(Ok(1))))).resolves.toBe(true);
-        await expect(ErrAsync(OkAsync(1)).equal(ErrAsync(OkAsync(1)))).resolves.toBe(true);
 
-        // nested false
-
-        await expect(OkAsync(Ok(1)).equal(Ok(Ok(2)))).resolves.toBe(false);
-        await expect(OkAsync(Ok(1)).equal(Ok(OkAsync(2)))).resolves.toBe(false);
-        await expect(OkAsync(Ok(1)).equal(Promise.resolve(Ok(Ok(2))))).resolves.toBe(false);
-        await expect(OkAsync(Ok(1)).equal(Promise.resolve(Ok(OkAsync(2))))).resolves.toBe(false);
-        await expect(OkAsync(Ok(1)).equal(OkAsync(Ok(2)))).resolves.toBe(false);
-        await expect(OkAsync(Ok(1)).equal(OkAsync(Promise.resolve(Ok(2))))).resolves.toBe(false);
-        await expect(OkAsync(Ok(1)).equal(OkAsync(OkAsync(2)))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok(1))).equal(Ok(Ok(2)))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok(1))).equal(Ok(OkAsync(2)))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok(1))).equal(Promise.resolve(Ok(Ok(2))))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok(1))).equal(Promise.resolve(Ok(OkAsync(2))))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok(1))).equal(OkAsync(Ok(2)))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok(1))).equal(OkAsync(Promise.resolve(Ok(2))))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok(1))).equal(OkAsync(OkAsync(2)))).resolves.toBe(false);
         await expect(OkAsync(OkAsync(1)).equal(Ok(Ok(2)))).resolves.toBe(false);
         await expect(OkAsync(OkAsync(1)).equal(Ok(OkAsync(2)))).resolves.toBe(false);
-        await expect(OkAsync(OkAsync(1)).equal(Promise.resolve(Ok(Ok(2))))).resolves.toBe(false);
-        await expect(OkAsync(OkAsync(1)).equal(Promise.resolve(Ok(OkAsync(2))))).resolves.toBe(false);
         await expect(OkAsync(OkAsync(1)).equal(OkAsync(Ok(2)))).resolves.toBe(false);
-        await expect(OkAsync(OkAsync(1)).equal(OkAsync(Promise.resolve(Ok(2))))).resolves.toBe(false);
-        await expect(OkAsync(OkAsync(1)).equal(OkAsync(OkAsync(2)))).resolves.toBe(false);
 
-        await expect(OkAsync(Ok(1)).equal(Ok(Err('err')))).resolves.toBe(false);
-        await expect(OkAsync(Ok(1)).equal(Ok(ErrAsync('err')))).resolves.toBe(false);
-        await expect(OkAsync(Ok(1)).equal(Promise.resolve(Ok(Err('err'))))).resolves.toBe(false);
-        await expect(OkAsync(Ok(1)).equal(Promise.resolve(Ok(ErrAsync('err'))))).resolves.toBe(false);
-        await expect(OkAsync(Ok(1)).equal(OkAsync(Err('err')))).resolves.toBe(false);
-        await expect(OkAsync(Ok(1)).equal(OkAsync(Promise.resolve(Err('err'))))).resolves.toBe(false);
-        await expect(OkAsync(Ok(1)).equal(OkAsync(ErrAsync('err')))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok(1))).equal(Ok(Err('err')))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok(1))).equal(Ok(ErrAsync('err')))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok(1))).equal(Promise.resolve(Ok(Err('err'))))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok(1))).equal(Promise.resolve(Ok(ErrAsync('err'))))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok(1))).equal(OkAsync(Err('err')))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok(1))).equal(OkAsync(Promise.resolve(Err('err'))))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok(1))).equal(OkAsync(ErrAsync('err')))).resolves.toBe(false);
+        await expect(OkAsync(ErrAsync('err 1')).equal(Ok(Err('err 2')))).resolves.toBe(false);
+        await expect(OkAsync(ErrAsync('err 1')).equal(Ok(ErrAsync('err 2')))).resolves.toBe(false);
+        await expect(OkAsync(ErrAsync('err 1')).equal(OkAsync(Err('err 2')))).resolves.toBe(false);
+
+        await expect(ErrAsync(OkAsync(1)).equal(Err(Ok(2)))).resolves.toBe(false);
+        await expect(ErrAsync(OkAsync(1)).equal(Err(OkAsync(2)))).resolves.toBe(false);
+        await expect(ErrAsync(OkAsync(1)).equal(ErrAsync(Ok(2)))).resolves.toBe(false);
+
+        await expect(ErrAsync(ErrAsync('err 1')).equal(Err(Err('err 2')))).resolves.toBe(false);
+        await expect(ErrAsync(ErrAsync('err 1')).equal(Err(ErrAsync('err 2')))).resolves.toBe(false);
+        await expect(ErrAsync(ErrAsync('err 1')).equal(ErrAsync(Err('err 2')))).resolves.toBe(false);
+
         await expect(OkAsync(OkAsync(1)).equal(Ok(Err('err')))).resolves.toBe(false);
         await expect(OkAsync(OkAsync(1)).equal(Ok(ErrAsync('err')))).resolves.toBe(false);
-        await expect(OkAsync(OkAsync(1)).equal(Promise.resolve(Ok(Err('err'))))).resolves.toBe(false);
-        await expect(OkAsync(OkAsync(1)).equal(Promise.resolve(Ok(ErrAsync('err'))))).resolves.toBe(false);
         await expect(OkAsync(OkAsync(1)).equal(OkAsync(Err('err')))).resolves.toBe(false);
-        await expect(OkAsync(OkAsync(1)).equal(OkAsync(Promise.resolve(Err('err'))))).resolves.toBe(false);
-        await expect(OkAsync(OkAsync(1)).equal(OkAsync(ErrAsync('err')))).resolves.toBe(false);
 
-        await expect(OkAsync(Err('err')).equal(Ok(Ok(1)))).resolves.toBe(false);
-        await expect(OkAsync(Err('err')).equal(Ok(OkAsync(1)))).resolves.toBe(false);
-        await expect(OkAsync(Err('err')).equal(Promise.resolve(Ok(Ok(1))))).resolves.toBe(false);
-        await expect(OkAsync(Err('err')).equal(Promise.resolve(Ok(OkAsync(1))))).resolves.toBe(false);
-        await expect(OkAsync(Err('err')).equal(OkAsync(Ok(1)))).resolves.toBe(false);
-        await expect(OkAsync(Err('err')).equal(OkAsync(Promise.resolve(Ok(1))))).resolves.toBe(false);
-        await expect(OkAsync(Err('err')).equal(OkAsync(OkAsync(1)))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Err('err'))).equal(Ok(Ok(1)))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Err('err'))).equal(Ok(OkAsync(1)))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Err('err'))).equal(Promise.resolve(Ok(Ok(1))))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Err('err'))).equal(Promise.resolve(Ok(OkAsync(1))))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Err('err'))).equal(OkAsync(Ok(1)))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Err('err'))).equal(OkAsync(Promise.resolve(Ok(1))))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Err('err'))).equal(OkAsync(OkAsync(1)))).resolves.toBe(false);
         await expect(OkAsync(ErrAsync('err')).equal(Ok(Ok(1)))).resolves.toBe(false);
         await expect(OkAsync(ErrAsync('err')).equal(Ok(OkAsync(1)))).resolves.toBe(false);
-        await expect(OkAsync(ErrAsync('err')).equal(Promise.resolve(Ok(Ok(1))))).resolves.toBe(false);
-        await expect(OkAsync(ErrAsync('err')).equal(Promise.resolve(Ok(OkAsync(1))))).resolves.toBe(false);
         await expect(OkAsync(ErrAsync('err')).equal(OkAsync(Ok(1)))).resolves.toBe(false);
-        await expect(OkAsync(ErrAsync('err')).equal(OkAsync(Promise.resolve(Ok(1))))).resolves.toBe(false);
-        await expect(OkAsync(ErrAsync('err')).equal(OkAsync(OkAsync(1)))).resolves.toBe(false);
 
-        await expect(ErrAsync(Err('err')).equal(Err(Ok(1)))).resolves.toBe(false);
-        await expect(ErrAsync(Err('err')).equal(Err(OkAsync(1)))).resolves.toBe(false);
-        await expect(ErrAsync(Err('err')).equal(Promise.resolve(Err(Ok(1))))).resolves.toBe(false);
-        await expect(ErrAsync(Err('err')).equal(Promise.resolve(Err(OkAsync(1))))).resolves.toBe(false);
-        await expect(ErrAsync(Err('err')).equal(ErrAsync(Ok(1)))).resolves.toBe(false);
-        await expect(ErrAsync(Err('err')).equal(ErrAsync(Promise.resolve(Ok(1))))).resolves.toBe(false);
-        await expect(ErrAsync(Err('err')).equal(ErrAsync(OkAsync(1)))).resolves.toBe(false);
-        await expect(ErrAsync(Promise.resolve(Err('err'))).equal(Err(Ok(1)))).resolves.toBe(false);
-        await expect(ErrAsync(Promise.resolve(Err('err'))).equal(Err(OkAsync(1)))).resolves.toBe(false);
-        await expect(ErrAsync(Promise.resolve(Err('err'))).equal(Promise.resolve(Err(Ok(1))))).resolves.toBe(false);
-        await expect(ErrAsync(Promise.resolve(Err('err'))).equal(Promise.resolve(Err(OkAsync(1))))).resolves.toBe(
-            false,
-        );
-        await expect(ErrAsync(Promise.resolve(Err('err'))).equal(ErrAsync(Ok(1)))).resolves.toBe(false);
-        await expect(ErrAsync(Promise.resolve(Err('err'))).equal(ErrAsync(Promise.resolve(Ok(1))))).resolves.toBe(
-            false,
-        );
-        await expect(ErrAsync(Promise.resolve(Err('err'))).equal(ErrAsync(OkAsync(1)))).resolves.toBe(false);
         await expect(ErrAsync(ErrAsync('err')).equal(Err(Ok(1)))).resolves.toBe(false);
         await expect(ErrAsync(ErrAsync('err')).equal(Err(OkAsync(1)))).resolves.toBe(false);
-        await expect(ErrAsync(ErrAsync('err')).equal(Promise.resolve(Err(Ok(1))))).resolves.toBe(false);
-        await expect(ErrAsync(ErrAsync('err')).equal(Promise.resolve(Err(OkAsync(1))))).resolves.toBe(false);
         await expect(ErrAsync(ErrAsync('err')).equal(ErrAsync(Ok(1)))).resolves.toBe(false);
-        await expect(ErrAsync(ErrAsync('err')).equal(ErrAsync(Promise.resolve(Ok(1))))).resolves.toBe(false);
-        await expect(ErrAsync(ErrAsync('err')).equal(ErrAsync(OkAsync(1)))).resolves.toBe(false);
 
-        await expect(ErrAsync(Ok(1)).equal(Err(Err('err')))).resolves.toBe(false);
-        await expect(ErrAsync(Ok(1)).equal(Err(ErrAsync('err')))).resolves.toBe(false);
-        await expect(ErrAsync(Ok(1)).equal(Promise.resolve(Err(Err('err'))))).resolves.toBe(false);
-        await expect(ErrAsync(Ok(1)).equal(Promise.resolve(Err(ErrAsync('err'))))).resolves.toBe(false);
-        await expect(ErrAsync(Ok(1)).equal(ErrAsync(Err('err')))).resolves.toBe(false);
-        await expect(ErrAsync(Ok(1)).equal(ErrAsync(Promise.resolve(Err('err'))))).resolves.toBe(false);
-        await expect(ErrAsync(Ok(1)).equal(ErrAsync(ErrAsync('err')))).resolves.toBe(false);
-        await expect(ErrAsync(Promise.resolve(Ok(1))).equal(Err(Err('err')))).resolves.toBe(false);
-        await expect(ErrAsync(Promise.resolve(Ok(1))).equal(Err(ErrAsync('err')))).resolves.toBe(false);
-        await expect(ErrAsync(Promise.resolve(Ok(1))).equal(Promise.resolve(Err(Err('err'))))).resolves.toBe(false);
-        await expect(ErrAsync(Promise.resolve(Ok(1))).equal(Promise.resolve(Err(ErrAsync('err'))))).resolves.toBe(
-            false,
-        );
-        await expect(ErrAsync(Promise.resolve(Ok(1))).equal(ErrAsync(Err('err')))).resolves.toBe(false);
-        await expect(ErrAsync(Promise.resolve(Ok(1))).equal(ErrAsync(Promise.resolve(Err('err'))))).resolves.toBe(
-            false,
-        );
-        await expect(ErrAsync(Promise.resolve(Ok(1))).equal(ErrAsync(ErrAsync('err')))).resolves.toBe(false);
         await expect(ErrAsync(OkAsync(1)).equal(Err(Err('err')))).resolves.toBe(false);
         await expect(ErrAsync(OkAsync(1)).equal(Err(ErrAsync('err')))).resolves.toBe(false);
-        await expect(ErrAsync(OkAsync(1)).equal(Promise.resolve(Err(Err('err'))))).resolves.toBe(false);
-        await expect(ErrAsync(OkAsync(1)).equal(Promise.resolve(Err(ErrAsync('err'))))).resolves.toBe(false);
         await expect(ErrAsync(OkAsync(1)).equal(ErrAsync(Err('err')))).resolves.toBe(false);
-        await expect(ErrAsync(OkAsync(1)).equal(ErrAsync(Promise.resolve(Err('err'))))).resolves.toBe(false);
-        await expect(ErrAsync(OkAsync(1)).equal(ErrAsync(ErrAsync('err')))).resolves.toBe(false);
+
+        await expect(OkAsync(OkAsync(OkAsync(1))).equal(OkAsync(OkAsync(1)))).resolves.toBe(false);
+        await expect(OkAsync(OkAsync(OkAsync(1))).equal(OkAsync(OkAsync(1)))).resolves.toBe(false);
+        await expect(OkAsync(OkAsync(OkAsync(1))).equal(OkAsync(OkAsync(1)))).resolves.toBe(false);
+
+        await expect(OkAsync(OkAsync(1)).equal(OkAsync(OkAsync(OkAsync(1))))).resolves.toBe(false);
+        await expect(OkAsync(OkAsync(1)).equal(OkAsync(OkAsync(OkAsync(1))))).resolves.toBe(false);
+        await expect(OkAsync(OkAsync(1)).equal(OkAsync(OkAsync(OkAsync(1))))).resolves.toBe(false);
 
         // object equality
 
         await expect(OkAsync([1]).equal(Ok([1]))).resolves.toBe(false);
-        await expect(OkAsync([1]).equal(Promise.resolve(Ok([1])))).resolves.toBe(false);
         await expect(OkAsync([1]).equal(OkAsync([1]))).resolves.toBe(false);
 
         await expect(OkAsync({ foo: 1 }).equal(Ok({ foo: 1 }))).resolves.toBe(false);
-        await expect(OkAsync({ foo: 1 }).equal(Promise.resolve(Ok({ foo: 1 })))).resolves.toBe(false);
         await expect(OkAsync({ foo: 1 }).equal(OkAsync({ foo: 1 }))).resolves.toBe(false);
 
-        await expect(ErrAsync({ message: 'err' }).equal(Err({ message: 'err' }))).resolves.toBe(false);
-        await expect(ErrAsync({ message: 'err' }).equal(Promise.resolve(Err({ message: 'err' })))).resolves.toBe(false);
-        await expect(ErrAsync({ message: 'err' }).equal(ErrAsync({ message: 'err' }))).resolves.toBe(false);
+        await expect(ErrAsync({ msg: 'err' }).equal(Err({ msg: 'err' }))).resolves.toBe(false);
+        await expect(ErrAsync({ msg: 'err' }).equal(ErrAsync({ msg: 'err' }))).resolves.toBe(false);
 
-        await expect(OkAsync(Ok([1])).equal(Ok(Ok([1])))).resolves.toBe(false);
-        await expect(OkAsync(Ok([1])).equal(Ok(OkAsync([1])))).resolves.toBe(false);
-        await expect(OkAsync(Ok([1])).equal(Promise.resolve(Ok(Ok([1]))))).resolves.toBe(false);
-        await expect(OkAsync(Ok([1])).equal(Promise.resolve(Ok(OkAsync([1]))))).resolves.toBe(false);
-        await expect(OkAsync(Ok([1])).equal(OkAsync(Ok([1])))).resolves.toBe(false);
-        await expect(OkAsync(Ok([1])).equal(OkAsync(Promise.resolve(Ok([1]))))).resolves.toBe(false);
-        await expect(OkAsync(Ok([1])).equal(OkAsync(OkAsync([1])))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok([1]))).equal(Ok(Ok([1])))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok([1]))).equal(Ok(OkAsync([1])))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok([1]))).equal(Promise.resolve(Ok(Ok([1]))))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok([1]))).equal(Promise.resolve(Ok(OkAsync([1]))))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok([1]))).equal(OkAsync(Ok([1])))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok([1]))).equal(OkAsync(Promise.resolve(Ok([1]))))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok([1]))).equal(OkAsync(OkAsync([1])))).resolves.toBe(false);
         await expect(OkAsync(OkAsync([1])).equal(Ok(Ok([1])))).resolves.toBe(false);
         await expect(OkAsync(OkAsync([1])).equal(Ok(OkAsync([1])))).resolves.toBe(false);
-        await expect(OkAsync(OkAsync([1])).equal(Promise.resolve(Ok(Ok([1]))))).resolves.toBe(false);
-        await expect(OkAsync(OkAsync([1])).equal(Promise.resolve(Ok(OkAsync([1]))))).resolves.toBe(false);
         await expect(OkAsync(OkAsync([1])).equal(OkAsync(Ok([1])))).resolves.toBe(false);
-        await expect(OkAsync(OkAsync([1])).equal(OkAsync(Promise.resolve(Ok([1]))))).resolves.toBe(false);
-        await expect(OkAsync(OkAsync([1])).equal(OkAsync(OkAsync([1])))).resolves.toBe(false);
 
-        await expect(OkAsync(Ok({ foo: 1 })).equal(Ok(Ok({ foo: 1 })))).resolves.toBe(false);
-        await expect(OkAsync(Ok({ foo: 1 })).equal(Ok(OkAsync({ foo: 1 })))).resolves.toBe(false);
-        await expect(OkAsync(Ok({ foo: 1 })).equal(Promise.resolve(Ok(Ok({ foo: 1 }))))).resolves.toBe(false);
-        await expect(OkAsync(Ok({ foo: 1 })).equal(Promise.resolve(Ok(OkAsync({ foo: 1 }))))).resolves.toBe(false);
-        await expect(OkAsync(Ok({ foo: 1 })).equal(OkAsync(Ok({ foo: 1 })))).resolves.toBe(false);
-        await expect(OkAsync(Ok({ foo: 1 })).equal(OkAsync(Promise.resolve(Ok({ foo: 1 }))))).resolves.toBe(false);
-        await expect(OkAsync(Ok({ foo: 1 })).equal(OkAsync(OkAsync({ foo: 1 })))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok({ foo: 1 }))).equal(Ok(Ok({ foo: 1 })))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok({ foo: 1 }))).equal(Ok(OkAsync({ foo: 1 })))).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok({ foo: 1 }))).equal(Promise.resolve(Ok(Ok({ foo: 1 }))))).resolves.toBe(
-            false,
-        );
-        await expect(
-            OkAsync(Promise.resolve(Ok({ foo: 1 }))).equal(Promise.resolve(Ok(OkAsync({ foo: 1 })))),
-        ).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok({ foo: 1 }))).equal(OkAsync(Ok({ foo: 1 })))).resolves.toBe(false);
-        await expect(
-            OkAsync(Promise.resolve(Ok({ foo: 1 }))).equal(OkAsync(Promise.resolve(Ok({ foo: 1 })))),
-        ).resolves.toBe(false);
-        await expect(OkAsync(Promise.resolve(Ok({ foo: 1 }))).equal(OkAsync(OkAsync({ foo: 1 })))).resolves.toBe(false);
         await expect(OkAsync(OkAsync({ foo: 1 })).equal(Ok(Ok({ foo: 1 })))).resolves.toBe(false);
         await expect(OkAsync(OkAsync({ foo: 1 })).equal(Ok(OkAsync({ foo: 1 })))).resolves.toBe(false);
-        await expect(OkAsync(OkAsync({ foo: 1 })).equal(Promise.resolve(Ok(Ok({ foo: 1 }))))).resolves.toBe(false);
-        await expect(OkAsync(OkAsync({ foo: 1 })).equal(Promise.resolve(Ok(OkAsync({ foo: 1 }))))).resolves.toBe(false);
         await expect(OkAsync(OkAsync({ foo: 1 })).equal(OkAsync(Ok({ foo: 1 })))).resolves.toBe(false);
-        await expect(OkAsync(OkAsync({ foo: 1 })).equal(OkAsync(Promise.resolve(Ok({ foo: 1 }))))).resolves.toBe(false);
-        await expect(OkAsync(OkAsync({ foo: 1 })).equal(OkAsync(OkAsync({ foo: 1 })))).resolves.toBe(false);
 
-        await expect(ErrAsync(Err({ message: 'err' })).equal(Err(Err({ message: 'err' })))).resolves.toBe(false);
-        await expect(ErrAsync(Err({ message: 'err' })).equal(Err(ErrAsync({ message: 'err' })))).resolves.toBe(false);
-        await expect(
-            ErrAsync(Err({ message: 'err' })).equal(Promise.resolve(Err(Err({ message: 'err' })))),
-        ).resolves.toBe(false);
-        await expect(
-            ErrAsync(Err({ message: 'err' })).equal(Promise.resolve(Err(ErrAsync({ message: 'err' })))),
-        ).resolves.toBe(false);
-        await expect(ErrAsync(Err({ message: 'err' })).equal(ErrAsync(Err({ message: 'err' })))).resolves.toBe(false);
-        await expect(
-            ErrAsync(Err({ message: 'err' })).equal(ErrAsync(Promise.resolve(Err({ message: 'err' })))),
-        ).resolves.toBe(false);
-        await expect(ErrAsync(Err({ message: 'err' })).equal(ErrAsync(ErrAsync({ message: 'err' })))).resolves.toBe(
-            false,
-        );
-        await expect(
-            ErrAsync(Promise.resolve(Err({ message: 'err' }))).equal(Err(Err({ message: 'err' }))),
-        ).resolves.toBe(false);
-        await expect(
-            ErrAsync(Promise.resolve(Err({ message: 'err' }))).equal(Err(ErrAsync({ message: 'err' }))),
-        ).resolves.toBe(false);
-        await expect(
-            ErrAsync(Promise.resolve(Err({ message: 'err' }))).equal(Promise.resolve(Err(Err({ message: 'err' })))),
-        ).resolves.toBe(false);
-        await expect(
-            ErrAsync(Promise.resolve(Err({ message: 'err' }))).equal(
-                Promise.resolve(Err(ErrAsync({ message: 'err' }))),
-            ),
-        ).resolves.toBe(false);
-        await expect(
-            ErrAsync(Promise.resolve(Err({ message: 'err' }))).equal(ErrAsync(Err({ message: 'err' }))),
-        ).resolves.toBe(false);
-        await expect(
-            ErrAsync(Promise.resolve(Err({ message: 'err' }))).equal(
-                ErrAsync(Promise.resolve(Err({ message: 'err' }))),
-            ),
-        ).resolves.toBe(false);
-        await expect(
-            ErrAsync(Promise.resolve(Err({ message: 'err' }))).equal(ErrAsync(ErrAsync({ message: 'err' }))),
-        ).resolves.toBe(false);
-        await expect(ErrAsync(ErrAsync({ message: 'err' })).equal(Err(Err({ message: 'err' })))).resolves.toBe(false);
-        await expect(ErrAsync(ErrAsync({ message: 'err' })).equal(Err(ErrAsync({ message: 'err' })))).resolves.toBe(
-            false,
-        );
-        await expect(
-            ErrAsync(ErrAsync({ message: 'err' })).equal(Promise.resolve(Err(Err({ message: 'err' })))),
-        ).resolves.toBe(false);
-        await expect(
-            ErrAsync(ErrAsync({ message: 'err' })).equal(Promise.resolve(Err(ErrAsync({ message: 'err' })))),
-        ).resolves.toBe(false);
-        await expect(ErrAsync(ErrAsync({ message: 'err' })).equal(ErrAsync(Err({ message: 'err' })))).resolves.toBe(
-            false,
-        );
-        await expect(
-            ErrAsync(ErrAsync({ message: 'err' })).equal(ErrAsync(Promise.resolve(Err({ message: 'err' })))),
-        ).resolves.toBe(false);
-        await expect(
-            ErrAsync(ErrAsync({ message: 'err' })).equal(ErrAsync(ErrAsync({ message: 'err' }))),
-        ).resolves.toBe(false);
+        await expect(ErrAsync(ErrAsync({ msg: 'err' })).equal(Err(Err({ msg: 'err' })))).resolves.toBe(false);
+        await expect(ErrAsync(ErrAsync({ msg: 'err' })).equal(Err(ErrAsync({ msg: 'err' })))).resolves.toBe(false);
+        await expect(ErrAsync(ErrAsync({ msg: 'err' })).equal(ErrAsync(Err({ msg: 'err' })))).resolves.toBe(false);
+    });
+
+    it('should check if itself equals to another result-like instance', async () => {
+        await expect(OkAsync(OkAsync(1)).equal(Ok(OkFork(1)))).resolves.toBe(true);
+        await expect(OkAsync(ErrAsync('err')).equal(Ok(ErrFork('err')))).resolves.toBe(true);
+
+        await expect(OkAsync(OkFork(1)).equal(Ok(Ok(1)))).resolves.toBe(true);
+        await expect(OkAsync(ErrFork('err')).equal(Ok(Err('err')))).resolves.toBe(true);
+
+        await expect(OkAsync(OkAsync(1)).equal(Ok(OkFork(2)))).resolves.toBe(false);
+        await expect(OkAsync(ErrAsync('err 1')).equal(Ok(ErrFork('err 2')))).resolves.toBe(false);
+
+        await expect(OkAsync(OkFork(2)).equal(Ok(Ok(1)))).resolves.toBe(false);
+        await expect(OkAsync(ErrFork('err 2')).equal(Ok(Err('err 1')))).resolves.toBe(false);
     });
 
     it('should have correct examples doc', async () => {
@@ -1406,20 +1153,15 @@ describe(`Test method \`${RustlikeResultAsync.name}.prototype.${RustlikeResultAs
 
             assert(await OkAsync(Ok(1)).equal(Ok(Ok(1))));
             assert(await OkAsync(Ok(1)).equal(Ok(OkAsync(1))));
-            assert(await OkAsync(Ok(1)).equal(Promise.resolve(Ok(Ok(1)))));
-            assert(await OkAsync(Ok(1)).equal(OkAsync(Promise.resolve(Ok(1)))));
             assert(await OkAsync(Ok(1)).equal(OkAsync(OkAsync(1))));
-            assert(await OkAsync(Promise.resolve(Ok(1))).equal(Promise.resolve(Ok(OkAsync(1)))));
             assert(await OkAsync(OkAsync(1)).equal(OkAsync(Ok(1))));
 
             assert((await OkAsync([1]).equal(Ok([1]))) === false);
             assert((await OkAsync({ foo: 1 }).equal(Promise.resolve(Ok({ foo: 1 })))) === false);
-            assert((await ErrAsync({ message: 'err' }).equal(ErrAsync({ message: 'err' }))) === false);
+            assert((await ErrAsync({ msg: 'err' }).equal(ErrAsync({ msg: 'err' }))) === false);
 
             assert((await OkAsync(Ok([1])).equal(Ok(Ok([1])))) === false);
             assert((await OkAsync(Ok([1])).equal(OkAsync(OkAsync([1])))) === false);
-            assert((await OkAsync(Promise.resolve(Ok([1]))).equal(OkAsync(Ok([1])))) === false);
-            assert((await OkAsync(Promise.resolve(Ok({ foo: 1 }))).equal(Ok(OkAsync({ foo: 1 })))) === false);
             assert((await OkAsync(OkAsync({ foo: 1 })).equal(OkAsync(OkAsync({ foo: 1 })))) === false);
         }
 
