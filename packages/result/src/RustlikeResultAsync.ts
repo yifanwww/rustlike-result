@@ -1,9 +1,8 @@
-// eslint-disable-next-line import/no-cycle
-import { Err, Ok } from './factory';
-import type { Result } from './Result';
-import type { ResultAsync } from './ResultAsync';
-import type { Optional } from './types.internal';
-import { equalResultAsync } from './utils';
+import { Err, Ok } from './factory.js';
+import type { Result } from './Result.js';
+import type { ResultAsync } from './ResultAsync.js';
+import type { Optional } from './types.internal.js';
+import { equalResultAsync } from './utils.js';
 
 export class RustlikeResultAsync<T, E> implements ResultAsync<T, E> {
     private readonly _promise: Promise<Result<T, E>>;

@@ -3,7 +3,7 @@ import type { Result } from '@rustresult/result';
 import { Err, Ok } from '@rustresult/result';
 import { createModelSchema, deserialize, list, object, primitive, serialize } from 'serializr';
 
-import { createResultModelSchema, resultPropSchema } from '../index';
+import { createResultModelSchema, resultPropSchema } from '../index.js';
 
 describe(`Test fn ${resultPropSchema.name}`, () => {
     describe('for simple `Result` structure', () => {

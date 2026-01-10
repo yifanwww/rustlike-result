@@ -1,8 +1,8 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { resultifyAsync, resultifyPromise, resultifySync } from '../resultify';
-import { RustlikeResult } from '../RustlikeResult';
-import { RustlikeResultAsync } from '../RustlikeResultAsync';
+import { resultifyAsync, resultifyPromise, resultifySync } from '../resultify.js';
+import { RustlikeResult } from '../RustlikeResult.js';
+import { RustlikeResultAsync } from '../RustlikeResultAsync.js';
 
 function syncFn(throws: boolean) {
     if (throws) {

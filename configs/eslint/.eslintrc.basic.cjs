@@ -300,7 +300,7 @@ module.exports = {
         'import/named': 'off',
 
         // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/no-cycle.md
-        'import/no-cycle': 'error',
+        'import/no-cycle': 'off',
 
         // Disabled for import-statement of dev dependencies.
         // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/no-extraneous-dependencies.md

@@ -1,10 +1,10 @@
 import { describe, it } from '@jest/globals';
 
-import { Err, Ok } from '../factory';
-import { ErrAsync, fromPromiseableResult, OkAsync } from '../factoryAsync';
-import type { ResultAsync } from '../ResultAsync';
+import { Err, Ok } from '../factory.js';
+import { ErrAsync, fromPromiseableResult, OkAsync } from '../factoryAsync.js';
+import type { ResultAsync } from '../ResultAsync.js';
 
-import { expectResultAsync } from './_helpers';
+import { expectResultAsync } from './_helpers.js';
 
 describe(`Test fn \`${OkAsync.name}\``, () => {
     it('should create `OkAsync` result', async () => {

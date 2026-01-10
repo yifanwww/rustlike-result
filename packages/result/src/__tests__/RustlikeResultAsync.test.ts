@@ -1,13 +1,13 @@
 import { describe, expect, it, jest } from '@jest/globals';
 import assert from 'node:assert';
 
-import { Err, Ok } from '../factory';
-import { ErrAsync, OkAsync } from '../factoryAsync';
-import type { Result } from '../Result';
-import type { ResultAsync } from '../ResultAsync';
-import { RustlikeResultAsync } from '../RustlikeResultAsync';
+import { Err, Ok } from '../factory.js';
+import { ErrAsync, OkAsync } from '../factoryAsync.js';
+import type { Result } from '../Result.js';
+import type { ResultAsync } from '../ResultAsync.js';
+import { RustlikeResultAsync } from '../RustlikeResultAsync.js';
 
-import { ErrFork, OkFork } from './fork';
+import { ErrFork, OkFork } from './fork.js';
 
 function panicFn1(): never {
     throw new Error('error');

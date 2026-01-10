@@ -40,7 +40,7 @@ jobs:
         run: pnpm run build
 
       - name: Publish
-        run: node scripts/release.mjs
+        run: node scripts/release.js
         env:
           GITHUB_REF_NAME: ${{ github.ref_name }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

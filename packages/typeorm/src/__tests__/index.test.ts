@@ -1,9 +1,9 @@
 import { describe, expect, it, jest } from '@jest/globals';
 import { Err, ErrAsync, Ok, OkAsync } from '@rustresult/result';
 import type { DataSource, EntityManager, QueryRunner } from 'typeorm';
-import type { IsolationLevel } from 'typeorm/driver/types/IsolationLevel';
+import type { IsolationLevel } from 'typeorm/driver/types/IsolationLevel.js';
 
-import { typeormTransaction } from '../index';
+import { typeormTransaction } from '../index.js';
 
 class MockedEntityManager {}
 

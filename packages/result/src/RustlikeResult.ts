@@ -1,10 +1,9 @@
-import type { Result } from './Result';
-import type { ResultAsync } from './ResultAsync';
-// eslint-disable-next-line import/no-cycle
-import { RustlikeResultAsync } from './RustlikeResultAsync';
-import { RESULT_SYMBOL } from './symbols';
-import type { Optional, ResultType } from './types.internal';
-import { equalResult } from './utils';
+import type { Result } from './Result.js';
+import type { ResultAsync } from './ResultAsync.js';
+import { RustlikeResultAsync } from './RustlikeResultAsync.js';
+import { RESULT_SYMBOL } from './symbols.js';
+import type { Optional, ResultType } from './types.internal.js';
+import { equalResult } from './utils.js';
 
 /**
  * DO NOT USE THIS CLASS. This is for internal use.

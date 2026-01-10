@@ -1,5 +1,5 @@
-import type { Result } from './Result';
-import { RESULT_SYMBOL } from './symbols';
+import type { Result } from './Result.js';
+import { RESULT_SYMBOL } from './symbols.js';
 
 export function isResult(value: Exclude<unknown, null | undefined>): value is Result<unknown, unknown> {
     return (value as Result<unknown, unknown>).symbol === RESULT_SYMBOL;

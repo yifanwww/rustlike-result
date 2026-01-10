@@ -1,5 +1,5 @@
-import type { Result } from '../Result';
-import { RESULT_SYMBOL } from '../symbols';
+import type { Result } from '../Result.js';
+import { RESULT_SYMBOL } from '../symbols.js';
 
 class ResultFork<T, E> {
     constructor(

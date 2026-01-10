@@ -1,9 +1,9 @@
 import { describe, it } from '@jest/globals';
 
-import { Err, Ok } from '../factory';
-import type { Result } from '../Result';
+import { Err, Ok } from '../factory.js';
+import type { Result } from '../Result.js';
 
-import { expectResult } from './_helpers';
+import { expectResult } from './_helpers.js';
 
 describe(`Test fn \`${Ok.name}\``, () => {
     it('should create `Ok` result', () => {

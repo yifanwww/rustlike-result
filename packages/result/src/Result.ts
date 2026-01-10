@@ -1,6 +1,6 @@
-import type { ResultAsync } from './ResultAsync';
-import type { RESULT_SYMBOL } from './symbols';
-import type { Optional } from './types.internal';
+import type { ResultAsync } from './ResultAsync.js';
+import type { RESULT_SYMBOL } from './symbols.js';
+import type { Optional } from './types.internal.js';
 
 /**
  * The interface of `Result` that defines the methods that `Result` should support.

@@ -1,5 +1,5 @@
-import type { Result } from './Result';
-import type { Optional } from './types.internal';
+import type { Result } from './Result.js';
+import type { Optional } from './types.internal.js';
 
 /**
  * The interface of async `Result` that defines the methods that async `Result` should support.

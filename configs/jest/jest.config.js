@@ -1,9 +1,11 @@
-const fs = require('node:fs');
-const path = require('node:path');
+import fs from 'node:fs';
+import path from 'node:path';
+import url from 'node:url';
 
-const repo = path.join(__dirname, '../..');
+const repo = path.join(import.meta.dirname, '../..');
 
-/** @returns {import('@jest/types').Config.InitialOptions} */
+const resolve = (p) => url.fileURLToPath(import.meta.resolve(p));
+
 function getConfig() {
     const packageJson = process.env.npm_package_json;
     const packageDir = packageJson ? path.dirname(packageJson) : process.cwd();
@@ -30,7 +32,7 @@ function getConfig() {
 
         transform: {
             '^.+\\.(js|mjs|cjs|ts)$': [
-                require.resolve('@swc/jest'),
+                resolve('@swc/jest'),
                 {
                     jsc: {
                         transform: {
@@ -44,7 +46,13 @@ function getConfig() {
         transformIgnorePatterns: ['[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$'],
 
         modulePaths: [],
+        moduleNameMapper: {
+            // Pure ESM packages needs this, to make the relative import works with TypeScript source files
+            '^(.*)\\.js$': ['$1.js', '$1.ts'],
+        },
         moduleFileExtensions: ['js', 'json', 'node', 'ts'],
+
+        extensionsToTreatAsEsm: ['.ts'],
 
         // https://jestjs.io/docs/configuration/#resetmocks-boolean
         resetMocks: true,
@@ -53,4 +61,4 @@ function getConfig() {
     };
 }
 
-module.exports = getConfig();
+export default getConfig();

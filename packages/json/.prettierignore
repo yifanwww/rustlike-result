@@ -1,7 +1,6 @@
 # Compilation
 
-/lib
-/lib-commonjs
+/dist
 
 # Test
 

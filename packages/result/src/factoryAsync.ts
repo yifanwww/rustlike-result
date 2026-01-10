@@ -1,7 +1,7 @@
-import { Err, Ok } from './factory';
-import type { Result } from './Result';
-import type { ResultAsync } from './ResultAsync';
-import { RustlikeResultAsync } from './RustlikeResultAsync';
+import { Err, Ok } from './factory.js';
+import type { Result } from './Result.js';
+import type { ResultAsync } from './ResultAsync.js';
+import { RustlikeResultAsync } from './RustlikeResultAsync.js';
 
 /**
  * Creates a `ResultAsync` that contains the success value.

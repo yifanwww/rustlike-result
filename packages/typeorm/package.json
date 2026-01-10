@@ -2,18 +2,10 @@
     "name": "@rustresult/typeorm",
     "version": "0.6.0",
     "description": "A TypeORM toolkit for @rustresult/result",
+    "type": "module",
     "exports": {
-        ".": {
-            "types": "./lib/index.d.ts",
-            "node": "./lib-commonjs/index.js",
-            "import": "./lib/index.js",
-            "default": "./lib-commonjs/index.js"
-        },
-        "./cjs": "./lib-commonjs/index.js"
+        ".": "./dist/index.js"
     },
-    "main": "lib-commonjs/index.js",
-    "module": "lib/index.js",
-    "types": "lib/index.d.ts",
     "homepage": "https://github.com/yifanwww/rustlike-result#readme",
     "license": "MIT",
     "author": "yifanwww <yifanw1101@gmail.com> (https://github.com/yifanwww)",
@@ -27,16 +19,15 @@
     },
     "packageManager": "pnpm@9.8.0+sha512.8e4c3550fb500e808dbc30bb0ce4dd1eb614e30b1c55245f211591ec2cdf9c611cabd34e1364b42f564bd54b3945ed0f49d61d1bbf2ec9bd74b866fcdc723276",
     "scripts": {
-        "build": "concurrently -n cjs,esm,types \"pnpm run build:cjs\" \"pnpm run build:esm\" \"pnpm run build:types\"",
-        "build:cjs": "tsc --project tsconfigs/tsconfig.cjs.json",
-        "build:esm": "tsc --project tsconfigs/tsconfig.esm.json",
+        "build": "concurrently -n js,types \"pnpm run build:js\" \"pnpm run build:types\"",
+        "build:js": "tsc --project tsconfigs/tsconfig.js.json",
         "build:types": "tsc --project tsconfigs/tsconfig.types.json",
-        "clean": "rimraf --glob coverage lib lib-commonjs tsconfigs/*.tsbuildinfo",
+        "clean": "rimraf --glob coverage dist tsconfigs/*.tsbuildinfo",
         "format": "prettier --write \"**/*.{cjs,js,mjs,json,ts,yaml,yml}\"",
         "lint": "cross-env ESLINT_USE_FLAT_CONFIG=false eslint .",
         "lint-fix": "cross-env ESLINT_USE_FLAT_CONFIG=false eslint . --fix",
-        "test": "node ../../scripts/unit-test.mjs --watch",
-        "test-full": "node ../../scripts/unit-test.mjs --coverage",
+        "test": "node ../../scripts/unit-test.js --watch",
+        "test-full": "node ../../scripts/unit-test.js --coverage",
         "typecheck": "tsc --project tsconfig.json --noEmit --incremental false"
     },
     "dependencies": {
@@ -45,7 +36,6 @@
     },
     "devDependencies": {
         "@jest/globals": "^30.2.0",
-        "@swc/jest": "^0.2.39",
         "@typescript-eslint/eslint-plugin": "^8.51.0",
         "@typescript-eslint/parser": "^8.51.0",
         "concurrently": "^9.2.1",
@@ -63,7 +53,6 @@
     },
     "files": [
         "CHANGELOG.md",
-        "lib",
-        "lib-commonjs"
+        "dist"
     ]
 }

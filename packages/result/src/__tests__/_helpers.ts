@@ -1,10 +1,10 @@
 import { expect } from '@jest/globals';
 
-import type { Result } from '../Result';
-import type { ResultAsync } from '../ResultAsync';
-import type { RustlikeResult } from '../RustlikeResult';
-import type { RustlikeResultAsync } from '../RustlikeResultAsync';
-import type { ResultType } from '../types.internal';
+import type { Result } from '../Result.js';
+import type { ResultAsync } from '../ResultAsync.js';
+import type { RustlikeResult } from '../RustlikeResult.js';
+import type { RustlikeResultAsync } from '../RustlikeResultAsync.js';
+import type { ResultType } from '../types.internal.js';
 
 type ResultInstance = RustlikeResult<unknown, unknown>;
 

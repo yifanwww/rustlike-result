@@ -2,6 +2,7 @@
     "name": "rustlike-result",
     "version": "0.0.0",
     "description": "",
+    "type": "module",
     "private": true,
     "homepage": "https://github.com/yifanwww/rustlike-result#readme",
     "license": "MIT",
@@ -28,6 +29,7 @@
         "typecheck": "pnpm run --recursive --no-sort --stream typecheck"
     },
     "devDependencies": {
+        "@swc/jest": "^0.2.39",
         "@types/node": "^20.19.27",
         "@types/semver": "^7.7.1",
         "chalk": "^5.6.2",

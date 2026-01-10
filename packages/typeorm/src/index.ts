@@ -1,7 +1,7 @@
 import { Err, fromPromiseableResult } from '@rustresult/result';
 import type { Result, ResultAsync } from '@rustresult/result';
 import type { DataSource, EntityManager } from 'typeorm';
-import type { IsolationLevel } from 'typeorm/driver/types/IsolationLevel';
+import type { IsolationLevel } from 'typeorm/driver/types/IsolationLevel.js';
 
 /**
  * Wraps given function execution (and all operations made there) into a transaction.
