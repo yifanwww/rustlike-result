@@ -4,36 +4,126 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    '@jest/globals':
+      specifier: ^30.2.0
+      version: 30.2.0
+    '@swc/jest':
+      specifier: ^0.2.39
+      version: 0.2.39
+    '@types/node':
+      specifier: ^20.19.27
+      version: 20.19.27
+    '@types/prompts':
+      specifier: ^2.4.9
+      version: 2.4.9
+    '@types/semver':
+      specifier: ^7.7.1
+      version: 7.7.1
+    '@typescript-eslint/eslint-plugin':
+      specifier: ^8.51.0
+      version: 8.51.0
+    '@typescript-eslint/parser':
+      specifier: ^8.51.0
+      version: 8.51.0
+    chalk:
+      specifier: ^5.6.2
+      version: 5.6.2
+    concurrently:
+      specifier: ^9.2.1
+      version: 9.2.1
+    cross-env:
+      specifier: ^10.1.0
+      version: 10.1.0
+    effect:
+      specifier: ^3.19.14
+      version: 3.19.14
+    eslint:
+      specifier: ^9.39.2
+      version: 9.39.2
+    eslint-config-airbnb-base:
+      specifier: ^15.0.0
+      version: 15.0.0
+    eslint-config-prettier:
+      specifier: ^10.1.8
+      version: 10.1.8
+    eslint-plugin-import:
+      specifier: ^2.32.0
+      version: 2.32.0
+    eslint-plugin-jest:
+      specifier: ^29.12.1
+      version: 29.12.1
+    eslint-plugin-prettier:
+      specifier: ^5.5.4
+      version: 5.5.4
+    husky:
+      specifier: ^9.1.7
+      version: 9.1.7
+    jest:
+      specifier: ^30.2.0
+      version: 30.2.0
+    lint-staged:
+      specifier: ^16.2.7
+      version: 16.2.7
+    neverthrow:
+      specifier: ^8.2.0
+      version: 8.2.0
+    prettier:
+      specifier: 3.7.4
+      version: 3.7.4
+    prompts:
+      specifier: ^2.4.2
+      version: 2.4.2
+    rimraf:
+      specifier: ^6.1.2
+      version: 6.1.2
+    semver:
+      specifier: ^7.7.3
+      version: 7.7.3
+    serializr:
+      specifier: ^3.0.2
+      version: 3.0.5
+    tinybench:
+      specifier: ^6.0.0
+      version: 6.0.0
+    typeorm:
+      specifier: ^0.3.0
+      version: 0.3.28
+    typescript:
+      specifier: 5.9.3
+      version: 5.9.3
+
 importers:
 
   .:
     devDependencies:
       '@swc/jest':
-        specifier: ^0.2.39
+        specifier: 'catalog:'
         version: 0.2.39(@swc/core@1.15.8)
       '@types/node':
-        specifier: ^20.19.27
+        specifier: 'catalog:'
         version: 20.19.27
       '@types/semver':
-        specifier: ^7.7.1
+        specifier: 'catalog:'
         version: 7.7.1
       chalk:
-        specifier: ^5.6.2
+        specifier: 'catalog:'
         version: 5.6.2
       husky:
-        specifier: ^9.1.7
+        specifier: 'catalog:'
         version: 9.1.7
       lint-staged:
-        specifier: ^16.2.7
+        specifier: 'catalog:'
         version: 16.2.7
       prettier:
-        specifier: 3.7.4
+        specifier: 'catalog:'
         version: 3.7.4
       semver:
-        specifier: ^7.7.3
+        specifier: 'catalog:'
         version: 7.7.3
       typescript:
-        specifier: 5.9.3
+        specifier: 'catalog:'
         version: 5.9.3
 
   packages/benchmark:
@@ -42,56 +132,56 @@ importers:
         specifier: workspace:^
         version: link:../result
       effect:
-        specifier: ^3.19.14
+        specifier: 'catalog:'
         version: 3.19.14
       neverthrow:
-        specifier: ^8.2.0
+        specifier: 'catalog:'
         version: 8.2.0
       prompts:
-        specifier: ^2.4.2
+        specifier: 'catalog:'
         version: 2.4.2
       tinybench:
-        specifier: ^6.0.0
+        specifier: 'catalog:'
         version: 6.0.0
     devDependencies:
       '@types/prompts':
-        specifier: ^2.4.9
+        specifier: 'catalog:'
         version: 2.4.9
       '@typescript-eslint/eslint-plugin':
-        specifier: ^8.51.0
+        specifier: 'catalog:'
         version: 8.51.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)
       '@typescript-eslint/parser':
-        specifier: ^8.51.0
+        specifier: 'catalog:'
         version: 8.51.0(eslint@9.39.2)(typescript@5.9.3)
       cross-env:
-        specifier: ^10.1.0
+        specifier: 'catalog:'
         version: 10.1.0
       eslint:
-        specifier: ^9.39.2
+        specifier: 'catalog:'
         version: 9.39.2
       eslint-config-airbnb-base:
-        specifier: ^15.0.0
+        specifier: 'catalog:'
         version: 15.0.0(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2))(eslint@9.39.2)
       eslint-config-prettier:
-        specifier: ^10.1.8
+        specifier: 'catalog:'
         version: 10.1.8(eslint@9.39.2)
       eslint-plugin-import:
-        specifier: ^2.32.0
+        specifier: 'catalog:'
         version: 2.32.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)
       eslint-plugin-jest:
-        specifier: ^29.12.1
+        specifier: 'catalog:'
         version: 29.12.1(@typescript-eslint/eslint-plugin@8.51.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(jest@30.2.0(@types/node@20.19.27))(typescript@5.9.3)
       eslint-plugin-prettier:
-        specifier: ^5.5.4
+        specifier: 'catalog:'
         version: 5.5.4(eslint-config-prettier@10.1.8(eslint@9.39.2))(eslint@9.39.2)(prettier@3.7.4)
       prettier:
-        specifier: 3.7.4
+        specifier: 'catalog:'
         version: 3.7.4
       rimraf:
-        specifier: ^6.1.2
+        specifier: 'catalog:'
         version: 6.1.2
       typescript:
-        specifier: 5.9.3
+        specifier: 'catalog:'
         version: 5.9.3
 
   packages/json:
@@ -101,49 +191,49 @@ importers:
         version: link:../result
     devDependencies:
       '@jest/globals':
-        specifier: ^30.2.0
+        specifier: 'catalog:'
         version: 30.2.0
       '@typescript-eslint/eslint-plugin':
-        specifier: ^8.51.0
+        specifier: 'catalog:'
         version: 8.51.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)
       '@typescript-eslint/parser':
-        specifier: ^8.51.0
+        specifier: 'catalog:'
         version: 8.51.0(eslint@9.39.2)(typescript@5.9.3)
       concurrently:
-        specifier: ^9.2.1
+        specifier: 'catalog:'
         version: 9.2.1
       cross-env:
-        specifier: ^10.1.0
+        specifier: 'catalog:'
         version: 10.1.0
       eslint:
-        specifier: ^9.39.2
+        specifier: 'catalog:'
         version: 9.39.2
       eslint-config-airbnb-base:
-        specifier: ^15.0.0
+        specifier: 'catalog:'
         version: 15.0.0(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2))(eslint@9.39.2)
       eslint-config-prettier:
-        specifier: ^10.1.8
+        specifier: 'catalog:'
         version: 10.1.8(eslint@9.39.2)
       eslint-plugin-import:
-        specifier: ^2.32.0
+        specifier: 'catalog:'
         version: 2.32.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)
       eslint-plugin-jest:
-        specifier: ^29.12.1
+        specifier: 'catalog:'
         version: 29.12.1(@typescript-eslint/eslint-plugin@8.51.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(jest@30.2.0(@types/node@20.19.27))(typescript@5.9.3)
       eslint-plugin-prettier:
-        specifier: ^5.5.4
+        specifier: 'catalog:'
         version: 5.5.4(eslint-config-prettier@10.1.8(eslint@9.39.2))(eslint@9.39.2)(prettier@3.7.4)
       jest:
-        specifier: ^30.2.0
+        specifier: 'catalog:'
         version: 30.2.0(@types/node@20.19.27)
       prettier:
-        specifier: 3.7.4
+        specifier: 'catalog:'
         version: 3.7.4
       rimraf:
-        specifier: ^6.1.2
+        specifier: 'catalog:'
         version: 6.1.2
       typescript:
-        specifier: 5.9.3
+        specifier: 'catalog:'
         version: 5.9.3
 
   packages/json-serializr:
@@ -152,101 +242,101 @@ importers:
         specifier: workspace:^0.6.0
         version: link:../result
       serializr:
-        specifier: ^3.0.2
+        specifier: 'catalog:'
         version: 3.0.5
     devDependencies:
       '@jest/globals':
-        specifier: ^30.2.0
+        specifier: 'catalog:'
         version: 30.2.0
       '@typescript-eslint/eslint-plugin':
-        specifier: ^8.51.0
+        specifier: 'catalog:'
         version: 8.51.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)
       '@typescript-eslint/parser':
-        specifier: ^8.51.0
+        specifier: 'catalog:'
         version: 8.51.0(eslint@9.39.2)(typescript@5.9.3)
       concurrently:
-        specifier: ^9.2.1
+        specifier: 'catalog:'
         version: 9.2.1
       cross-env:
-        specifier: ^10.1.0
+        specifier: 'catalog:'
         version: 10.1.0
       eslint:
-        specifier: ^9.39.2
+        specifier: 'catalog:'
         version: 9.39.2
       eslint-config-airbnb-base:
-        specifier: ^15.0.0
+        specifier: 'catalog:'
         version: 15.0.0(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2))(eslint@9.39.2)
       eslint-config-prettier:
-        specifier: ^10.1.8
+        specifier: 'catalog:'
         version: 10.1.8(eslint@9.39.2)
       eslint-plugin-import:
-        specifier: ^2.32.0
+        specifier: 'catalog:'
         version: 2.32.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)
       eslint-plugin-jest:
-        specifier: ^29.12.1
+        specifier: 'catalog:'
         version: 29.12.1(@typescript-eslint/eslint-plugin@8.51.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(jest@30.2.0(@types/node@20.19.27))(typescript@5.9.3)
       eslint-plugin-prettier:
-        specifier: ^5.5.4
+        specifier: 'catalog:'
         version: 5.5.4(eslint-config-prettier@10.1.8(eslint@9.39.2))(eslint@9.39.2)(prettier@3.7.4)
       jest:
-        specifier: ^30.2.0
+        specifier: 'catalog:'
         version: 30.2.0(@types/node@20.19.27)
       prettier:
-        specifier: 3.7.4
+        specifier: 'catalog:'
         version: 3.7.4
       rimraf:
-        specifier: ^6.1.2
+        specifier: 'catalog:'
         version: 6.1.2
       typescript:
-        specifier: 5.9.3
+        specifier: 'catalog:'
         version: 5.9.3
 
   packages/result:
     devDependencies:
       '@jest/globals':
-        specifier: ^30.2.0
+        specifier: 'catalog:'
         version: 30.2.0
       '@typescript-eslint/eslint-plugin':
-        specifier: ^8.51.0
+        specifier: 'catalog:'
         version: 8.51.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)
       '@typescript-eslint/parser':
-        specifier: ^8.51.0
+        specifier: 'catalog:'
         version: 8.51.0(eslint@9.39.2)(typescript@5.9.3)
       concurrently:
-        specifier: ^9.2.1
+        specifier: 'catalog:'
         version: 9.2.1
       cross-env:
-        specifier: ^10.1.0
+        specifier: 'catalog:'
         version: 10.1.0
       eslint:
-        specifier: ^9.39.2
+        specifier: 'catalog:'
         version: 9.39.2
       eslint-config-airbnb-base:
-        specifier: ^15.0.0
+        specifier: 'catalog:'
         version: 15.0.0(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2))(eslint@9.39.2)
       eslint-config-prettier:
-        specifier: ^10.1.8
+        specifier: 'catalog:'
         version: 10.1.8(eslint@9.39.2)
       eslint-plugin-import:
-        specifier: ^2.32.0
+        specifier: 'catalog:'
         version: 2.32.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)
       eslint-plugin-jest:
-        specifier: ^29.12.1
+        specifier: 'catalog:'
         version: 29.12.1(@typescript-eslint/eslint-plugin@8.51.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(jest@30.2.0(@types/node@20.19.27))(typescript@5.9.3)
       eslint-plugin-prettier:
-        specifier: ^5.5.4
+        specifier: 'catalog:'
         version: 5.5.4(eslint-config-prettier@10.1.8(eslint@9.39.2))(eslint@9.39.2)(prettier@3.7.4)
       jest:
-        specifier: ^30.2.0
+        specifier: 'catalog:'
         version: 30.2.0(@types/node@20.19.27)
       prettier:
-        specifier: 3.7.4
+        specifier: 'catalog:'
         version: 3.7.4
       rimraf:
-        specifier: ^6.1.2
+        specifier: 'catalog:'
         version: 6.1.2
       typescript:
-        specifier: 5.9.3
+        specifier: 'catalog:'
         version: 5.9.3
 
   packages/typeorm:
@@ -255,53 +345,53 @@ importers:
         specifier: workspace:^0.6.0
         version: link:../result
       typeorm:
-        specifier: ^0.3.0
+        specifier: 'catalog:'
         version: 0.3.28
     devDependencies:
       '@jest/globals':
-        specifier: ^30.2.0
+        specifier: 'catalog:'
         version: 30.2.0
       '@typescript-eslint/eslint-plugin':
-        specifier: ^8.51.0
+        specifier: 'catalog:'
         version: 8.51.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)
       '@typescript-eslint/parser':
-        specifier: ^8.51.0
+        specifier: 'catalog:'
         version: 8.51.0(eslint@9.39.2)(typescript@5.9.3)
       concurrently:
-        specifier: ^9.2.1
+        specifier: 'catalog:'
         version: 9.2.1
       cross-env:
-        specifier: ^10.1.0
+        specifier: 'catalog:'
         version: 10.1.0
       eslint:
-        specifier: ^9.39.2
+        specifier: 'catalog:'
         version: 9.39.2
       eslint-config-airbnb-base:
-        specifier: ^15.0.0
+        specifier: 'catalog:'
         version: 15.0.0(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2))(eslint@9.39.2)
       eslint-config-prettier:
-        specifier: ^10.1.8
+        specifier: 'catalog:'
         version: 10.1.8(eslint@9.39.2)
       eslint-plugin-import:
-        specifier: ^2.32.0
+        specifier: 'catalog:'
         version: 2.32.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)
       eslint-plugin-jest:
-        specifier: ^29.12.1
+        specifier: 'catalog:'
         version: 29.12.1(@typescript-eslint/eslint-plugin@8.51.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(jest@30.2.0(@types/node@20.19.27))(typescript@5.9.3)
       eslint-plugin-prettier:
-        specifier: ^5.5.4
+        specifier: 'catalog:'
         version: 5.5.4(eslint-config-prettier@10.1.8(eslint@9.39.2))(eslint@9.39.2)(prettier@3.7.4)
       jest:
-        specifier: ^30.2.0
+        specifier: 'catalog:'
         version: 30.2.0(@types/node@20.19.27)
       prettier:
-        specifier: 3.7.4
+        specifier: 'catalog:'
         version: 3.7.4
       rimraf:
-        specifier: ^6.1.2
+        specifier: 'catalog:'
         version: 6.1.2
       typescript:
-        specifier: 5.9.3
+        specifier: 'catalog:'
         version: 5.9.3
 
 packages:
