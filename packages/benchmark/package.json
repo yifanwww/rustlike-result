@@ -21,8 +21,8 @@
         "build": "tsc --project tsconfig.build.json",
         "clean": "rimraf --glob dist *.tsbuildinfo",
         "format": "prettier --write \"**/*.{cjs,js,mjs,json,ts,yaml,yml}\"",
-        "lint": "cross-env ESLINT_USE_FLAT_CONFIG=false eslint .",
-        "lint-fix": "cross-env ESLINT_USE_FLAT_CONFIG=false eslint . --fix",
+        "lint": "eslint .",
+        "lint-fix": "eslint . --fix",
         "typecheck": "tsc --project tsconfig.json --noEmit --incremental false"
     },
     "dependencies": {
@@ -34,15 +34,7 @@
     },
     "devDependencies": {
         "@types/prompts": "catalog:",
-        "@typescript-eslint/eslint-plugin": "catalog:",
-        "@typescript-eslint/parser": "catalog:",
-        "cross-env": "catalog:",
         "eslint": "catalog:",
-        "eslint-config-airbnb-base": "catalog:",
-        "eslint-config-prettier": "catalog:",
-        "eslint-plugin-import": "catalog:",
-        "eslint-plugin-jest": "catalog:",
-        "eslint-plugin-prettier": "catalog:",
         "prettier": "catalog:",
         "rimraf": "catalog:",
         "typescript": "catalog:"

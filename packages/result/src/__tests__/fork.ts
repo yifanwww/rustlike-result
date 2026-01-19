@@ -25,13 +25,11 @@ class ResultFork<T, E> {
 }
 
 export function OkFork<T, E = never>(value: T): Result<T, E> {
-    // eslint-disable-next-line new-cap
     const instance = new ResultFork(true, value);
     return instance as unknown as Result<T, E>;
 }
 
 export function ErrFork<E, T = never>(error: E): Result<T, E> {
-    // eslint-disable-next-line new-cap
     const instance = new ResultFork(false, error);
     return instance as unknown as Result<T, E>;
 }

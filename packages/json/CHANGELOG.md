@@ -2,6 +2,8 @@
 ## @rustresult/json v0.7.0 (Unreleased)
 ### Breaking Changes
 
+**This package is now pure ESM.**
+
 Requires `@rustresult/result v0.7.0`.
 
 ### Bug Fixes

@@ -1,7 +1,2 @@
-# Compilation
-
-/dist
-
-# Test
-
 /coverage
+/dist

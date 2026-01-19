@@ -1,7 +1,5 @@
 {
     "settings": {
-        // --------------------------------------------------- Built-in Settings
-
         "editor.insertSpaces": true,
         "editor.rulers": [120],
         "editor.tabSize": 4,
@@ -41,10 +39,6 @@
             "editor.insertSpaces": true,
             "editor.tabSize": 2
         },
-
-        // -------------------------------------------------- Extension Settings
-
-        "eslint.useFlatConfig": false
     },
     "folders": [
         {

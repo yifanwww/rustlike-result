@@ -2,6 +2,8 @@
 ## @rustresult/result v0.7.0 (Unreleased)
 ### Breaking Changes
 
+**This package is now pure ESM.**
+
 No longer exports `isResult` and `isResultAsync`.
 
 No longer exports type `ResultType`.

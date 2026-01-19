@@ -29,14 +29,20 @@
         "typecheck": "pnpm run --recursive --no-sort --stream typecheck"
     },
     "devDependencies": {
+        "@eslint/js": "catalog:",
         "@swc/jest": "catalog:",
         "@types/node": "catalog:",
         "@types/semver": "catalog:",
         "chalk": "catalog:",
+        "eslint-plugin-import": "catalog:",
+        "eslint-plugin-jest": "catalog:",
+        "eslint-plugin-prettier": "catalog:",
+        "globals": "catalog:",
         "husky": "catalog:",
         "lint-staged": "catalog:",
         "prettier": "catalog:",
         "semver": "catalog:",
-        "typescript": "catalog:"
+        "typescript": "catalog:",
+        "typescript-eslint": "catalog:"
     }
 }
