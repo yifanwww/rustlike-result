@@ -3,7 +3,6 @@ import { Err, Ok } from '@rustresult/result';
 import type { Result as NTResult } from 'neverthrow';
 import { err as ntErr, ok as ntOk } from 'neverthrow';
 import { Bench, hrtimeNow } from 'tinybench';
-
 import { formatTinybenchTask } from '../tinybench.js';
 import { formatNum, logEnvironment, logTestCases } from '../utils.js';
 

@@ -54,25 +54,13 @@ export default defineConfig([
             'import/order': [
                 'error',
                 {
-                    groups: [['builtin', 'external'], 'internal', 'parent', 'sibling', 'unknown'],
-                    pathGroups: [
-                        {
-                            pattern: 'src/**/*.{css,scss}',
-                            group: 'unknown',
-                            position: 'after',
-                        },
-                        {
-                            pattern: './**/*.{css,scss}',
-                            group: 'unknown',
-                            position: 'after',
-                        },
-                    ],
+                    groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'unknown'],
                     alphabetize: {
                         caseInsensitive: true,
                         order: 'asc',
                     },
                     distinctGroup: false,
-                    'newlines-between': 'always',
+                    'newlines-between': 'never',
                 },
             ],
         },

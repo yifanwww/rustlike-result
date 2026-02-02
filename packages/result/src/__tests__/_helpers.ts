@@ -1,5 +1,4 @@
 import { expect } from '@jest/globals';
-
 import type { Result } from '../Result.js';
 import type { ResultAsync } from '../ResultAsync.js';
 import type { RustlikeResult } from '../RustlikeResult.js';

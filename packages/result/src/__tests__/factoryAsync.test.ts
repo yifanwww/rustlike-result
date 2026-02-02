@@ -1,9 +1,7 @@
 import { describe, it } from '@jest/globals';
-
 import { Err, Ok } from '../factory.js';
 import { ErrAsync, fromPromiseableResult, OkAsync } from '../factoryAsync.js';
 import type { ResultAsync } from '../ResultAsync.js';
-
 import { expectResultAsync } from './_helpers.js';
 
 describe(`Test fn \`${OkAsync.name}\``, () => {

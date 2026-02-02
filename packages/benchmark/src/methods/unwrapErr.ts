@@ -1,6 +1,5 @@
 import { Err } from '@rustresult/result';
 import { Bench, hrtimeNow } from 'tinybench';
-
 import { formatTinybenchTask } from '../tinybench.js';
 import { formatNum, logEnvironment, logTestCases } from '../utils.js';
 

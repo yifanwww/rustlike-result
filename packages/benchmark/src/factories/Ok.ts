@@ -4,7 +4,6 @@ import { Effect, Exit } from 'effect';
 import type { Ok as NTOk } from 'neverthrow';
 import { ok as ntOk } from 'neverthrow';
 import { Bench, hrtimeNow } from 'tinybench';
-
 import { formatTinybenchTask } from '../tinybench.js';
 import { formatNum, logEnvironment, logTestCases } from '../utils.js';
 

@@ -1,6 +1,5 @@
 import { describe, expect, it } from '@jest/globals';
 import { Err, Ok } from '@rustresult/result';
-
 import { ResultJSON } from '../index.js';
 
 describe(`Test fn \`${ResultJSON.serialize.name}\``, () => {

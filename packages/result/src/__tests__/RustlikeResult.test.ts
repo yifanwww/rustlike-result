@@ -1,12 +1,10 @@
-import { describe, expect, it, jest } from '@jest/globals';
 import assert from 'node:assert';
-
+import { describe, expect, it, jest } from '@jest/globals';
 import { Err, Ok } from '../factory.js';
 import type { Result } from '../Result.js';
 import { resultifySync } from '../resultify.js';
 import { RustlikeResult } from '../RustlikeResult.js';
 import { RustlikeResultAsync } from '../RustlikeResultAsync.js';
-
 import { expectResult, expectResultAsync } from './_helpers.js';
 import { ErrFork, OkFork } from './fork.js';
 

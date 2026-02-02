@@ -1,8 +1,6 @@
 import { describe, it } from '@jest/globals';
-
 import { Err, Ok } from '../factory.js';
 import type { Result } from '../Result.js';
-
 import { expectResult } from './_helpers.js';
 
 describe(`Test fn \`${Ok.name}\``, () => {

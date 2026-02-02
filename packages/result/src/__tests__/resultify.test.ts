@@ -1,5 +1,4 @@
 import { describe, expect, it } from '@jest/globals';
-
 import { resultifyAsync, resultifyPromise, resultifySync } from '../resultify.js';
 import { RustlikeResult } from '../RustlikeResult.js';
 import { RustlikeResultAsync } from '../RustlikeResultAsync.js';
