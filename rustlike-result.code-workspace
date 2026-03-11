@@ -1,4 +1,10 @@
 {
+    "folders": [
+        {
+            "name": "rustlike-result",
+            "path": "."
+        }
+    ],
     "settings": {
         "editor.insertSpaces": true,
         "editor.rulers": [120],
@@ -11,11 +17,8 @@
 
         "git.enabled": true,
 
-        "search.useIgnoreFiles": true,
-        "search.useParentIgnoreFiles": true,
-
-        "typescript.enablePromptUseWorkspaceTsdk": true,
-        "typescript.tsdk": "rustlike-result/node_modules/typescript/lib",
+        "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+        "js/ts.tsdk.path": "rustlike-result/node_modules/typescript/lib",
 
         "[javascript]": {
             "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -33,35 +36,5 @@
             "editor.defaultFormatter": "esbenp.prettier-vscode",
             "editor.tabSize": 2
         }
-    },
-    "folders": [
-        {
-            "name": "rustlike-result",
-            "path": "."
-        },
-        {
-            "name": "@rustresult/result",
-            "path": "packages/result"
-        },
-        {
-            "name": "@rustresult/benchmark",
-            "path": "packages/benchmark"
-        },
-        {
-            "name": "@rustresult/json",
-            "path": "packages/json"
-        },
-        {
-            "name": "@rustresult/json-serializr",
-            "path": "packages/json-serializr"
-        },
-        {
-            "name": "@rustresult/typeorm",
-            "path": "packages/typeorm"
-        },
-        {
-            "name": "rust",
-            "path": "rust"
-        }
-    ]
+    }
 }
