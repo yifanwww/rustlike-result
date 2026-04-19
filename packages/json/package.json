@@ -24,10 +24,10 @@
         "build:types": "tsc --project tsconfigs/tsconfig.types.json",
         "clean": "rimraf --glob coverage dist tsconfigs/*.tsbuildinfo",
         "format": "prettier --write \"**/*.{cjs,js,mjs,json,ts,yaml,yml}\"",
-        "lint": "eslint .",
-        "lint-fix": "eslint . --fix",
-        "test": "node ../../scripts/unit-test.js --watch",
-        "test-full": "node ../../scripts/unit-test.js --coverage",
+        "lint": "eslint . --fix",
+        "lint-ci": "eslint .",
+        "test": "node ../../scripts/unit-test.js --onlyChanged",
+        "test-ci": "node ../../scripts/unit-test.js --coverage",
         "typecheck": "tsc --project tsconfig.json --noEmit --incremental false"
     },
     "dependencies": {

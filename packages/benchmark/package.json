@@ -21,8 +21,8 @@
         "build": "tsc --project tsconfig.build.json",
         "clean": "rimraf --glob dist *.tsbuildinfo",
         "format": "prettier --write \"**/*.{cjs,js,mjs,json,ts,yaml,yml}\"",
-        "lint": "eslint .",
-        "lint-fix": "eslint . --fix",
+        "lint": "eslint . --fix",
+        "lint-ci": "eslint .",
         "typecheck": "tsc --project tsconfig.json --noEmit --incremental false"
     },
     "dependencies": {
