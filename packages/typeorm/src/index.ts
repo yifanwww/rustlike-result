@@ -1,3 +1,5 @@
+// reference: https://github.com/typeorm/typeorm/blob/1.0.0/src/entity-manager/EntityManager.ts#L158
+
 import { Err, fromPromiseableResult } from '@rustresult/result';
 import type { Result, ResultAsync } from '@rustresult/result';
 import type { DataSource, EntityManager } from 'typeorm';
@@ -34,7 +36,9 @@ export function typeormTransaction<Res, Err>(
     const queryRunner = dataSource.createQueryRunner();
 
     const innerTransaction = async (): Promise<Result<Res, Err | Error>> => {
-        await queryRunner.connect();
+        // don't need to connect() here?
+        // https://typeorm.io/docs/query-runner#using-queryrunner
+        // await queryRunner.connect();
         await queryRunner.startTransaction(isolation);
         try {
             const result = await runInTransaction(queryRunner.manager);
@@ -45,6 +49,7 @@ export function typeormTransaction<Res, Err>(
                     await queryRunner.rollbackTransaction();
                 } catch {
                     // ignore rollback errors
+                    // we return original error even if rollback thrown an error
                 }
             }
             return result;
@@ -53,6 +58,7 @@ export function typeormTransaction<Res, Err>(
                 await queryRunner.rollbackTransaction();
             } catch {
                 // ignore rollback errors
+                // we return original error even if rollback thrown an error
             }
             return err instanceof Error ? Err(err) : Err(new Error(String(err)));
         } finally {

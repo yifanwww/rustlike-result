@@ -43,14 +43,14 @@ class MockedDataSource implements Pick<DataSource, 'createQueryRunner'> {
 describe(`Test fn \`${typeormTransaction.name}\``, () => {
     it('should run transaction successfully', async () => {
         const spiedCreateQueryRunner = jest.spyOn(MockedDataSource.prototype, 'createQueryRunner');
-        const spiedConnect = jest.spyOn(MockedQueryRunner.prototype, 'connect');
+        // const spiedConnect = jest.spyOn(MockedQueryRunner.prototype, 'connect');
         const spiedStartTransaction = jest.spyOn(MockedQueryRunner.prototype, 'startTransaction');
         const spiedCommitTransaction = jest.spyOn(MockedQueryRunner.prototype, 'commitTransaction');
         const spiedRollbackTransaction = jest.spyOn(MockedQueryRunner.prototype, 'rollbackTransaction');
         const spiedRelease = jest.spyOn(MockedQueryRunner.prototype, 'release');
 
         expect(spiedCreateQueryRunner).toHaveBeenCalledTimes(0);
-        expect(spiedConnect).toHaveBeenCalledTimes(0);
+        // expect(spiedConnect).toHaveBeenCalledTimes(0);
         expect(spiedStartTransaction).toHaveBeenCalledTimes(0);
         expect(spiedCommitTransaction).toHaveBeenCalledTimes(0);
         expect(spiedRollbackTransaction).toHaveBeenCalledTimes(0);
@@ -64,7 +64,7 @@ describe(`Test fn \`${typeormTransaction.name}\``, () => {
             expect(result).toStrictEqual(Ok(null));
 
             expect(spiedCreateQueryRunner).toHaveBeenCalledTimes(1);
-            expect(spiedConnect).toHaveBeenCalledTimes(1);
+            // expect(spiedConnect).toHaveBeenCalledTimes(1);
             expect(spiedStartTransaction).toHaveBeenCalledTimes(1);
             expect(spiedCommitTransaction).toHaveBeenCalledTimes(1);
             expect(spiedRollbackTransaction).toHaveBeenCalledTimes(0);
@@ -77,7 +77,7 @@ describe(`Test fn \`${typeormTransaction.name}\``, () => {
             expect(result).toStrictEqual(Ok(null));
 
             expect(spiedCreateQueryRunner).toHaveBeenCalledTimes(2);
-            expect(spiedConnect).toHaveBeenCalledTimes(2);
+            // expect(spiedConnect).toHaveBeenCalledTimes(2);
             expect(spiedStartTransaction).toHaveBeenCalledTimes(2);
             expect(spiedCommitTransaction).toHaveBeenCalledTimes(2);
             expect(spiedRollbackTransaction).toHaveBeenCalledTimes(0);
@@ -97,7 +97,7 @@ describe(`Test fn \`${typeormTransaction.name}\``, () => {
             expect(result).toStrictEqual(Ok(null));
 
             expect(spiedCreateQueryRunner).toHaveBeenCalledTimes(3);
-            expect(spiedConnect).toHaveBeenCalledTimes(3);
+            // expect(spiedConnect).toHaveBeenCalledTimes(3);
             expect(spiedStartTransaction).toHaveBeenCalledTimes(3);
             expect(spiedCommitTransaction).toHaveBeenCalledTimes(3);
             expect(spiedRollbackTransaction).toHaveBeenCalledTimes(0);
@@ -112,7 +112,7 @@ describe(`Test fn \`${typeormTransaction.name}\``, () => {
             expect(result).toStrictEqual(Ok(null));
 
             expect(spiedCreateQueryRunner).toHaveBeenCalledTimes(4);
-            expect(spiedConnect).toHaveBeenCalledTimes(4);
+            // expect(spiedConnect).toHaveBeenCalledTimes(4);
             expect(spiedStartTransaction).toHaveBeenCalledTimes(4);
             expect(spiedCommitTransaction).toHaveBeenCalledTimes(4);
             expect(spiedRollbackTransaction).toHaveBeenCalledTimes(0);
@@ -122,14 +122,14 @@ describe(`Test fn \`${typeormTransaction.name}\``, () => {
 
     it('should rollback if transaction failes (return Err)', async () => {
         const spiedCreateQueryRunner = jest.spyOn(MockedDataSource.prototype, 'createQueryRunner');
-        const spiedConnect = jest.spyOn(MockedQueryRunner.prototype, 'connect');
+        // const spiedConnect = jest.spyOn(MockedQueryRunner.prototype, 'connect');
         const spiedStartTransaction = jest.spyOn(MockedQueryRunner.prototype, 'startTransaction');
         const spiedCommitTransaction = jest.spyOn(MockedQueryRunner.prototype, 'commitTransaction');
         const spiedRollbackTransaction = jest.spyOn(MockedQueryRunner.prototype, 'rollbackTransaction');
         const spiedRelease = jest.spyOn(MockedQueryRunner.prototype, 'release');
 
         expect(spiedCreateQueryRunner).toHaveBeenCalledTimes(0);
-        expect(spiedConnect).toHaveBeenCalledTimes(0);
+        // expect(spiedConnect).toHaveBeenCalledTimes(0);
         expect(spiedStartTransaction).toHaveBeenCalledTimes(0);
         expect(spiedCommitTransaction).toHaveBeenCalledTimes(0);
         expect(spiedRollbackTransaction).toHaveBeenCalledTimes(0);
@@ -142,7 +142,7 @@ describe(`Test fn \`${typeormTransaction.name}\``, () => {
             expect(result).toStrictEqual(Err(null));
 
             expect(spiedCreateQueryRunner).toHaveBeenCalledTimes(1);
-            expect(spiedConnect).toHaveBeenCalledTimes(1);
+            // expect(spiedConnect).toHaveBeenCalledTimes(1);
             expect(spiedStartTransaction).toHaveBeenCalledTimes(1);
             expect(spiedCommitTransaction).toHaveBeenCalledTimes(0);
             expect(spiedRollbackTransaction).toHaveBeenCalledTimes(1);
@@ -154,7 +154,7 @@ describe(`Test fn \`${typeormTransaction.name}\``, () => {
             expect(result).toStrictEqual(Err(null));
 
             expect(spiedCreateQueryRunner).toHaveBeenCalledTimes(2);
-            expect(spiedConnect).toHaveBeenCalledTimes(2);
+            // expect(spiedConnect).toHaveBeenCalledTimes(2);
             expect(spiedStartTransaction).toHaveBeenCalledTimes(2);
             expect(spiedCommitTransaction).toHaveBeenCalledTimes(0);
             expect(spiedRollbackTransaction).toHaveBeenCalledTimes(2);
@@ -164,14 +164,14 @@ describe(`Test fn \`${typeormTransaction.name}\``, () => {
 
     it('should rollback if transaction failes (throwing Error)', async () => {
         const spiedCreateQueryRunner = jest.spyOn(MockedDataSource.prototype, 'createQueryRunner');
-        const spiedConnect = jest.spyOn(MockedQueryRunner.prototype, 'connect');
+        // const spiedConnect = jest.spyOn(MockedQueryRunner.prototype, 'connect');
         const spiedStartTransaction = jest.spyOn(MockedQueryRunner.prototype, 'startTransaction');
         const spiedCommitTransaction = jest.spyOn(MockedQueryRunner.prototype, 'commitTransaction');
         const spiedRollbackTransaction = jest.spyOn(MockedQueryRunner.prototype, 'rollbackTransaction');
         const spiedRelease = jest.spyOn(MockedQueryRunner.prototype, 'release');
 
         expect(spiedCreateQueryRunner).toHaveBeenCalledTimes(0);
-        expect(spiedConnect).toHaveBeenCalledTimes(0);
+        // expect(spiedConnect).toHaveBeenCalledTimes(0);
         expect(spiedStartTransaction).toHaveBeenCalledTimes(0);
         expect(spiedCommitTransaction).toHaveBeenCalledTimes(0);
         expect(spiedRollbackTransaction).toHaveBeenCalledTimes(0);
@@ -184,7 +184,7 @@ describe(`Test fn \`${typeormTransaction.name}\``, () => {
             expect(result).toStrictEqual(Err(new Error('error')));
 
             expect(spiedCreateQueryRunner).toHaveBeenCalledTimes(1);
-            expect(spiedConnect).toHaveBeenCalledTimes(1);
+            // expect(spiedConnect).toHaveBeenCalledTimes(1);
             expect(spiedStartTransaction).toHaveBeenCalledTimes(1);
             expect(spiedCommitTransaction).toHaveBeenCalledTimes(0);
             expect(spiedRollbackTransaction).toHaveBeenCalledTimes(1);
@@ -199,7 +199,7 @@ describe(`Test fn \`${typeormTransaction.name}\``, () => {
             expect(result).toStrictEqual(Err(new Error('error')));
 
             expect(spiedCreateQueryRunner).toHaveBeenCalledTimes(2);
-            expect(spiedConnect).toHaveBeenCalledTimes(2);
+            // expect(spiedConnect).toHaveBeenCalledTimes(2);
             expect(spiedStartTransaction).toHaveBeenCalledTimes(2);
             expect(spiedCommitTransaction).toHaveBeenCalledTimes(0);
             expect(spiedRollbackTransaction).toHaveBeenCalledTimes(2);
@@ -214,7 +214,7 @@ describe(`Test fn \`${typeormTransaction.name}\``, () => {
             expect(result).toStrictEqual(Err(new Error('false')));
 
             expect(spiedCreateQueryRunner).toHaveBeenCalledTimes(3);
-            expect(spiedConnect).toHaveBeenCalledTimes(3);
+            // expect(spiedConnect).toHaveBeenCalledTimes(3);
             expect(spiedStartTransaction).toHaveBeenCalledTimes(3);
             expect(spiedCommitTransaction).toHaveBeenCalledTimes(0);
             expect(spiedRollbackTransaction).toHaveBeenCalledTimes(3);
@@ -224,7 +224,7 @@ describe(`Test fn \`${typeormTransaction.name}\``, () => {
 
     it('should not throw if rollbacking throws Error', async () => {
         const spiedCreateQueryRunner = jest.spyOn(MockedDataSource.prototype, 'createQueryRunner');
-        const spiedConnect = jest.spyOn(MockedQueryRunner.prototype, 'connect');
+        // const spiedConnect = jest.spyOn(MockedQueryRunner.prototype, 'connect');
         const spiedStartTransaction = jest.spyOn(MockedQueryRunner.prototype, 'startTransaction');
         const spiedCommitTransaction = jest.spyOn(MockedQueryRunner.prototype, 'commitTransaction');
         const spiedRollbackTransaction = jest
@@ -235,7 +235,7 @@ describe(`Test fn \`${typeormTransaction.name}\``, () => {
         const spiedRelease = jest.spyOn(MockedQueryRunner.prototype, 'release');
 
         expect(spiedCreateQueryRunner).toHaveBeenCalledTimes(0);
-        expect(spiedConnect).toHaveBeenCalledTimes(0);
+        // expect(spiedConnect).toHaveBeenCalledTimes(0);
         expect(spiedStartTransaction).toHaveBeenCalledTimes(0);
         expect(spiedCommitTransaction).toHaveBeenCalledTimes(0);
         expect(spiedRollbackTransaction).toHaveBeenCalledTimes(0);
@@ -248,7 +248,7 @@ describe(`Test fn \`${typeormTransaction.name}\``, () => {
             expect(result).toStrictEqual(Err(null));
 
             expect(spiedCreateQueryRunner).toHaveBeenCalledTimes(1);
-            expect(spiedConnect).toHaveBeenCalledTimes(1);
+            // expect(spiedConnect).toHaveBeenCalledTimes(1);
             expect(spiedStartTransaction).toHaveBeenCalledTimes(1);
             expect(spiedCommitTransaction).toHaveBeenCalledTimes(0);
             expect(spiedRollbackTransaction).toHaveBeenCalledTimes(1);
@@ -262,7 +262,7 @@ describe(`Test fn \`${typeormTransaction.name}\``, () => {
             expect(result).toStrictEqual(Err(new Error('error')));
 
             expect(spiedCreateQueryRunner).toHaveBeenCalledTimes(2);
-            expect(spiedConnect).toHaveBeenCalledTimes(2);
+            // expect(spiedConnect).toHaveBeenCalledTimes(2);
             expect(spiedStartTransaction).toHaveBeenCalledTimes(2);
             expect(spiedCommitTransaction).toHaveBeenCalledTimes(0);
             expect(spiedRollbackTransaction).toHaveBeenCalledTimes(2);
